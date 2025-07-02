@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -119,3 +120,6 @@ This allows for consistent styling and easier theme changes.
 2. Use the appropriate existing file or create a new one
 3. Follow the established naming conventions
 4. Import the CSS file where needed
+=======
+# solcafe-core
+>>>>>>> b8ae729343632b5cabb687b34733005763e4077e

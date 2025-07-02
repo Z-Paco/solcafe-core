@@ -1,0 +1,271 @@
+/* Hero section */
+.hero-section {
+  position: relative;
+  padding: 4rem 1rem;
+  text-align: center;
+  background: var(--hero-gradient);
+  margin-bottom: 3rem;
+  border-radius: 0 0 8px 8px;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: var(--theme-background);
+}
+
+.hero-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--theme-background);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: var(--theme-background);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Mission section */
+.mission-section {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  padding: 2rem;
+}
+
+.mission-section h2 {
+  color: var(--primary-bg);
+  margin-bottom: 1.5rem;
+}
+
+.mission-section p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Features section */
+.features-section {
+  padding: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.features-section h2 {
+  margin-bottom: 2rem;
+  color: var(--primary-bg);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px var(--card-hover-shadow);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--theme-secondary);
+}
+
+.feature h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-bg);
+}
+
+.feature p {
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.feature-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--theme-secondary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.feature-link:hover {
+  color: var(--primary-bg);
+}
+
+.feature-link .arrow {
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.feature-link:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* Join section */
+.join-section {
+  background: linear-gradient(
+    135deg,
+    var(--forest-light) 0%,
+    var(--forest-green) 85%,
+    var(--accent-yellow) 100%
+  );
+  padding: 4rem 1rem;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 3rem;
+}
+
+.join-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.join-section h2 {
+  color: var(--theme-text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.join-section p {
+  margin-bottom: 2rem;
+  color: var(--theme-text-primary);
+}
+
+/* Roles section */
+.roles-section {
+  padding: 3rem 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.roles-section h2 {
+  margin-bottom: 1rem;
+  color: var(--primary-bg);
+}
+
+.roles-intro {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  font-size: 1.1rem;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+.role-card {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 4px solid var(--theme-primary);
+}
+
+.role-card:nth-child(1) {
+  border-top-color: var(--accent-yellow); /* Dreamer */
+}
+
+.role-card:nth-child(2) {
+  border-top-color: var(--theme-primary); /* Techie */
+}
+
+.role-card:nth-child(3) {
+  border-top-color: var(--forest-green); /* Book Keeper */
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+}
+
+.role-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.role-card h3 {
+  margin-bottom: 0.75rem;
+  color: var(--primary-text);
+}
+
+.role-card p {
+  margin-bottom: 1rem;
+  flex-grow: 0;
+}
+
+.role-traits {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.role-traits li {
+  margin-bottom: 0.5rem;
+  list-style-type: circle;
+}
+
+.roles-cta {
+  margin-top: 2rem;
+}
+
+.roles-cta p {
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-section h2 {
+    font-size: 1.5rem;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .roles-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}

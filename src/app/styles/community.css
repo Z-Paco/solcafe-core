@@ -1,0 +1,177 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1 {
+  color: var(--primary-text);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.creation-hub {
+  background-color: var(--primary-bg);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 2px 8px var(--shadow-color, rgba(0, 0, 0, 0.1));
+  text-align: center;
+}
+
+.creation-hub h2 {
+  color: var(--primary-text);
+  margin-bottom: 0.5rem;
+}
+
+.creation-hub p {
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+}
+
+.content-creation-options {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.create-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: var(--secondary-bg);
+  border-radius: 8px;
+  color: var(--primary-text);
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 160px;
+}
+
+.create-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px var(--shadow-color, rgba(0, 0, 0, 0.15));
+}
+
+.create-option .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.create-option h3 {
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.login-prompt {
+  background-color: var(--primary-bg);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  box-shadow: 0 2px 8px var(--shadow-color, rgba(0, 0, 0, 0.1));
+}
+
+.login-prompt p {
+  color: var(--secondary-text);
+  margin-bottom: 1.5rem;
+}
+
+.login-button {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover {
+  background-color: var(--primary-color-dark);
+}
+
+/* Featured Projects Cards */
+
+.featured-projects-section {
+  margin-top: 2rem;
+}
+
+.featured-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.featured-project-card {
+  background: var(--theme-background);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid var(--card-border);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.featured-project-card:hover {
+  box-shadow: 0 5px 15px var(--card-hover-shadow);
+  border-color: var(--forest-green);
+}
+
+.featured-project-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: var(--secondary-bg);
+}
+
+.featured-project-content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.btn-primary {
+  margin-top: 1rem;
+  display: inline-block;
+  background: var(--theme-primary);
+  color: var(--theme-text-primary);
+  padding: 0.5em 1.2em;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: var(--theme-primary-dark);
+  color: var(--theme-background);
+}
+
+.btn-primary .btn-icon {
+  margin-left: 0.5em;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .creation-hub,
+  .login-prompt {
+    padding: 1.5rem;
+  }
+
+  .content-creation-options {
+    gap: 1rem;
+  }
+
+  .create-option {
+    padding: 1.5rem;
+    width: 140px;
+  }
+}

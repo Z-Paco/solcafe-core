@@ -1,0 +1,60 @@
+/**
+ * Solcafe Role-Based Themes
+ * Applied through CSS classes on the root element based on user's primary role
+ * These themes modify accent colors while preserving the seasonal base theme
+ */
+
+/* Dreamer: Visionaries who imagine and share what could be possible */
+:root.role-dreamer {
+  --highlight-text: #9b59b6; /* Amethyst purple */
+  --highlight-bg-subtle: rgba(155, 89, 182, 0.1);
+
+  /* Role-specific elements */
+  --role-emblem-color: #9b59b6;
+  --role-emblem-border: #c39bd3;
+  --role-path-color: #c39bd3;
+}
+
+/* Techie: Builders who focus on practical solutions and systems */
+:root.role-techie {
+  --highlight-text: #3498db; /* Electric blue */
+  --highlight-bg-subtle: rgba(52, 152, 219, 0.1);
+
+  /* Role-specific elements */
+  --role-emblem-color: #3498db;
+  --role-emblem-border: #85c1e9;
+  --role-path-color: #85c1e9;
+}
+
+/* Book Keeper: Chroniclers who preserve knowledge and tell stories */
+:root.role-bookkeeper {
+  --highlight-text: #e67e22; /* Amber orange */
+  --highlight-bg-subtle: rgba(230, 126, 34, 0.1);
+
+  /* Role-specific elements */
+  --role-emblem-color: #e67e22;
+  --role-emblem-border: #f0b27a;
+  --role-path-color: #f0b27a;
+}
+
+/* Cultivator: Growers who nurture communities and ecosystems */
+:root.role-cultivator {
+  --highlight-text: #27ae60; /* Emerald green */
+  --highlight-bg-subtle: rgba(39, 174, 96, 0.1);
+
+  /* Role-specific elements */
+  --role-emblem-color: #27ae60;
+  --role-emblem-border: #7dcea0;
+  --role-path-color: #7dcea0;
+}
+
+/* Crafter: Artisans who create beauty and functional works */
+:root.role-crafter {
+  --highlight-text: #c0392b; /* Ruby red */
+  --highlight-bg-subtle: rgba(192, 57, 43, 0.1);
+
+  /* Role-specific elements */
+  --role-emblem-color: #c0392b;
+  --role-emblem-border: #d98880;
+  --role-path-color: #d98880;
+}

@@ -1,0 +1,78 @@
+/* Art Page Styles */
+.art-gallery {
+  column-count: 3;
+  column-gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: var(--primary-bg);
+}
+
+@media (max-width: 900px) {
+  .art-gallery {
+    column-count: 2;
+  }
+}
+@media (max-width: 600px) {
+  .art-gallery {
+    column-count: 1;
+  }
+}
+
+.art-item {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 2rem;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px var(--card-shadow);
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.art-item:hover {
+  box-shadow: 0 8px 24px var(--card-shadow);
+}
+
+.art-item img {
+  width: 100%;
+  display: block;
+  border-radius: 12px 12px 0 0;
+  object-fit: cover;
+  transition: transform 0.3s cubic-bezier(0.4, 2, 0.6, 1);
+}
+
+.art-item img:hover {
+  transform: scale(1.05);
+}
+
+.caption {
+  padding: 1rem;
+  font-size: 1rem;
+  color: var(--text-main);
+  text-align: center;
+}
+/* lightbox Modal */
+#lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-dark, rgba(0, 0, 0, 0.85));
+  z-index: 1000;
+  display: none;
+}
+
+#lightbox-img {
+  transition: transform 0.3s cubic-bezier(0.4, 2, 0.6, 1);
+  cursor: pointer;
+}
+/* For future use */
+/*
+<form id="art-submit-form">
+  <input type="text" name="title" placeholder="Art Title" required>
+  <input type="file" name="image" accept="image/*" required>
+  <button type="submit">Submit Art</button>
+</form>
+*/

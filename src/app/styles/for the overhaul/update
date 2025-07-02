@@ -1,0 +1,594 @@
+src/
+└── app/
+    └── styles/
+        ├── globals.css           (keep existing file)
+        ├── components/           (new folder)
+        │   ├── buttons.css       (new file)
+        │   ├── forms.css         (new file)
+        │   ├── cards.css         (new file)
+        │   ├── header.css        (move existing file)
+        │   └── footer.css        (new file)
+        ├── layouts/              (new folder)
+        │   ├── dashboard.css     (move existing file)
+        │   ├── profile.css       (move existing file)
+        │   └── post-detail.css   (new file)
+        ├── pages/                (new folder)
+        │   ├── home.css          (move existing file)
+        │   ├── auth.css          (new file)
+        │   └── content/          (new folder)
+        │       ├── art.css       (move existing file)
+        │       ├── engineering.css (move existing file)
+        │       └── news.css      (move existing file)
+        └── templates/            (move existing folder if needed)
+
+# Run these commands in your terminal
+mkdir -p src/app/styles/components
+mkdir -p src/app/styles/layouts
+mkdir -p src/app/styles/pages/content
+
+
+# Move header.css to components folder
+move src\app\styles\header.css src\app\styles\components\
+
+# Move content-specific CSS files
+move src\app\styles\news.css src\app\styles\pages\content\
+move src\app\styles\art.css src\app\styles\pages\content\
+move src\app\styles\engineer.css src\app\styles\pages\content\
+
+# Move layout files
+move src\app\styles\dashboard.css src\app\styles\layouts\
+move src\app\styles\profile.css src\app\styles\layouts\
+
+# Make sure home.css is in the right place
+if exist src\app\styles\home.css (
+  move src\app\styles\home.css src\app\styles\pages\
+)
+
+Step 4 
+/* Button Component Styles */
+
+/* Base button styles */
+.button,
+.primary-button,
+.secondary-button,
+.button-link,
+.create-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  text-decoration: none;
+}
+
+/* Primary button */
+.primary-button {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  border: none;
+}
+
+.primary-button:hover {
+  background-color: var(--primary-bg-hover);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Secondary button */
+.secondary-button {
+  background-color: transparent;
+  color: var(--secondary-text);
+  border: 1px solid var(--card-border);
+}
+
+.secondary-button:hover {
+  background-color: var(--secondary-bg-subtle);
+  border-color: var(--secondary-text);
+}
+
+/* Link styled as button */
+.button-link {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  border: none;
+}
+
+.button-link:hover {
+  background-color: var(--primary-bg-hover);
+  text-decoration: none;
+}
+
+/* Create button (used on listing pages) */
+.create-button {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.create-button:hover {
+  background-color: var(--primary-bg-hover);
+}
+
+/* Action buttons (edit, delete, etc.) */
+.edit-button,
+.delete-button,
+.back-button,
+.fetch-button {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: var(--secondary-bg);
+  color: var(--secondary-text);
+  border: 1px solid var(--card-border);
+}
+
+.delete-button {
+  background-color: var(--error-bg-subtle);
+  color: var(--error-text);
+  border: 1px solid var(--error-bg);
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted-text);
+  text-decoration: none;
+}
+
+.back-button:hover {
+  color: var(--secondary-text);
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: var(--muted-text);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0.25rem;
+}
+
+.remove-button:hover {
+  color: var(--error-text);
+}
+
+/* Form Component Styles */
+
+/* Form groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--secondary-text);
+}
+
+.form-group small,
+.form-group .field-description {
+  display: block;
+  color: var(--muted-text);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Input elements */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="url"],
+.form-group input[type="search"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  color: var(--secondary-text);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-bg);
+  box-shadow: 0 0 0 3px var(--primary-bg-subtle);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Checkboxes and radio buttons */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+/* Form validation */
+.form-group.error input,
+.form-group.error textarea,
+.form-group.error select {
+  border-color: var(--error-text);
+  background-color: var(--error-bg-subtle);
+}
+
+.error-message {
+  color: var(--error-text);
+  background-color: var(--error-bg-subtle);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.success-message {
+  color: var(--success-text);
+  background-color: var(--success-bg-subtle);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+/* File uploads */
+.image-preview {
+  margin-top: 1rem;
+  max-width: 300px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Loading states */
+.loading-container {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted-text);
+}
+
+/* Card Component Styles */
+
+/* Base card */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card with image */
+.card-image {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Card content */
+.card-content {
+  padding: 1rem;
+}
+
+.card-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--secondary-text);
+}
+
+.card-description {
+  margin-top: 0;
+  color: var(--muted-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Card meta */
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--muted-text);
+}
+
+/* Post cards on listing pages */
+.post-card {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.post-card:last-child {
+  border-bottom: none;
+}
+
+.post-card h4 {
+  margin-bottom: 0.5rem;
+}
+
+.post-card time {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+/* Related link cards */
+.related-link-item {
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.related-link-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.related-link-wrapper {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.related-link-content {
+  padding: 1rem;
+}
+
+.related-link-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--secondary-text);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.related-link-comment {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Footer Component Styles */
+
+footer {
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--card-border);
+  padding: 2rem 1rem;
+  margin-top: auto;
+  text-align: center;
+}
+
+footer p {
+  color: var(--muted-text);
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer-links a {
+  color: var(--muted-text);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--secondary-text);
+  text-decoration: underline;
+}
+
+/* Post Detail Layout Styles */
+
+.post-detail {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.post-header {
+  margin-bottom: 2rem;
+}
+
+.post-title {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+}
+
+.author-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  object-fit: cover;
+}
+
+.post-date {
+  color: var(--muted-text);
+}
+
+.post-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+}
+
+.featured-image {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.featured-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.post-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tag {
+  background-color: var(--primary-bg-subtle);
+  color: var(--primary-text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section h2 {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 0.5rem;
+}
+
+.comments-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.comments-placeholder {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--primary-bg-subtle);
+  border-radius: 8px;
+  color: var(--muted-text);
+}
+
+/* No image style improvements */
+.no-image-header {
+  background-color: var(--primary-bg-subtle);
+  padding: 3rem 1rem;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.post-category {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-text);
+}
+
+
+; Step 5
+; Add at layou.jsx
+import './styles/globals.css';
+import './styles/components/header.css';
+import './styles/components/footer.css';
+import './styles/components/buttons.css';
+import './styles/components/forms.css';
+import './styles/components/cards.css';
+
+; Add at Homepage
+import "../app/styles/pages/home.css";
+
+; ArtPage.jsx
+import "../styles/pages/content/art.css";
+
+; EngineeringPage.jsx
+import "../styles/pages/content/engineering.css";
+
+; NewsPage.jsx
+import "../styles/pages/content/news.css";
+
+; Header.jsx
+import "../app/styles/components/header.css";
+
+; Footer.jsx
+import "../app/styles/components/footer.css";

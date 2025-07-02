@@ -1,0 +1,186 @@
+/* Engineer Page Styles */
+/* Add your engineer-specific styles here. Example structure: */
+
+.engineer-content {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem 1.5rem;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px var(--card-shadow);
+  color: var(--secondary-text);
+  font-family: "helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.engineer-content h2 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  text-align: center;
+  color: var(--secondary-text);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.engineer-content p {
+  margin: 1rem 0;
+  font-size: 1.08rem;
+}
+
+/* Featured Projects */
+.featured-projects {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--secondary-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  padding: 1rem;
+  text-align: left;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.project-card img {
+  width: 100%;
+  border-radius: 4px;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px var(--card-hover-shadow);
+}
+
+.project-card h3 {
+  margin: 0.5rem;
+}
+
+.project-card .card-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* tags */
+.project.tags {
+  margin: 0.5rem 0 1rem 0;
+}
+.tag {
+  display: inline-block;
+  background: var(--highlight-text);
+  color: var(--secondary-bg);
+  border-radius: 6px;
+  padding: 0.2em 0.7em;
+  font-size: 0.85em;
+  margin: 0 0.3em 0.3em 0;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.submitted-by {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted-text);
+  text-align: right;
+}
+
+/* Discussion & Resources */
+.discussion-resources {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.discussion-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.link-card {
+  background: var(--secondary-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  min-width: 220px;
+  text-decoration: none;
+  color: var(--secondary-text);
+  box-shadow: 0 2px 8px var(--card-shadow);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.link-card p {
+  font-style: italic;
+  color: var(--caption-text);
+}
+
+.link-card:hover {
+  transform: scale(1.04);
+}
+
+/* Add these styles to your existing CSS */
+
+.project-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted-text);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px dashed var(--card-border);
+  color: var(--muted-text);
+}
+
+.placeholder-image {
+  background: var(--primary-bg-subtle);
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--muted-text);
+}
+
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
+}
+
+.create-button {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.create-button:hover {
+  background-color: var(--primary-bg-hover);
+}

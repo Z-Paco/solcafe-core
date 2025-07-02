@@ -1,0 +1,69 @@
+/**
+ * Solcafe Seasonal Themes
+ * Applied through CSS classes on the root element
+ * Activated by themeManager.js based on current season
+ */
+
+/* Spring Theme: Fresh growth, renewal */
+:root.theme-spring {
+  --theme-primary: #4b7f52; /* Fresh green */
+  --theme-primary-dark: #3a6641; /* Deep forest */
+  --theme-secondary: #f9d56e; /* Daffodil yellow */
+  --theme-background: #fcfcfc; /* Clean, bright background */
+  --theme-text-primary: #ffffff; /* White text on primary */
+  --theme-text-secondary: #2a3b2d; /* Dark green-gray text */
+  --theme-text-muted: #5c8d63; /* Muted green */
+
+  /* Spring-specific */
+  --highlight-bg-subtle: rgba(249, 213, 110, 0.1); /* Yellow tint */
+  --primary-bg-subtle: rgba(75, 127, 82, 0.1); /* Green tint */
+  --card-hover-shadow: rgba(75, 127, 82, 0.18); /* Green shadow */
+}
+
+/* Summer Theme: Bright, vibrant, energetic */
+:root.theme-summer {
+  --theme-primary: #1a8fe3; /* Bright blue */
+  --theme-primary-dark: #0c7dcf; /* Deep sky blue */
+  --theme-secondary: #f9b500; /* Sunshine yellow */
+  --theme-background: #ffffff; /* Bright white */
+  --theme-text-primary: #ffffff; /* White text on primary */
+  --theme-text-secondary: #24405c; /* Navy text */
+  --theme-text-muted: #6497c8; /* Muted blue */
+
+  /* Summer-specific */
+  --highlight-bg-subtle: rgba(249, 181, 0, 0.1); /* Gold tint */
+  --primary-bg-subtle: rgba(26, 143, 227, 0.1); /* Blue tint */
+  --card-hover-shadow: rgba(26, 143, 227, 0.18); /* Blue shadow */
+}
+
+/* Autumn Theme: Warm, earthy, transitional */
+:root.theme-autumn {
+  --theme-primary: #7d4427; /* Russet brown */
+  --theme-primary-dark: #5e3320; /* Deep auburn */
+  --theme-secondary: #e67e22; /* Pumpkin orange */
+  --theme-background: #fcfbf8; /* Warm cream */
+  --theme-text-primary: #ffffff; /* White text on primary */
+  --theme-text-secondary: #3d281e; /* Dark brown text */
+  --theme-text-muted: #9c7162; /* Muted terra cotta */
+
+  /* Autumn-specific */
+  --highlight-bg-subtle: rgba(230, 126, 34, 0.1); /* Orange tint */
+  --primary-bg-subtle: rgba(125, 68, 39, 0.1); /* Brown tint */
+  --card-hover-shadow: rgba(125, 68, 39, 0.18); /* Brown shadow */
+}
+
+/* Winter Theme: Cool, reflective, crystalline */
+:root.theme-winter {
+  --theme-primary: #34495e; /* Slate blue */
+  --theme-primary-dark: #2c3e50; /* Deep navy */
+  --theme-secondary: #3498db; /* Ice blue */
+  --theme-background: #f8f9fb; /* Icy white */
+  --theme-text-primary: #ffffff; /* White text on primary */
+  --theme-text-secondary: #1f2b38; /* Dark slate text */
+  --theme-text-muted: #68809a; /* Muted slate */
+
+  /* Winter-specific */
+  --highlight-bg-subtle: rgba(52, 152, 219, 0.1); /* Blue tint */
+  --primary-bg-subtle: rgba(52, 73, 94, 0.1); /* Slate tint */
+  --card-hover-shadow: rgba(52, 73, 94, 0.18); /* Slate shadow */
+}

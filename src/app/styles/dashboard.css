@@ -1,0 +1,65 @@
+/* Main dashboard container */
+.dashboard-content {
+  max-width: 900px;
+  margin: 2.5rem auto;
+  padding: 2rem 1.5rem;
+  background: var(--secondary-bg);
+  border-radius: 14px;
+  box-shadow: 0 2px 16px var(--card-shadow);
+  color: var(--secondary-text);
+}
+/* Welcome section */
+.dashboard-welcome {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.dashboard-welcome h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Quick actions */
+.dashboard-actions {
+  margin-bottom: 2.5rem;
+}
+.dashboard-actions h3 {
+  margin-bottom: 1rem;
+}
+.dashboard-actions ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+.dashboard-actions li {
+  background: var(--primary-bg-dark);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  padding: 0.8em 1.5em;
+  transition: background 0.2s;
+}
+.dashboard-actions li a {
+  color: var(--primary-text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.08em;
+}
+.dashboard-actions li:hover {
+  background: var(--primary-bg);
+}
+
+/* Recent Activity */
+.dashboard-summary {
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  text-align: center;
+}
+.dashboard-summary h3 {
+  margin-bottom: 0.7rem;
+}

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // ← add this
+    "paths": {
+      "@/*": ["src/*"] // ← your existing mapping
+    }
+  },
+  "include": ["src", "app", "public/layout.jsx"] // ← ensure TS/JS will scan your src folder
+}

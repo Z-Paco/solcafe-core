@@ -1,0 +1,365 @@
+.profile-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem 1.5rem;
+  background: var(--secondary-bg);
+  border-radius: 14px;
+  box-shadow: 0 2px 16px var(--card-shadow);
+}
+
+/* Profile header with avatar and info */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--highlight-text);
+  position: relative; /* For positioning the role emblem*/
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Role emblem Overlay */
+.role-emblem {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 40px;
+  border-radius: 50%;
+  background: var(--highlight-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--secondary-bg);
+}
+
+.profile-info h1 {
+  margin-bottom: 0.5rem;
+  color: var(--secondary-text);
+}
+
+.username {
+  color: var(--muted-text);
+  margin-bottom: 0.7rem;
+}
+/* Role Styling */
+.role-title {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.role {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.primary {
+  color: var(--primary-bg-dark);
+}
+
+.secondary {
+  color: var(--muted-text);
+}
+
+.role-separator {
+  color: var(--muted-text);
+}
+
+.role-level {
+  background: var(--highlight-text);
+  color: var(--secondary-bg);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+/* Journey path visualization */
+.role-journey {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: var(--primary-bg);
+  border-radius: 10px;
+  color: var(--primary-text);
+}
+
+.journey-path {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.journey-node {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--light-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.journey-active {
+  background: var(--highlight-text);
+  color: var(--secondary-bg);
+}
+
+.journey-line {
+  flex-grow: 1;
+  height: 3px;
+  background: var(--light-line);
+}
+/* Tabs for navigation */
+.profile-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted-text);
+  cursor: pointer;
+}
+
+.tab.active {
+  color: var(--primary-bg-dark);
+  border-bottom: 3px solid var(--highlight-text);
+}
+
+/* Content section */
+.profile-content {
+  min-height: 300px;
+}
+
+.placeholder-text {
+  text-align: center;
+  color: var(--muted-text);
+  padding: 3rem 1rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.role-title {
+  justify-content: center;
+}
+
+.journey-path {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Accolades styling */
+.accolades-list ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.accolade-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--highlight-bg-subtle);
+  border-radius: 8px;
+}
+
+.accolade-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--highlight-text);
+  color: var(--neutral-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+/* Milestones styling */
+.milestones-grid ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.milestone-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--primary-bg-subtle);
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.milestone-item:hover {
+  transform: translateX(5px);
+}
+
+.milestone-icon {
+  font-size: 1.5rem;
+  color: var(--primary-bg-dark);
+}
+
+/* Settings form */
+.settings-form {
+  max-width: 500px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+}
+
+.settings-save-btn {
+  background: var(--primary-bg-dark);
+  color: var(--neutral-light);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settings-save-btn:hover {
+  background: var(--primary-bg);
+}
+
+/* Avatar upload component */
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+
+.avatar-image {
+  object-fit: cover;
+}
+
+.avatar-upload-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.upload-button {
+  background: var(--highlight-text);
+  color: var(--secondary-bg);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.upload-button:disabled {
+  background: var(--muted-text);
+  cursor: not-allowed;
+}
+
+/* Role Badge component */
+.role-badge-container {
+  display: flex;
+  gap: flex;
+  flex-wrap: wrap;
+}
+
+.role-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+.role-badge-small {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.role-badge-large {
+  font-size: 1rem;
+  padding: 0.4rem 1rem;
+}
+
+/* Profile Editor Component */
+.profile-editor {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .profile-editor {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-editor-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.success-message {
+  background-color: var(--highlight-bg-subtle);
+  color: var(--primary-bg-dark);
+  padding: 0.8rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

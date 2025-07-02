@@ -1,0 +1,273 @@
+/* =========================
+   Global CSS Variables - SOLARPUNK THEME
+   ========================= */
+:root {
+  /* --------- CORE COLOR PALETTE (Primary controls) --------- */
+  /* These variables have the most impact on your site's appearance */
+
+  /* Main brand colors */
+  --theme-primary: #79c9f4; /* light-sky-blue (main brand/accent) */
+  --theme-primary-dark: #649fc5; /* air-superiority-blue (dark accent/hover/footer) */
+  --theme-secondary: #a9d86e; /* forest-green (was yellow, now soothing green) */
+
+  /* Background colors */
+  --theme-background: #fefffe; /* pure white for cards and foreground elements */
+  --page-background: #f5f7f5; /* very light gray-green for the page background */
+
+  /* Text colors */
+  --theme-text-primary: #2f382c; /* black-olive for text on colored bg */
+  --theme-text-secondary: #2f382c; /* black-olive for main text on light bg */
+  --theme-text-muted: #b4a260; /* ecru (muted/secondary text) */
+
+  /* --------- NATURE ELEMENTS (Secondary palette) --------- */
+  /* Greens, yellows and accent colors for nature-inspired elements */
+
+  --forest-green: #a9d86e; /* softer lime green for forest elements */
+  --forest-dark: #7ca353; /* deeper forest green for shadows/depth */
+  --forest-light: #c5e696; /* lighter forest green for highlights */
+  --forest-accent: #bfe94e; /* pear green for accents */
+  --accent-yellow: #fdfb75; /* icterine (yellow now as accent only) */
+
+  /* --------- FUNCTIONAL MAPPINGS --------- */
+  /* Semantic aliases - changing core colors will update these automatically */
+
+  --primary-bg: var(--theme-primary);
+  --primary-bg-dark: var(--theme-primary-dark);
+  --secondary-bg: var(--page-background);
+  --primary-text: var(--theme-text-primary);
+  --secondary-text: var(--theme-text-secondary);
+  --highlight-text: var(--theme-secondary);
+  --muted-text: var(--theme-text-muted);
+
+  /* --------- COMPONENT STYLING --------- */
+  /* Specific styling for UI components */
+
+  /* Cards and containers */
+  --card-border: var(--forest-accent); /* pear as a soft border */
+  --card-shadow: rgba(0, 0, 0, 0.05);
+  --card-hover-shadow: rgba(
+    169,
+    216,
+    110,
+    0.25
+  ); /* forest green glow on hover */
+  --forest-border: 2px solid var(--forest-green);
+
+  /* Text elements */
+  --caption-text: #b4a260; /* ecru */
+  --highlight-bg-subtle: var(--accent-yellow); /* yellow as highlight bg */
+
+  /* Backgrounds and sections */
+  --primary-bg-subtle: var(
+    --forest-green
+  ); /* forest green for subtle backgrounds */
+  --footer-bg: var(--theme-primary-dark);
+  --footer-text: var(--theme-background);
+
+  /* --------- GRADIENTS --------- */
+  /* Dramatic visual effects for sections and backgrounds */
+
+  --hero-gradient: linear-gradient(
+    135deg,
+    var(--theme-primary) 0%,
+    var(--forest-green) 70%,
+    var(--accent-yellow) 100%
+  ); /* Sky-to-forest-to-gold gradient for hero backgrounds */
+
+  --forest-to-light-gradient: linear-gradient(
+    135deg,
+    var(--forest-dark) 0%,
+    var(--forest-light) 70%,
+    var(--accent-yellow) 100%
+  ); /* Forest-to-gold gradient for nature sections */
+
+  /* --------- UTILITY & ACCESSIBILITY --------- */
+  /* Helper colors for specific UI needs */
+
+  --neutral-light: #fefffe; /* white - needed for skip-link */
+  --light-overlay: rgba(254, 255, 254, 0.1);
+  --light-line: rgba(254, 255, 254, 0.3);
+  --overlay-dark: rgba(100, 159, 197, 0.85); /* air-superiority-blue */
+
+  /* --------- STATUS COLORS --------- */
+  /* Colors for notifications, alerts, and feedback */
+
+  --error-bg-subtle: rgba(235, 87, 87, 0.1); /* light red background */
+  --error-text: #d64545; /* brick red - accessible and less jarring */
+  --warning-text: #e69c41; /* amber orange for warnings */
+  --success-text: #3aab58; /* green for success messages */
+}
+
+/* =========================
+   Global Styles
+   ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Use viewport height to ensure full height */
+  font-family: arial, sans-serif;
+  line-height: 1.6;
+  background: var(--page-background); /* slightly darker background */
+  color: var(--secondary-text);
+  text-align: center;
+}
+
+main {
+  flex: 1 0 auto; /* This makes the main content area grow to push footer down */
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Global utility styles only */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Accessibility */
+.skip-link {
+  background: var(--primary-bg-dark);
+  color: var(--neutral-light);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  position: relative;
+  z-index: 1000;
+  display: inline-block;
+  margin: 1rem 0;
+}
+
+.skip-link:focus {
+  outline: 2px dashed var(--highlight-text);
+  outline-offset: 2px;
+}
+
+/* Apply improved footer with sky-to-forest gradient */
+footer {
+  flex-shrink: 0;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--theme-primary-dark) 0%,
+    var(--forest-dark) 85%,
+    var(--accent-yellow) 100%
+  );
+  color: var(--footer-text);
+  padding: 2rem 0;
+  box-shadow: 0 -4px 16px rgba(169, 216, 110, 0.15);
+}
+
+/* Forest-themed card styling */
+.card {
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--card-bg); /* pure white cards */
+  box-shadow: 0 3px 8px var(--card-shadow);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 5px 15px var(--card-hover-shadow);
+  border-color: var(--forest-green);
+}
+
+/* Nature-inspired section styling */
+.nature-section {
+  background: var(--forest-to-light-gradient);
+  padding: 2rem;
+  border-radius: 12px;
+  color: var(--theme-text-primary);
+}
+
+/* Primary buttons with forest hover */
+.btn-primary {
+  background-color: var(--theme-primary);
+  color: var(--theme-text-primary);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--theme-primary-dark);
+  box-shadow: 0 0 0 3px var(--forest-light);
+}
+
+/* Green eco-buttons for sustainability actions */
+.btn-eco {
+  background-color: var(--forest-green);
+  color: var(--theme-text-primary);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-eco:hover {
+  background-color: var(--forest-dark);
+}
+
+/* Accent sections with subtle patterns */
+.accent-section {
+  position: relative;
+  background-color: var(--forest-light);
+  border-left: 4px solid var(--forest-dark);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Forest border for important content */
+.forest-border {
+  border: var(--forest-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* Role icon shared styles */
+.role-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

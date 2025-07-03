@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -105,6 +104,7 @@ This document outlines the CSS organization for the SolCafe project.
 ## Naming Conventions
 
 We follow a component-based approach with descriptive class names:
+
 - `.component-name`: Base component
 - `.component-name__element`: Element within component
 - `.component-name--modifier`: Variant of component
@@ -120,6 +120,3 @@ This allows for consistent styling and easier theme changes.
 2. Use the appropriate existing file or create a new one
 3. Follow the established naming conventions
 4. Import the CSS file where needed
-=======
-# solcafe-core
->>>>>>> b8ae729343632b5cabb687b34733005763e4077e

@@ -72,8 +72,9 @@
     var(--theme-primary) 0%,
     var(--forest-green) 70%,
     var(--accent-yellow) 100%
-  ); /* Sky-to-forest-to-gold gradient for hero backgrounds */
+  );
 
+  /* Sky-to-forest-to-gold gradient for hero backgrounds */
   --forest-to-light-gradient: linear-gradient(
     135deg,
     var(--forest-dark) 0%,

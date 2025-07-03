@@ -211,3 +211,29 @@
   color: var(--highlight-text);
   margin-bottom: 1rem;
 }
+
+.learn-roles-link {
+  color: var(--primary-bg);
+  background: var(--forest-light);
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px var(--card-shadow);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.learn-roles-link:hover {
+  color: var(--primary-bg-dark);
+  background: linear-gradient(
+    138deg,
+    var(--accent-yellow) 0%,
+    var(--forest-green) 60%,
+    var(--forest-light) 100%
+  );
+  box-shadow: 0 4px 16px var(--card-hover-shadow);
+}

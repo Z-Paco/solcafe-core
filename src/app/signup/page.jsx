@@ -56,7 +56,16 @@ export default function SignUpPage() {
       });
 
       if (error) {
-        setError(error.message);
+        // Custom message for disabled signups
+        if (
+          error.message &&
+          (error.message.toLowerCase().includes("signups not allowed") ||
+            error.message.toLowerCase().includes("signups are disabled"))
+        ) {
+          setError("Signups are currently disabled. Please check back soon.");
+        } else {
+          setError(error.message);
+        }
       } else {
         setShowConfirmation(true);
       }
@@ -159,36 +168,32 @@ export default function SignUpPage() {
               <div className="form-group role-selection-container">
                 <label htmlFor="initialRole">5. Choose Your Initial Path</label>
                 <div className="role-options">
-                  {availableRoles.map((role) => {
-                    console.log(
-                      "Role:",
-                      role,
-                      "Description:",
-                      roleDescriptions[role]
-                    ); // Debug log
-                    return (
-                      <div
-                        key={role}
-                        className={`role-option ${
-                          initialRole === role ? "selected" : ""
-                        }`}
-                        onClick={() => setInitialRole(role)}
-                      >
-                        <div className="role-icon">{role.charAt(0)}</div>
-                        <div className="role-details">
-                          <h4>{role}</h4>
-                          <p>
-                            {roleDescriptions[role] ||
-                              "No description available"}
-                          </p>
-                        </div>
+                  {availableRoles.map((role) => (
+                    <div
+                      key={role}
+                      className={`role-option ${
+                        initialRole === role ? "selected" : ""
+                      }`}
+                      onClick={() => setInitialRole(role)}
+                    >
+                      <div className="role-icon">{role.charAt(0)}</div>
+                      <div className="role-details">
+                        <h4>{role}</h4>
+                        <p>
+                          {roleDescriptions[role] || "No description available"}
+                        </p>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
                 <small className="form-helper">
                   Your role will evolve as you contribute
                 </small>
+                <div style={{ marginTop: "0.5rem" }}>
+                  <Link href="/about/roles" className="learn-roles-link">
+                    Learn about roles
+                  </Link>
+                </div>
               </div>
 
               {error && <div className="auth-error">{error}</div>}

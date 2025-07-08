@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import Image from "next/image";
-import "../app/styles/header.css";
+import "../../app/styles/header.css";
 
 export default function Header() {
   const session = useSession();

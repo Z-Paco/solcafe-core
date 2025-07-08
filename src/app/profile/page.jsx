@@ -4,7 +4,7 @@ import ProfileEditor from "@/components/ProfileEditor";
 import { useState, useEffect } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
-import AvatarUpload from "@/components/AvatarUpload";
+import AvatarUpload from "@/components/content-editors/AvatarUpload";
 import RoleBadge from "@/components/RoleBadge";
 import Image from "next/image";
 import "../styles/profile.css";

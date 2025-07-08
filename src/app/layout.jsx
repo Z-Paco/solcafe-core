@@ -3,8 +3,8 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import SupabaseProvider from "@/components/SupabaseProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
 import "./styles/globals.css";
 
 export const metadata = {

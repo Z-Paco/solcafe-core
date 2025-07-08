@@ -1,24 +1,24 @@
 "use client";
 
-import { useState } from 'react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import AvatarUpload from './AvatarUpload';
+import { useState } from "react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import AvatarUpload from "./content-editors/AvatarUpload";
 
 export default function ProfileEditor({ profile, userId, onSave }) {
   const supabase = useSupabaseClient();
   const [loading, setLoading] = useState(false);
-  const [displayName, setDisplayName] = useState(profile?.display_name || '');
-  const [username, setUsername] = useState(profile?.username || '');
-  const [bio, setBio] = useState(profile?.bio || '');
+  const [displayName, setDisplayName] = useState(profile?.display_name || "");
+  const [username, setUsername] = useState(profile?.username || "");
+  const [bio, setBio] = useState(profile?.bio || "");
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null);
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   async function updateProfile(e) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccessMessage('');
+    setSuccessMessage("");
 
     console.log("Updating profile with:", {
       display_name: displayName,
@@ -30,14 +30,14 @@ export default function ProfileEditor({ profile, userId, onSave }) {
       // Username validation - must be unique
       if (username !== profile?.username) {
         const { data: usernameCheck, error: usernameError } = await supabase
-          .from('profiles')
-          .select('username')
-          .eq('username', username)
-          .not('id', 'eq', userId)
+          .from("profiles")
+          .select("username")
+          .eq("username", username)
+          .not("id", "eq", userId)
           .single();
 
         if (usernameCheck) {
-          setError('Username is already taken');
+          setError("Username is already taken");
           setLoading(false);
           return;
         }
@@ -45,35 +45,35 @@ export default function ProfileEditor({ profile, userId, onSave }) {
 
       // Update profile in database
       const { data, error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({
           display_name: displayName,
           username: username,
           bio: bio,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', userId)
+        .eq("id", userId)
         .select();
 
       if (error) {
         console.error("Supabase update error:", error);
         throw error;
       }
-      
+
       console.log("Profile updated successfully:", data);
-      setSuccessMessage('Profile updated successfully!');
-      
+      setSuccessMessage("Profile updated successfully!");
+
       if (onSave) {
         onSave({
           display_name: displayName,
           username: username,
           bio: bio,
-          avatar_url: avatarUrl
+          avatar_url: avatarUrl,
         });
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
-      setError('Error updating profile');
+      console.error("Error updating profile:", error);
+      setError("Error updating profile");
     } finally {
       setLoading(false);
     }
@@ -81,24 +81,28 @@ export default function ProfileEditor({ profile, userId, onSave }) {
 
   function handleAvatarUpload(url) {
     setAvatarUrl(url);
-    setSuccessMessage('Avatar updated successfully!');
+    setSuccessMessage("Avatar updated successfully!");
   }
 
   async function deleteProfile() {
-    if (!confirm("Are you sure you want to delete your profile? This cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete your profile? This cannot be undone."
+      )
+    ) {
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const { error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .delete()
-        .eq('id', userId);
-        
+        .eq("id", userId);
+
       if (error) throw error;
-      
+
       // Redirect to home or reload page
       window.location.reload();
     } catch (error) {
@@ -114,9 +118,10 @@ export default function ProfileEditor({ profile, userId, onSave }) {
       <div className="profile-editor-avatar">
         <AvatarUpload
           userId={userId}
-          url={avatarUrl ? 
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarUrl}` : 
-            undefined
+          url={
+            avatarUrl
+              ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarUrl}`
+              : undefined
           }
           onUpload={handleAvatarUpload}
         />
@@ -124,8 +129,10 @@ export default function ProfileEditor({ profile, userId, onSave }) {
 
       <form onSubmit={updateProfile} className="profile-editor-form">
         {error && <div className="error-message">{error}</div>}
-        {successMessage && <div className="success-message">{successMessage}</div>}
-        
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
+
         <div className="form-group">
           <label htmlFor="displayName">Display Name</label>
           <input
@@ -143,7 +150,9 @@ export default function ProfileEditor({ profile, userId, onSave }) {
             id="username"
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
+            onChange={(e) =>
+              setUsername(e.target.value.toLowerCase().replace(/\s+/g, ""))
+            }
             className="profile-input"
           />
           <small>Unique username, no spaces allowed</small>
@@ -160,16 +169,16 @@ export default function ProfileEditor({ profile, userId, onSave }) {
           />
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="profile-save-button"
           disabled={loading}
         >
-          {loading ? 'Saving...' : 'Save Profile'}
+          {loading ? "Saving..." : "Save Profile"}
         </button>
 
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={deleteProfile}
           className="profile-delete-button"
         >

@@ -91,29 +91,6 @@ export interface Database {
           updated_at?: string | null;
         };
       };
-      contributions: {
-        Row: {
-          id: string;
-          profile_id: string;
-          content: string;
-          type: string;
-          title: string;
-        };
-        Insert: {
-          id?: string;
-          profile_id: string;
-          content: string;
-          type: string;
-          title: string;
-        };
-        Update: {
-          id?: string;
-          profile_id?: string;
-          content?: string;
-          type?: string;
-          title?: string;
-        };
-      };
     };
   };
 }

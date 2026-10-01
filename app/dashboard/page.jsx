@@ -62,7 +62,7 @@ export default function DashboardPage() {
       <h1>Dashboard</h1>
       <section className="dashboard-welcome">
         <h2>Welcome back, {displayName}!</h2>
-        <p>Here's a quick overview of your activity and shortcuts to get started.</p>
+        <p>Here&apos;s a quick overview of your activity and shortcuts to get started.</p>
       </section>
 
       <section className="dashboard-actions">

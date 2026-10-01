@@ -35,7 +35,7 @@ export default function HomePage() {
         </p>
         <p>
           Inspired by solarpunk ideals and grounded in our commitment to
-          stewardship, we're creating spaces that spark creativity and inspire
+          stewardship, we&apos;re creating spaces that spark creativity and inspire
           meaningful change.
         </p>
       </section>
@@ -163,8 +163,8 @@ export default function HomePage() {
           <h2>Join a Growing Movement</h2>
           <p>
             Connect with others who share your passion for creating a more
-            sustainable and beautiful world. Whether you're a dreamer, a
-            builder, or a knowledge keeper, there's a place for you at Solcafe.
+            sustainable and beautiful world. Whether you&apos;re a dreamer, a
+            builder, or a knowledge keeper, there&apos;s a place for you at Solcafe.
           </p>
           <Link href="/signup" className="btn-primary">
             Get Started Today

@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
             <div className="confirmation-icon">✦</div>
             <h2>Check Your Email</h2>
             <p>
-              We've sent password reset instructions to {email}. Please check your inbox.
+              We&apos;ve sent password reset instructions to {email}. Please check your inbox.
             </p>
             <Link href="/login" className="auth-button">
               Return to Login

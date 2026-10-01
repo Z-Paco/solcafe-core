@@ -10,7 +10,7 @@ export default function RolesPage() {
         <div className="role-section card">
           <h3>Why Roles?</h3>
           <p>
-            The roles are a fun way to display a user's strengths and passions.
+            The roles are a fun way to display a user&apos;s strengths and passions.
             The Solarpunk movement is blessed to have many walks of life,
             visions, skills, and experiences. These roles harness these
             attributes into a system that encourages collaboration, learning,

@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function NewsContentEditor({ content, updateContent }) {
+export default function NewsContentEditor({ content, updateContent, onValidate }) {
   const [mainContent, setMainContent] = useState(content.mainContent || "");
   const [sources, setSources] = useState(content.sources || []);
   const [quotes, setQuotes] = useState(content.quotes || []);
@@ -286,10 +286,11 @@ export default function NewsContentEditor({ content, updateContent }) {
     return isValid;
   };
 
-  // Attach validate method to updateContent
-  if (typeof updateContent === "function") {
-    updateContent.validate = validate;
-  }
+  // Share the validation function with the parent via callback instead of
+  // mutating the updateContent prop (react-hooks/immutability).
+  useEffect(() => {
+    onValidate?.(validate);
+  });
 
   return (
     <div className="news-content-editor">
@@ -485,7 +486,7 @@ export default function NewsContentEditor({ content, updateContent }) {
       <div className="form-group">
         <label htmlFor="coverImage">Cover Image (Optional)</label>
         <p className="field-description">
-          Add a cover image if automatic extraction doesn't work or you prefer a
+          Add a cover image if automatic extraction doesn&apos;t work or you prefer a
           custom image.
         </p>
         <input

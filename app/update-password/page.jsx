@@ -61,7 +61,7 @@ export default function UpdatePasswordPage() {
             <div className="confirmation-icon">✦</div>
             <h2>Password Updated</h2>
             <p>
-              Your password has been successfully changed. You'll be redirected
+              Your password has been successfully changed. You&apos;ll be redirected
               to login shortly.
             </p>
             <Link href="/login" className="auth-button">

@@ -83,7 +83,7 @@ export default function LoginPage() {
         </form>
 
         <div className="auth-links">
-          <Link href="/signup">Don't have an account? Sign up</Link>
+          <Link href="/signup">Don&apos;t have an account? Sign up</Link>
           <Link href="/reset-password">Forgot your password?</Link>
         </div>
       </div>

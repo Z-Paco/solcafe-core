@@ -81,11 +81,11 @@ export default function AboutPage() {
         <div className="about-section card">
           <h3>Join Us</h3>
           <p>
-            Solcafe is designed for those with ambition and passion. We've
+            Solcafe is designed for those with ambition and passion. We&apos;ve
             segmented our content into areas that let you focus on your
-            strengths: as a "Dreamer" in our art space, a "Techie" in
-            engineering, or a "Book Keeper" of ideas in our news section. If
-            you're eager to share your vision, join invigorating discussions, or
+            strengths: as a &quot;Dreamer&quot; in our art space, a &quot;Techie&quot; in
+            engineering, or a &quot;Book Keeper&quot; of ideas in our news section. If
+            you&apos;re eager to share your vision, join invigorating discussions, or
             simply get inspired by a new way of thinking, Solcafe is the place
             for you.
           </p>

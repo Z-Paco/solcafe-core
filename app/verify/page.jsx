@@ -83,7 +83,7 @@ export default function VerifyPage() {
               <div className="confirmation-icon">✦</div>
               <h2>Verification Successful</h2>
               <p>
-                Your email has been verified. You'll be redirected to the home
+                Your email has been verified. You&apos;ll be redirected to the home
                 page shortly.
               </p>
               <Link href="/" className="auth-button">

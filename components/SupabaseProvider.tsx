@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import type { Session } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database";
 
 export default function SupabaseProvider({
@@ -10,7 +11,7 @@ export default function SupabaseProvider({
   session,
 }: {
   children: React.ReactNode;
-  session: any;
+  session: Session | null;
 }) {
   const [supabaseClient] = useState(() =>
     createBrowserClient<Database>(

@@ -60,17 +60,6 @@ export async function POST(request) {
       }
     }
 
-    // Add this to your relatedLink structure
-    const newLink = { title: "", url: "", comment: "", imageUrl: "" };
-
-    // In your related links UI
-    <textarea
-      placeholder="Your comment about this link"
-      value={link.comment}
-      onChange={(e) => updateRelatedLink(index, "comment", e.target.value)}
-      rows="2"
-    />;
-
     return NextResponse.json(metadata);
   } catch (error) {
     console.error("Error extracting metadata:", error);

@@ -50,11 +50,11 @@ potentially vestigial. Do not expand it without explicit direction.
 
 ## Tech Stack
 
-- Next.js 15 (App Router) + React 19
-- TypeScript throughout (one legacy JS exception — see Technical Debt)
+- Next.js 16 (App Router) + React 19
+- TypeScript throughout
 - Tailwind CSS 4 alongside custom CSS (BEM-style naming; see README)
 - Supabase auth via the modern SSR pattern (`@supabase/ssr`)
-- Jest configured for tests (Babel for ESM)
+- No test suite (Jest deps pruned Oct 2026; lint + typecheck are the checks)
 
 ## Commands
 
@@ -63,7 +63,6 @@ npm run dev        # dev server
 npm run build      # production build
 npm run lint       # eslint
 npm run typecheck  # tsc --noEmit
-npm test           # jest
 ```
 
 Run lint + typecheck after changes; they are the fastest correctness check
@@ -74,24 +73,22 @@ available here.
 - `app/` — App Router pages and API routes
   - Content types (each with `create`, `edit`, `[slug]`): `art/`, `news/`,
     `engineer/`
-  - Other routes: `about/` (+ `roles`), `comm/`, `contact/`, `dashboard/`,
-    `profile/`
+  - Other routes: `about/` (+ `roles`), `dashboard/`, `profile/`
+    (`comm/`, `contact/` still on disk but hidden from nav per scope cap)
   - Auth flows: `login/`, `signup/`, `verify/`, `reset-password/`,
     `update-password/`
-  - API routes: `api/posts`, `api/profile`, `api/roles`, `api/contribute`,
-    `api/extract-metadata`
+  - API routes: `api/extract-metadata` only (`api/posts`, `api/profile`
+    removed Oct 2026 — pages query Supabase directly; `api/roles`,
+    `api/contribute` never existed)
   - `app/styles/` — global CSS, themes, templates
 - `components/` — `common/`, `content-editors/`, `roles/`
-- `lib/supabase/` — SSR client setup (`client.ts`, `server.ts`, `middleware.ts`)
-- `lib/supabaseClient.ts` — legacy client (see Technical Debt)
+- `lib/supabase/` — SSR client setup (`server.ts`, `middleware.ts`)
 - `lib/types/database.ts` — generated DB types
-- `utils/theManager.js` — legacy JS helper (see Technical Debt)
 - `middleware.ts` — root middleware (Supabase session refresh)
 - `types/css.d.ts` — CSS module declarations
-- Note: there is currently **no** test suite on disk. The README's testing
-  section predates the app-router restructure and references stale paths
-  (`src/app/...`, `__tests__/`). Treat those instructions as historical until
-  tests are re-established.
+- Note: no test suite and no Jest config (pruned Oct 2026 along with
+  `lib/supabaseClient.ts`, `lib/supabase/client.ts`, `utils/theManager.js`).
+  README's old testing section has been replaced with lint + typecheck.
 
 ## Known Technical Debt (do not auto-fix)
 
@@ -99,8 +96,6 @@ available here.
    `@supabase/auth-helpers-react` coexist with `@supabase/ssr`. Half-finished
    migration to the SSR pattern. Cleanup = finish migrating remaining usages,
    remove helpers packages.
-2. **`utils/theManager.js`** — plain JS leftover in an otherwise TS project;
-   convert to `.ts` or delete if unused.
 
 **Agent behavior:** flag these if they surface during unrelated work and
 document cleanup steps. Do not clean them up automatically unless explicitly

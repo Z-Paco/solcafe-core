@@ -10,84 +10,31 @@ export default function AboutPage() {
         <h1>About Solcafe</h1>
 
         <div className="about-section card">
-          <h3>Solarpunk in a Nutshell</h3>
+          <h3>What this is</h3>
           <p>
-            Solarpunk is a cultural and aesthetic movement that champions
-            sustainability, renewable energy, and the harmonious integration of
-            technology with nature. It envisions a future where communities
-            thrive in green, self-sustaining environments: spaces that spark
-            creativity and inspire social change. This optimistic vision has
-            been a significant source of inspiration for Solcafe.
+            Solcafe is a student-built portfolio project around energy
+            stewardship in Alberta, rooted in a Catholic understanding of
+            creation care. It treats art and engineering as one integrated
+            practice — a place for informative energy content and the
+            creative work that imagines better systems.
           </p>
         </div>
 
         <div className="about-section card">
-          <h3>Our Purpose</h3>
+          <h3>What you&apos;ll find</h3>
           <p>
-            Solcafe is a community of individuals committed to making serious
-            change for the Earth. We focus on sustainability, providing a
-            creative space for people to express transformative ideas, and
-            offering an environment that inspires action.
+            News is the entry point: short, sourced energy updates. Art and
+            engineering posts are secondary — experiments and visual thinking
+            alongside the reporting.
           </p>
         </div>
 
         <div className="about-section card">
-          <h3>Core Principles</h3>
-
-          <div className="principle-item">
-            <h4>Human Dignity:</h4>
-            <p>
-              We believe every person is created with inherent worth and
-              deserves to be treated with respect and compassion. This belief
-              serves as the foundation of every community interaction and
-              innovation at Solcafe.
-            </p>
-          </div>
-
-          <div className="principle-item">
-            <h4>The Common Good:</h4>
-            <p>
-              We are committed to building a world where everyone has the
-              opportunity to thrive. Our goal is to ensure that the benefits of
-              progress and environmental stewardship are shared by all, rather
-              than reserved for a few.
-            </p>
-          </div>
-
-          <div className="principle-item">
-            <h4>Stewardship of Creation:</h4>
-            <p>
-              We recognize our responsibility to care for the Earth and its
-              resources. By protecting our environment today, we ensure its
-              sustainability for future generations—and we draw on traditions
-              that emphasize our sacred duty towards nature.
-            </p>
-          </div>
-        </div>
-
-        <div className="about-section card">
-          <h3>Our Vision</h3>
+          <h3>Status</h3>
           <p>
-            Inspired by the Solarpunk ethos, I dream of Solcafe becoming the
-            go-to destination for actionable information, spirited debates, and
-            innovative ideas in the sustainable space. Our platform is designed
-            for healthy discussions that challenge conventional approaches,
-            especially when studies show certain methods are inefficient, and to
-            offer a space where grievances can lead to breakthroughs in
-            sustainability.
-          </p>
-        </div>
-
-        <div className="about-section card">
-          <h3>Join Us</h3>
-          <p>
-            Solcafe is designed for those with ambition and passion. We&apos;ve
-            segmented our content into areas that let you focus on your
-            strengths: as a &quot;Dreamer&quot; in our art space, a &quot;Techie&quot; in
-            engineering, or a &quot;Book Keeper&quot; of ideas in our news section. If
-            you&apos;re eager to share your vision, join invigorating discussions, or
-            simply get inspired by a new way of thinking, Solcafe is the place
-            for you.
+            Built while finishing a Software Development diploma at SAIT, so
+            scope is intentionally capped. Roles (Dreamer, Techie, Book Keeper)
+            are presentational only — they don&apos;t gate access or content.
           </p>
           <div
             style={{
@@ -97,7 +44,9 @@ export default function AboutPage() {
               gap: "1rem",
             }}
           >
-            <button className="btn-primary">Sign Up</button>
+            <Link href="/news" className="btn-primary">
+              Browse News
+            </Link>
             <Link href="/about/roles" className="btn-eco">
               Learn More About Roles
             </Link>

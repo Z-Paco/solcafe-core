@@ -2,21 +2,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.example` to `.env.local` and fill the two keys from the Supabase dashboard:
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `app/page.jsx`. The page auto-updates as you edit the file.
+
+Useful commands:
+
+```bash
+npm run dev        # dev server
+npm run build      # production build
+npm run lint       # eslint
+npm run typecheck  # tsc --noEmit
+```
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
@@ -35,52 +40,19 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## 🧪 API Testing Guide
+## Correctness checks
 
-### How Testing Works
-
-- Each API route (like `/api/posts`, `/api/profile`, `/api/contributions`) has a corresponding test file in the `__tests__` folder.
-- Tests import the handler functions (e.g., `GET`, `POST`) directly and use mock requests/responses.
-- Supabase and Next.js cookies are mocked for isolation—no real DB or HTTP calls are made.
-- Tests are run with **Jest** (and Babel for ES module support).
-- Test environment variables are loaded from `.env.test` (or `.env` if you copy it).
-
-### Running the Tests
+There is currently no Jest suite (test deps were pruned — see scope note below).
+Fastest correctness signal is:
 
 ```bash
-npm test
+npm run lint
+npm run typecheck
 ```
 
-### Writing and Organizing Tests
-
-- Place new test files in the `__tests__` folder (e.g., `__tests__/api-posts.tests.js`).
-- Import your handler and test its logic with different mock requests.
-- Use mocks to simulate DB errors, missing fields, and authentication scenarios.
-- Add tests for:
-  - Success cases (200/201)
-  - Validation errors (400)
-  - Unauthorized (401)
-  - DB errors (500)
-
-### Example Test
-
-```js
-import { POST } from "../src/app/api/posts/route";
-
-test("POST /api/posts creates a post", async () => {
-  const req = {
-    json: async () => ({
-      user_id: "11111111-1111-1111-1111-111111111111",
-      title: "Test Post",
-      description: "This is a test post.",
-      image_url: "https://example.com/image.jpg",
-    }),
-    method: "POST",
-  };
-  const response = await POST(req);
-  expect(response.status).toBe(201);
-});
-```
+The only live API route is `POST /api/extract-metadata` (URL → Open Graph scrape,
+used by the News editor). Former `api/posts` and `api/profile` routes were removed —
+pages query Supabase directly.
 
 ---
 

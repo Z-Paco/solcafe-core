@@ -51,19 +51,10 @@ export default function Header() {
               <Link href="/">Home</Link>
             </li>
             <li>
-              <Link href="/comm">Community &amp; Collab</Link>
-            </li>
-            <li>
               <Link href="/dashboard">Dashboard</Link>
             </li>
             <li>
               <Link href="/about">About</Link>
-            </li>
-            {/* <li>
-              <Link href="/references">References</Link>
-            </li> */}
-            <li>
-              <Link href="/contact">Contact</Link>
             </li>
           </ul>
         </nav>

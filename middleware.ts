@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function middleware(req: NextRequest) {
   const { user, supabaseResponse } = await updateSession(req);
 
-  const protectedRoutes = ["/profile", "/dashboard", "/new-feature"];
+  const protectedRoutes = ["/profile", "/dashboard"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     req.nextUrl.pathname.startsWith(route)
   );
@@ -26,12 +26,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/profile/:path*",
-    "/dashboard/:path*",
-    "/settings/:path*",
-    "/projects/:path*",
-    "/login",
-    "/signup",
-  ],
+  matcher: ["/profile/:path*", "/dashboard/:path*", "/login", "/signup"],
 };

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
@@ -23,13 +23,14 @@ export default function EditArtPage() {
   const [error, setError] = useState(null);
   const [preview, setPreview] = useState(false);
   const [artContent, setArtContent] = useState({});
-  const [updateArtContent, setUpdateArtContent] = useState(() => {
-    const fn = (content) => {
-      setArtContent(content);
-    };
-    fn.validate = () => true;
-    return fn;
-  });
+  // Validation lives in a ref populated by the editor via onValidate.
+  const validateArtRef = useRef(() => true);
+  const updateArtContent = useCallback((content) => {
+    setArtContent(content);
+  }, []);
+  const handleArtValidate = useCallback((fn) => {
+    validateArtRef.current = fn;
+  }, []);
   const [validationErrors, setValidationErrors] = useState({});
 
   // Fetch post, user, and role info on mount
@@ -109,7 +110,7 @@ export default function EditArtPage() {
       setValidationErrors(errors);
       return;
     }
-    if (!updateArtContent.validate()) {
+    if (!validateArtRef.current()) {
       return;
     }
 
@@ -314,6 +315,7 @@ export default function EditArtPage() {
             content={artContent}
             updateContent={updateArtContent}
             userId={art.user_id}
+            onValidate={handleArtValidate}
           />
           {/* Published checkbox */}
           <div className="form-group">

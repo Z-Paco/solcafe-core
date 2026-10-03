@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { useRouter, useParams } from "next/navigation";
 import NewsContentEditor from "@/components/content-editors/NewsContentEditor";
@@ -13,7 +13,8 @@ export default function EditNewsPage() {
   const { slug } = params;
 
   const [post, setPost] = useState(null);
-  const [userId, setUserId] = useState(null);
+  // Derived from session — no effect sync needed (avoids cascading renders).
+  const userId = session?.user?.id ?? null;
   const [roleId, setRoleId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,22 +33,20 @@ export default function EditNewsPage() {
   // Cover image state
   const [coverImage, setCoverImage] = useState(null);
 
-  // Create a ref for the validation function
-  const [updateNewsContent, setUpdateNewsContent] = useState(() => {
-    const fn = (content) => {
-      setNewsContent(content);
-    };
-    fn.validate = () => true; // Default validate that always passes
-    return fn;
-  });
+  // Validation lives in a ref populated by the editor via onValidate.
+  const validateNewsRef = useRef(() => true);
+  const updateNewsContent = useCallback((content) => {
+    setNewsContent(content);
+  }, []);
+  const handleNewsValidate = useCallback((fn) => {
+    validateNewsRef.current = fn;
+  }, []);
 
   useEffect(() => {
     if (!session) {
       router.push("/login?redirect=/news/edit/" + slug);
       return;
     }
-
-    setUserId(session.user.id);
 
     async function fetchPost() {
       try {
@@ -111,7 +110,7 @@ export default function EditNewsPage() {
     }
 
     // Check content editor validation
-    if (!updateNewsContent.validate()) {
+    if (!validateNewsRef.current()) {
       // Content editor validation failed
       return;
     }
@@ -266,6 +265,7 @@ export default function EditNewsPage() {
             <NewsContentEditor
               content={newsContent}
               updateContent={updateNewsContent}
+              onValidate={handleNewsValidate}
             />
 
             <div className="form-group">
@@ -295,7 +295,7 @@ export default function EditNewsPage() {
             <div className="form-group">
               <label htmlFor="coverImage">Cover Image (Optional)</label>
               <p className="field-description">
-                Add a cover image if automatic extraction doesn't work or you
+                Add a cover image if automatic extraction doesn&apos;t work or you
                 prefer a custom image.
               </p>
               {/* 

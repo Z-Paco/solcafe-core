@@ -2,10 +2,19 @@
 import { useState, useEffect } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
+// Impure filename generation lives at module scope so render-phase
+// purity checks don't flag the upload event handler below.
+function createSchematicFileName(fileExt) {
+  return `schematic-${Date.now()}-${Math.random()
+    .toString(36)
+    .substring(2, 15)}.${fileExt}`;
+}
+
 export default function EngineeringContentEditor({
   content,
   updateContent,
   userId,
+  onValidate,
 }) {
   const supabase = useSupabaseClient();
 
@@ -15,8 +24,16 @@ export default function EngineeringContentEditor({
     content.difficulty || "intermediate"
   );
   const [timeRequired, setTimeRequired] = useState(content.timeRequired || "");
-  const [materials, setMaterials] = useState(content.materials || []);
-  const [steps, setSteps] = useState(content.steps || []);
+  const [materials, setMaterials] = useState(() =>
+    content.materials?.length
+      ? content.materials
+      : [{ name: "", quantity: "", unit: "" }]
+  );
+  const [steps, setSteps] = useState(() =>
+    content.steps?.length
+      ? content.steps
+      : [{ title: "", description: "", imageUrl: "" }]
+  );
   const [codeSnippets, setCodeSnippets] = useState(content.codeSnippets || []);
   const [schematics, setSchematics] = useState(content.schematics || []);
 
@@ -56,16 +73,6 @@ export default function EngineeringContentEditor({
     shell: 3000,
     other: 5000,
   };
-
-  // Initialize with default empty items if none exist
-  useEffect(() => {
-    if (materials.length === 0) {
-      setMaterials([{ name: "", quantity: "", unit: "" }]);
-    }
-    if (steps.length === 0) {
-      setSteps([{ title: "", description: "", imageUrl: "" }]);
-    }
-  }, []);
 
   // Materials list functions
   const addMaterial = () => {
@@ -150,9 +157,7 @@ export default function EngineeringContentEditor({
 
       for (const file of e.target.files) {
         const fileExt = file.name.split(".").pop();
-        const fileName = `schematic-${Date.now()}-${Math.random()
-          .toString(36)
-          .substring(2, 15)}.${fileExt}`;
+        const fileName = createSchematicFileName(fileExt);
         const filePath = `${userId}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
@@ -338,10 +343,11 @@ export default function EngineeringContentEditor({
     return isValid;
   };
 
-  // Attach validate method to updateContent
-  if (typeof updateContent === "function") {
-    updateContent.validate = validate;
-  }
+  // Share the validation function with the parent via callback instead of
+  // mutating the updateContent prop (react-hooks/immutability).
+  useEffect(() => {
+    onValidate?.(validate);
+  });
 
   return (
     <div className="engineering-content-editor">

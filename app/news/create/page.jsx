@@ -10,8 +10,9 @@ export default function CreateNewsPage() {
   const supabase = useSupabaseClient();
   const router = useRouter();
 
-  const [userId, setUserId] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Derived from session — no effect sync needed (avoids cascading renders).
+  const userId = session?.user?.id ?? null;
+  const loading = !session;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -25,13 +26,11 @@ export default function CreateNewsPage() {
   // News-specific content
   const [newsContent, setNewsContent] = useState({});
 
+  // Redirect side-effect only; userId/loading derive from session above.
   useEffect(() => {
     if (!session) {
       router.push("/login?redirect=/news/create");
-      return;
     }
-    setUserId(session.user.id);
-    setLoading(false);
   }, [session, router]);
 
   // Create slug from title

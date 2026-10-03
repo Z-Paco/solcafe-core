@@ -1,8 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-export default function ArtContentEditor({ content, updateContent, userId }) {
+export default function ArtContentEditor({
+  content,
+  updateContent,
+  userId,
+  onValidate,
+}) {
   const supabase = useSupabaseClient();
   const [uploadingImages, setUploadingImages] = useState(false);
   const [images, setImages] = useState(content.images || []);
@@ -174,11 +179,11 @@ export default function ArtContentEditor({ content, updateContent, userId }) {
     return isValid;
   };
 
-  // Expose validation method to parent
-  if (typeof updateContent === "function") {
-    // Attach validate method to the updateContent function
-    updateContent.validate = validate;
-  }
+  // Share the validation function with the parent via callback instead of
+  // mutating the updateContent prop (react-hooks/immutability).
+  useEffect(() => {
+    onValidate?.(validate);
+  });
 
   // Add this function inside your component, before the return statement:
   const removeImage = (index) => {

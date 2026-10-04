@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import "../styles/news.css";
 
@@ -72,19 +73,35 @@ export default function Newspage() {
     );
   }
 
+  const heroImage =
+    featuredPost?.image_url ||
+    featuredPost?.metadata?.relatedLinks?.[0]?.imageUrl ||
+    null;
+
   return (
     <main id="main-content">
       {/* Hero top story */}
       {featuredPost ? (
         <section className="hero-story">
           <article>
-            <Link href={`/news/${featuredPost.slug}`}>
-              <img 
-                src={featuredPost.image_url || 
-                     (featuredPost.metadata?.relatedLinks?.[0]?.imageUrl || "/news/placeholder.jpg")} 
-                alt={featuredPost.title} 
-              />
-            </Link>
+            {heroImage ? (
+              <Link href={`/news/${featuredPost.slug}`}>
+                {heroImage.startsWith("/") ? (
+                  <Image
+                    src={heroImage}
+                    alt={featuredPost.title}
+                    width={800}
+                    height={450}
+                  />
+                ) : (
+                  <img src={heroImage} alt={featuredPost.title} />
+                )}
+              </Link>
+            ) : (
+              <div className="no-image-header">
+                <div className="post-category">News</div>
+              </div>
+            )}
             <h2>
               <Link href={`/news/${featuredPost.slug}`}>{featuredPost.title}</Link>
             </h2>
@@ -95,8 +112,8 @@ export default function Newspage() {
       ) : (
         <section className="hero-story empty-hero">
           <article>
-            <h2>Latest News and Updates</h2>
-            <p className="teaser">Stay informed with our curated news collection on sustainable technology and design</p>
+            <h2>Energy news for Alberta</h2>
+            <p className="teaser">Sourced updates on energy stewardship, tracked through a creation-care lens</p>
           </article>
         </section>
       )}
@@ -116,7 +133,7 @@ export default function Newspage() {
         
         {!loading && newsPosts.length === 0 && !featuredPost && (
           <div className="empty-state">
-            <p>No news posts yet. Be the first to share news!</p>
+            <p>No news posts yet. Check back soon.</p>
             {session && (
               <Link href="/news/create" className="create-button">
                 Create News Post
@@ -147,14 +164,14 @@ export default function Newspage() {
 
       {/* Submission Banner */}
       <section className="submission-banner" aria-live="polite">
-        <h3>Want to Share News?</h3>
+        <h3>Spot a story?</h3>
         {session ? (
           <Link href="/news/create" className="create-button">
             Create News Post
           </Link>
         ) : (
           <p>
-            <Link href="/login?redirect=/news/create">Sign in</Link> to create and share news posts
+            <Link href="/login?redirect=/news/create">Sign in</Link> to contribute energy news
           </p>
         )}
       </section>

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import "../../styles/templates/postDetail.css";
 
@@ -133,7 +134,7 @@ export default function NewsPostPage() {
           <div className="post-meta">
             <div className="author-info">
               <img
-                src={post.profiles?.avatar_url || "/images/default-avatar.jpg"}
+                src={post.profiles?.avatar_url || "/profiles/default-avatar.jpg"}
                 alt={post.profiles?.username || "User"}
                 className="author-avatar"
               />
@@ -151,14 +152,21 @@ export default function NewsPostPage() {
           {/* Cover or first related link image */}
           {post.image_url || metadata.relatedLinks?.[0]?.imageUrl ? (
             <div className="featured-image">
-              <img
-                src={
-                  post.image_url ||
-                  metadata.relatedLinks?.[0]?.imageUrl ||
-                  "/images/placeholder-news.jpg"
-                }
-                alt={post.title}
-              />
+              {(post.image_url || metadata.relatedLinks[0].imageUrl).startsWith(
+                "/"
+              ) ? (
+                <Image
+                  src={post.image_url || metadata.relatedLinks[0].imageUrl}
+                  alt={post.title}
+                  width={800}
+                  height={450}
+                />
+              ) : (
+                <img
+                  src={post.image_url || metadata.relatedLinks[0].imageUrl}
+                  alt={post.title}
+                />
+              )}
             </div>
           ) : (
             <div className="no-image-header">
@@ -249,13 +257,6 @@ export default function NewsPostPage() {
             </div>
           )}
 
-          {/* Comment section placeholder */}
-          <div className="comments-section">
-            <h3>Comments</h3>
-            <div className="comments-placeholder">
-              <p>Comments feature coming soon</p>
-            </div>
-          </div>
         </div>
       </div>
     </main>

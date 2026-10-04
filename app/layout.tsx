@@ -6,7 +6,8 @@ import "./styles/globals.css";
 
 export const metadata = {
   title: "Solcafe",
-  description: "A solarpunk community platform",
+  description:
+    "Energy stewardship in Alberta — news, art, and engineering through a creation-care lens.",
 };
 
 export default async function RootLayout({

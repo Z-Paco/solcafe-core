@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ArtContentEditor({
   content,
@@ -8,7 +8,7 @@ export default function ArtContentEditor({
   userId,
   onValidate,
 }) {
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
   const [uploadingImages, setUploadingImages] = useState(false);
   const [images, setImages] = useState(content.images || []);
   const [medium, setMedium] = useState(content.medium || "");

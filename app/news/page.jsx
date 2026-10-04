@@ -1,12 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import "../styles/news.css";
 
 export default function Newspage() {
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
   const [newsPosts, setNewsPosts] = useState([]);
   const [featuredPost, setFeaturedPost] = useState(null);
   const [loading, setLoading] = useState(true);

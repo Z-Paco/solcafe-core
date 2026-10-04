@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import NextImage from "next/image"; // Rename to avoid conflict
 
 export default function AvatarUpload({ userId, url, onUpload }) {
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(
     url || "/profiles/default-avatar.jpg"

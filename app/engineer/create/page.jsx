@@ -1,13 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import EngineeringContentEditor from "@/components/content-editors/EngineeringContentEditor";
 import "../../styles/postEditor.css";
 
 export default function CreateEngineeringPage() {
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
   const router = useRouter();
 
   // Derived from session — no effect sync needed (avoids cascading renders).

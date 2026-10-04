@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import "../../../styles/postEditor.css";
 
@@ -9,7 +9,7 @@ export default function EditEngineerPage() {
   const router = useRouter();
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
-  const supabase = createClientComponentClient();
+  const [supabase] = useState(() => createClient());
 
   // State for post data and form fields
   const [post, setPost] = useState(null);

@@ -2,15 +2,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import "../../styles/./templates/postDetail.css";
 
 export default function ArtPostPage() {
   const params = useParams();
   const router = useRouter();
   const { slug } = params;
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);

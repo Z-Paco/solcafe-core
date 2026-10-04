@@ -2,12 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import "../styles/community.css";
 
 export default function CommunityPage() {
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
   const [featuredArt, setFeaturedArt] = useState(null);
   const [featuredEngineering, setFeaturedEngineering] = useState(null);
   const [featuredNews, setFeaturedNews] = useState(null);

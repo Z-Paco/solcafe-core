@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "../styles/auth.css";
 
 export default function UpdatePasswordPage() {
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

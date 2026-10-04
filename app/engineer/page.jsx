@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import "../styles/engineer.css";
 
@@ -80,7 +80,7 @@ function ProjectCard({ project }) {
 export default function EngineeringPage() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const [supabase] = useState(() => createClient());
 
   useEffect(() => {
     async function fetchProjects() {

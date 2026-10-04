@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 
 // Impure filename generation lives at module scope so render-phase
 // purity checks don't flag the upload event handler below.
@@ -16,7 +16,7 @@ export default function EngineeringContentEditor({
   userId,
   onValidate,
 }) {
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
 
   // State for engineering-specific content
   const [overview, setOverview] = useState(content.overview || "");

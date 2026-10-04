@@ -92,10 +92,11 @@ available here.
 
 ## Known Technical Debt (do not auto-fix)
 
-1. **Dual Supabase packages** — deprecated `@supabase/auth-helpers-nextjs` /
-   `@supabase/auth-helpers-react` coexist with `@supabase/ssr`. Half-finished
-   migration to the SSR pattern. Cleanup = finish migrating remaining usages,
-   remove helpers packages.
+None currently tracked. Past debt resolved Oct 2026: finished SSR migration
+(removed `@supabase/auth-helpers-*`, all client code on `@supabase/ssr`
+browser/server/middleware helpers); deleted `utils/theManager.js`,
+`lib/supabaseClient.ts`, dead `lib/supabase/client.ts` duplicate (recreated
+as canonical browser client during migration).
 
 **Agent behavior:** flag these if they surface during unrelated work and
 document cleanup steps. Do not clean them up automatically unless explicitly

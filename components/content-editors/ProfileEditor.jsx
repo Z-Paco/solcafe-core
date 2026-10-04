@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import AvatarUpload from "./AvatarUpload";
 
 export default function ProfileEditor({ profile, userId, onSave }) {
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
   const [loading, setLoading] = useState(false);
   const [displayName, setDisplayName] = useState(profile?.display_name || "");
   const [username, setUsername] = useState(profile?.username || "");

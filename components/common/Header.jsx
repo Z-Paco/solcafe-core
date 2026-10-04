@@ -1,14 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 import "../../app/styles/header.css";
 
 export default function Header() {
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
   const [avatar, setAvatar] = useState("/profiles/default-avatar.jpg");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   useEffect(() => {
     if (session?.user?.id) {

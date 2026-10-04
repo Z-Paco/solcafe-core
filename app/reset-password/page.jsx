@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import "../styles/auth.css";
 
 export default function ResetPasswordPage() {
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

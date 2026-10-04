@@ -1,13 +1,21 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter, useParams } from "next/navigation";
 import NewsContentEditor from "@/components/content-editors/NewsContentEditor";
 import "../../../styles/postEditor.css";
 
 export default function EditNewsPage() {
-  const session = useSession();
-  const supabase = useSupabaseClient();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
   const router = useRouter();
   const params = useParams();
   const { slug } = params;

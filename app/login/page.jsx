@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "../styles/auth.css";
 
 export default function LoginPage() {
-  const supabase = useSupabaseClient();
-  const session = useSession();
+  const [supabase] = useState(() => createClient());
+  const [session, setSession] = useState(null);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +16,14 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // if already logged in, redirect home
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
   useEffect(() => {
     if (session) router.push("/");
   }, [session, router]);

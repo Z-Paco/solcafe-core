@@ -18,20 +18,26 @@ const ArtContentEditor = dynamic(
 
 export default function CreateArtPage() {
   const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
   const router = useRouter();
+  const [userId, setUserId] = useState(null);
 
-  // Derived from session — no effect sync needed (avoids cascading renders).
-  const userId = session?.user?.id ?? null;
-  const loading = !session;
+  // Wait for getUser() before deciding to redirect (no redirect on first paint).
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!active) return;
+      if (!user) {
+        router.push("/login?redirect=/art/create");
+        return;
+      }
+      setUserId(user.id);
+    });
+    return () => {
+      active = false;
+    };
+  }, [supabase, router]);
+
+  const loading = !userId;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -45,12 +51,6 @@ export default function CreateArtPage() {
   // Art-specific content
   const [artContent, setArtContent] = useState({});
 
-  // Redirect side-effect only; userId/loading derive from session above.
-  useEffect(() => {
-    if (!session) {
-      router.push("/login?redirect=/art/create");
-    }
-  }, [session, router]);
 
   // Create slug from title
   const createSlug = (title) => {
@@ -120,7 +120,7 @@ export default function CreateArtPage() {
 
   if (loading) {
     return (
-      <main>
+      <main id="main-content">
         <div className="container">
           <div className="loading-container">
             <p>Loading editor...</p>
@@ -131,7 +131,7 @@ export default function CreateArtPage() {
   }
 
   return (
-    <main>
+    <main id="main-content">
       <div className="container">
         <div className="post-editor art-editor">
           <h1>Create Art Post</h1>

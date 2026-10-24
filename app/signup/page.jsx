@@ -100,7 +100,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="auth-container solarpunk-bg">
+    <main id="main-content" className="auth-container solarpunk-bg">
       <div className="auth-card">
         {showConfirmation ? (
           <div className="auth-confirmation">

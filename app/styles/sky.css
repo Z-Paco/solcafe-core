@@ -1,0 +1,143 @@
+/* =========================================================
+   Living sky. <html data-sky="dawn|day|dusk|night"> is set on the server
+   from Alberta time (lib/sky.ts) and re-checked by SkyClock every 5 minutes.
+   Each phase defines, as light-dark(light-theme, dark-theme) pairs:
+     --sky-top / --sky-mid / --sky-low  text-safe gradient stops (hero, fallbacks)
+     --sky-band-a/b/c                  vivid stops for hairlines (never under text)
+     --sun-fill / --sun-y / --moon-o / --star-o   hero art
+   Registered with @property so phase changes cross-fade.
+   Text contrast against every stop is checked for both themes by
+   scripts: see UX_NOTES.md ("Sky contrast").
+   ========================================================= */
+
+@property --sky-top { syntax: "<color>"; inherits: true; initial-value: #bfe0f5; }
+@property --sky-mid { syntax: "<color>"; inherits: true; initial-value: #e3f1fa; }
+@property --sky-low { syntax: "<color>"; inherits: true; initial-value: #fbf0c4; }
+@property --sky-band-a { syntax: "<color>"; inherits: true; initial-value: #6aaed9; }
+@property --sky-band-b { syntax: "<color>"; inherits: true; initial-value: #efc232; }
+@property --sky-band-c { syntax: "<color>"; inherits: true; initial-value: #7ea84a; }
+@property --sun-fill { syntax: "<color>"; inherits: true; initial-value: #f5d461; }
+@property --sun-y { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --moon-o { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --star-o { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+:root,
+:root[data-sky="day"] {
+  --sky-top: light-dark(#bfe0f5, #1d4566);
+  --sky-mid: light-dark(#e3f1fa, #183a58);
+  --sky-low: light-dark(#fbf0c4, #1b3042);
+  --sky-band-a: #6aaed9;
+  --sky-band-b: #efc232;
+  --sky-band-c: #7ea84a;
+  --sun-fill: #f5d461;
+  --sun-y: -62;
+  --moon-o: 0;
+  --star-o: 0;
+}
+
+:root[data-sky="dawn"] {
+  --sky-top: light-dark(#cfdaf0, #2a3558);
+  --sky-mid: light-dark(#f6dccf, #4a3a52);
+  --sky-low: light-dark(#fbe6bd, #54403c);
+  --sky-band-a: #9fb7e0;
+  --sky-band-b: #f3a68c;
+  --sky-band-c: #f6c768;
+  --sun-fill: #f2a65a;
+  --sun-y: -6;
+  --moon-o: 0;
+  --star-o: 0.35;
+}
+
+:root[data-sky="dusk"] {
+  --sky-top: light-dark(#dad3ec, #262c58);
+  --sky-mid: light-dark(#f2d0c4, #4d3249);
+  --sky-low: light-dark(#f7dfb2, #523a36);
+  --sky-band-a: #7c6cc4;
+  --sky-band-b: #e0766a;
+  --sky-band-c: #f2b24a;
+  --sun-fill: #ec8a52;
+  --sun-y: -4;
+  --moon-o: 0;
+  --star-o: 0.5;
+}
+
+:root[data-sky="night"] {
+  --sky-top: light-dark(#d3daec, #0b1426);
+  --sky-mid: light-dark(#dde2ef, #0e1c33);
+  --sky-low: light-dark(#e6e8f0, #132a3a);
+  --sky-band-a: #1e3a8a;
+  --sky-band-b: #4b5fa8;
+  --sky-band-c: #c9c9e8;
+  --sun-fill: #f2a65a;
+  --sun-y: 40;
+  --moon-o: 1;
+  --star-o: 1;
+}
+
+:root {
+  --moon-fill: light-dark(#6f79ad, #f4f0dc);
+  --sky-gradient: linear-gradient(
+    175deg,
+    var(--sky-top) 0%,
+    var(--sky-mid) 55%,
+    var(--sky-low) 100%
+  );
+  --sky-band: linear-gradient(
+    90deg,
+    var(--sky-band-a),
+    var(--sky-band-b) 55%,
+    var(--sky-band-c)
+  );
+  transition: --sky-top 2.4s ease, --sky-mid 2.4s ease, --sky-low 2.4s ease,
+    --sky-band-a 2.4s ease, --sky-band-b 2.4s ease, --sky-band-c 2.4s ease,
+    --sun-fill 2.4s ease, --sun-y 2.4s ease, --moon-o 2.4s ease,
+    --star-o 2.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+
+/* Utility surfaces */
+.sky-fill {
+  background: var(--sky-gradient);
+}
+
+.sky-band {
+  display: block;
+  height: 4px;
+  background: var(--sky-band);
+}
+
+/* =========================================================
+   Hero / empty-state horizon art (components/common/HorizonArt.jsx)
+   ========================================================= */
+.horizon__sun {
+  transform: translateY(calc(var(--sun-y) * 1px));
+}
+
+.horizon__moon {
+  opacity: var(--moon-o);
+}
+
+.horizon__stars {
+  opacity: var(--star-o);
+}
+
+.horizon__blades {
+  transform-origin: 392px 108px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .horizon__blades {
+    animation: turbine-spin 28s linear infinite;
+  }
+}
+
+@keyframes turbine-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

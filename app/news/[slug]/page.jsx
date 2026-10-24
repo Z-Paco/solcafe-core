@@ -1,263 +1,206 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { createClient } from "@/lib/supabase/client";
+import React from "react";
+import { notFound } from "next/navigation";
+import ArticleHeader from "@/components/common/ArticleHeader";
+import PostImage from "@/components/common/PostImage";
+import PostFooter from "@/components/common/PostFooter";
+import ReadingProgress from "@/components/common/ReadingProgress";
+import { getAdjacent, getPostForViewer, getRelated } from "@/lib/posts";
+import {
+  asArray,
+  asRecord,
+  excerpt,
+  readingMinutes,
+  safeHref,
+  safeImageSrc,
+  sourceDomain,
+  toParagraphs,
+} from "@/lib/content";
 import "../../styles/templates/postDetail.css";
 
-export default function NewsPostPage() {
-  const params = useParams();
-  const router = useRouter();
-  const { slug } = params;
-  const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userOwnsPost, setUserOwnsPost] = useState(false);
-
-  useEffect(() => {
-    async function fetchPost() {
-      if (!slug) return;
-      try {
-        // Fetch post
-        const { data, error } = await supabase
-          .from("posts")
-          .select("*, profiles(username, avatar_url)")
-          .eq("slug", slug)
-          .eq("content_type", "news")
-          .single();
-        if (error) throw error;
-        if (!data) {
-          setError("News post not found");
-          return;
-        }
-        setPost(data);
-
-        if (session && data.user_id === session.user.id) {
-          setUserOwnsPost(true);
-        }
-      } catch (err) {
-        console.error("Error fetching news post:", err);
-        setError("Failed to load news post. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchPost();
-  }, [slug, supabase, session]);
-
-  const handleDeletePost = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this news post? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-    try {
-      const { error } = await supabase.from("posts").delete().eq("id", post.id);
-      if (error) throw error;
-      router.push("/news");
-    } catch (err) {
-      console.error("Error deleting news post:", err);
-      alert("Failed to delete news post. Please try again.");
-    }
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = await getPostForViewer("news", slug);
+  if (!post) return { title: "Not found" };
+  const image = safeImageSrc(post.image_url);
+  return {
+    title: post.title,
+    description: excerpt(post.description, 160),
+    alternates: { canonical: `/news/${post.slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: excerpt(post.description, 160),
+      publishedTime: post.created_at,
+      ...(image ? { images: [image] } : {}),
+    },
+    ...(post.published ? {} : { robots: { index: false } }),
   };
+}
 
-  if (loading) {
-    return (
-      <main>
-        <div className="container">
-          <div className="loading">Loading news post...</div>
-        </div>
-      </main>
-    );
-  }
+/** Link titles are sometimes saved as the raw URL; show the domain instead. */
+function linkTitle(link) {
+  const title = typeof link.title === "string" ? link.title.trim() : "";
+  if (!title || /^https?:\/\//i.test(title)) return sourceDomain(link.url);
+  return title;
+}
 
-  if (error || !post) {
-    return (
-      <main>
-        <div className="container">
-          <div className="error-message">{error || "News post not found"}</div>
-          <Link href="/news" className="back-button">
-            Back to News
-          </Link>
-        </div>
-      </main>
-    );
-  }
+export default async function NewsPostPage({ params }) {
+  const { slug } = await params;
+  const post = await getPostForViewer("news", slug);
+  if (!post) notFound();
 
-  const { metadata = {} } = post;
-  const canEditOrDelete = userOwnsPost;
+  const metadata = asRecord(post.metadata);
+  const paragraphs = toParagraphs(metadata.mainContent);
+  const quotes = asArray(metadata.quotes).filter(
+    (q) => typeof q.text === "string" && q.text.trim()
+  );
+  const sources = asArray(metadata.sources).filter((s) => safeHref(s.url));
+  const related = asArray(metadata.relatedLinks).filter((l) => safeHref(l.url));
+  const epigraph = asRecord(metadata.epigraph);
+  const hasEpigraph = typeof epigraph.text === "string" && epigraph.text.trim();
+  const cover = post.image_url || related[0]?.imageUrl || null;
+  const [adjacent, moreLikeThis] = post.published
+    ? await Promise.all([getAdjacent(post), getRelated(post)])
+    : [{ older: null, newer: null }, []];
 
   return (
-    <main>
-      <div className="container">
-        <div className="post-detail news-post">
-          <div className="post-header">
-            <Link href="/news" className="back-button">
-              ← Back to News
-            </Link>
-            <h1 className="post-title">{post.title}</h1>
-            {post.tags && post.tags.length > 0 && (
-              <div className="post-tags">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-            {canEditOrDelete && (
-              <div className="post-actions">
-                <Link href={`/news/edit/${post.slug}`} className="edit-button">
-                  Edit
-                </Link>
-                <button className="delete-button" onClick={handleDeletePost}>
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
+    <main id="main-content" className="article article--news">
+      <ReadingProgress />
+      <div className="article__container">
+        <ArticleHeader
+          post={post}
+          backHref="/news"
+          backLabel="All news"
+          eyebrow="News"
+          editHref={`/news/edit/${post.slug}`}
+          noun="news post"
+          readMinutes={readingMinutes(post.description, metadata.mainContent)}
+        />
 
-          <div className="post-meta">
-            <div className="author-info">
-              <img
-                src={post.profiles?.avatar_url || "/profiles/default-avatar.jpg"}
-                alt={post.profiles?.username || "User"}
-                className="author-avatar"
-              />
-              <span className="author-name">
-                {post.profiles?.username || "Anonymous"}
+        {hasEpigraph && (
+          <figure className="article__epigraph">
+            <blockquote>
+              <p>{epigraph.text}</p>
+            </blockquote>
+            {epigraph.source && (
+              <figcaption>
+                {safeHref(epigraph.url) ? (
+                  <a href={safeHref(epigraph.url)} target="_blank" rel="noopener noreferrer">
+                    {epigraph.source}
+                  </a>
+                ) : (
+                  epigraph.source
+                )}
+              </figcaption>
+            )}
+          </figure>
+        )}
+
+        {safeImageSrc(cover) && (
+          <figure className="article__figure article__figure--wide">
+            <PostImage src={cover} alt="" className="article__img" priority />
+          </figure>
+        )}
+
+        <div className="article__layout" id="article-body">
+          {paragraphs.length > 0 && (
+            <div className="article__body article__body--dropcap">
+              {paragraphs.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+              <span className="fleuron" aria-hidden="true">
+                ❧
               </span>
             </div>
-            <div className="post-date">
-              {new Date(post.created_at).toLocaleDateString()}
-            </div>
-          </div>
-
-          <div className="post-description">{post.description}</div>
-
-          {/* Cover or first related link image */}
-          {post.image_url || metadata.relatedLinks?.[0]?.imageUrl ? (
-            <div className="featured-image">
-              {(post.image_url || metadata.relatedLinks[0].imageUrl).startsWith(
-                "/"
-              ) ? (
-                <Image
-                  src={post.image_url || metadata.relatedLinks[0].imageUrl}
-                  alt={post.title}
-                  width={800}
-                  height={450}
-                />
-              ) : (
-                <img
-                  src={post.image_url || metadata.relatedLinks[0].imageUrl}
-                  alt={post.title}
-                />
-              )}
-            </div>
-          ) : (
-            <div className="no-image-header">
-              <div className="post-category">News</div>
-            </div>
           )}
 
-          {/* Main content */}
-          {metadata.mainContent && (
-            <div className="section">
-              <h2>Article Content</h2>
-              <div className="news-main-content">{metadata.mainContent}</div>
-            </div>
-          )}
-
-          {/* Quotes */}
-          {metadata.quotes && metadata.quotes.length > 0 && (
-            <div className="section">
-              <h2>Key Quotes</h2>
-              <ul className="quotes-list">
-                {metadata.quotes.map((quote, idx) => (
-                  <li key={idx} className="quote-item">
-                    <blockquote>{quote.text}</blockquote>
-                    {quote.attribution && <cite>— {quote.attribution}</cite>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Sources */}
-          {metadata.sources && metadata.sources.length > 0 && (
-            <div className="section">
-              <h2>Sources</h2>
-              <ul className="sources-list">
-                {metadata.sources.map((source, idx) => (
-                  <li key={idx} className="source-item">
-                    {source.name && <span className="source-name">{source.name}: </span>}
-                    <a 
-                      href={source.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="source-link"
-                    >
-                      {source.url}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Related Links */}
-          {metadata.relatedLinks && metadata.relatedLinks.length > 0 && (
-            <div className="section">
-              <h2>Related Links</h2>
-              <div className="related-links-gallery">
-                {metadata.relatedLinks.map((link, idx) => (
-                  <div key={idx} className="related-link-item">
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="related-link-wrapper"
-                    >
-                      {link.imageUrl && (
-                        <div className="link-preview">
-                          <img
-                            src={link.imageUrl}
-                            alt={link.title || "Link preview"}
-                          />
-                        </div>
-                      )}
-                      <div className="related-link-content">
-                        <span className="related-link-title">
-                          {link.title || link.url}
-                        </span>
-                        {link.comment && (
-                          <div className="related-link-comment">
-                            {link.comment}
-                          </div>
+          {(quotes.length > 0 || sources.length > 0) && (
+            <aside className="article__margin" aria-label="Quotes and sources">
+              {quotes.length > 0 && (
+                <section className="article__notes" aria-label="Key quotes">
+                  {quotes.map((quote, i) => (
+                    <figure key={i} className="article__pullquote">
+                      <blockquote>
+                        <p>{quote.text.trim()}</p>
+                      </blockquote>
+                      {typeof quote.attribution === "string" &&
+                        quote.attribution.trim() && (
+                          <figcaption>{quote.attribution.trim()}</figcaption>
                         )}
-                      </div>
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                    </figure>
+                  ))}
+                </section>
+              )}
 
+              {sources.length > 0 && (
+                <section className="article__notes" aria-labelledby="sources-heading">
+                  <h2 id="sources-heading" className="article__section-title">
+                    Sources
+                  </h2>
+                  <ol className="article__sources">
+                    {sources.map((source, i) => (
+                      <li key={i}>
+                        <a href={safeHref(source.url)} target="_blank" rel="noopener noreferrer">
+                          {typeof source.name === "string" && source.name.trim()
+                            ? source.name.trim()
+                            : sourceDomain(source.url)}
+                        </a>
+                        <span className="article__source-domain">
+                          {sourceDomain(source.url)}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
+            </aside>
+          )}
         </div>
+
+        {related.length > 0 && (
+          <section className="article__section" aria-labelledby="related-heading">
+            <h2 id="related-heading" className="article__section-title">
+              Related links
+            </h2>
+            <ul className="link-cards">
+              {related.map((link, i) => (
+                <li key={i} className="link-card">
+                  <a
+                    href={safeHref(link.url)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-card__link"
+                  >
+                    {safeImageSrc(link.imageUrl) && (
+                      <span className="link-card__media">
+                        <PostImage
+                          src={link.imageUrl}
+                          alt=""
+                          width={480}
+                          height={270}
+                          className="link-card__img"
+                        />
+                      </span>
+                    )}
+                    <span className="link-card__body">
+                      <span className="link-card__domain">
+                        {sourceDomain(link.url)}
+                      </span>
+                      <span className="link-card__title">{linkTitle(link)}</span>
+                      {typeof link.comment === "string" && link.comment.trim() && (
+                        <span className="link-card__comment">
+                          {link.comment.trim()}
+                        </span>
+                      )}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <PostFooter adjacent={adjacent} related={moreLikeThis} />
       </div>
     </main>
   );

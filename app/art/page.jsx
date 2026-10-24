@@ -1,99 +1,99 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import AuthorActions from "@/components/common/AuthorActions";
+import Cover from "@/components/common/Cover";
+import CopySlot from "@/components/common/CopySlot";
+import EmptyState from "@/components/common/EmptyState";
+import PageIntro from "@/components/common/PageIntro";
+import { copyText } from "@/content/copy";
+import { listPublished } from "@/lib/posts";
+import { asRecord, formatDate } from "@/lib/content";
 import "../styles/art.css";
 
-export default function Artpage() {
-  const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
+export const metadata = {
+  title: "Art",
+  description: copyText("art.metaDescription"),
+  alternates: { canonical: "/art" },
+};
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-  const [artPosts, setArtPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const mediumOf = (post) => {
+  const medium = asRecord(post.metadata).medium;
+  return typeof medium === "string" ? medium.trim() : "";
+};
 
-  // Fetch art posts from Supabase
-  useEffect(() => {
-    async function fetchArtPosts() {
-      try {
-        const { data, error } = await supabase
-          .from("posts")
-          .select("*")
-          .eq("content_type", "art")
-          .eq("published", true)
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
-        setArtPosts(data || []);
-      } catch (err) {
-        console.error("Error fetching art posts:", err);
-        setError("Failed to load art posts. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchArtPosts();
-  }, [supabase]);
+export default async function ArtPage() {
+  const { posts, error } = await listPublished("art");
+  const [first] = posts;
 
   return (
-    <main>
-      <div className="page-header">
-        <h1>Art Gallery</h1>
-        {session && (
-          <Link href="/art/create" className="create-button">
-            Create Art Post
+    <main id="main-content" className="art-index">
+      <div className="container">
+        <PageIntro
+          eyebrow="Art"
+          title={<h1 className="page-intro__title">Art gallery</h1>}
+          lede={<CopySlot id="art.lede" as="p" className="page-intro__lede" lines={2} />}
+          actions={<AuthorActions createHref="/art/create" createLabel="New art post" />}
+        />
+
+        {error && (
+          <p className="notice notice--error" role="alert">
+            {error}
+          </p>
+        )}
+
+        {!error && posts.length === 0 && <EmptyState slot="art.empty" />}
+
+        {/* One work: shown large, framed like an exhibit. */}
+        {posts.length === 1 && (
+          <Link href={`/art/${first.slug}`} className="art-exhibit lift zoom" data-reveal>
+            <span className="art-exhibit__frame">
+              <span className="art-exhibit__mat">
+                <Cover
+                  src={first.image_url}
+                  className="art-exhibit__img"
+                  width={1200}
+                  height={900}
+                  sizes="(max-width: 900px) 100vw, 720px"
+                  priority
+                  markSize={96}
+                />
+              </span>
+            </span>
+            <span className="art-exhibit__plaque">
+              <span className="art-exhibit__title">{first.title}</span>
+              {mediumOf(first) && <span className="art-exhibit__medium">{mediumOf(first)}</span>}
+              <time className="art-exhibit__date" dateTime={first.created_at}>
+                {formatDate(first.created_at)}
+              </time>
+            </span>
           </Link>
         )}
-      </div>
 
-      {loading ? (
-        <div className="loading">Loading art gallery...</div>
-      ) : error ? (
-        <div className="error-message">{error}</div>
-      ) : artPosts.length === 0 ? (
-        <div className="empty-state">
-          <p>No art posts yet. Be the first to share your artwork!</p>
-          {session && (
-            <Link href="/art/create" className="create-button">
-              Create Art Post
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div className="art-gallery">
-          {artPosts.map((post) => {
-            console.log("Gallery post slug:", post.slug);
-            return (
-              <Link
-                href={`/art/${post.slug}`}
-                key={post.id}
-                className="art-item-link"
-              >
-                <div className="art-item">
-                  {post.image_url && (
-                    <img
+        {/* Two or more: a masonry that keeps growing gracefully. */}
+        {posts.length > 1 && (
+          <ul className="art-masonry">
+            {posts.map((post, i) => (
+              <li key={post.id} className="art-card" data-reveal style={{ "--reveal-i": i % 3 }}>
+                <Link href={`/art/${post.slug}`} className="art-card__link lift zoom">
+                  <span className={`art-card__media art-card__media--${i % 3}`}>
+                    <Cover
                       src={post.image_url}
-                      alt={post.title}
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                      }}
+                      className="art-card__img"
+                      width={800}
+                      height={1000}
+                      sizes="(max-width: 640px) 100vw, 33vw"
                     />
-                  )}
-                  <div className="caption">{post.title}</div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+                  </span>
+                  <span className="art-card__caption">
+                    <span className="art-card__title">{post.title}</span>
+                    {mediumOf(post) && <span className="art-card__medium">{mediumOf(post)}</span>}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }

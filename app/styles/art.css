@@ -1,78 +1,145 @@
-/* Art Page Styles */
-.art-gallery {
-  column-count: 3;
-  column-gap: 2rem;
-  max-width: 1200px;
-  margin: 2rem auto;
-  background: var(--primary-bg);
+/* =========================
+   Art index (app/art/page.jsx)
+   One work is an exhibit; two or more become a masonry.
+   ========================= */
+
+/* ---------- Exhibit: a single work, large and framed ---------- */
+.art-exhibit {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-4) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(ellipse at 50% 0%, var(--color-surface), var(--color-surface-sunk) 85%);
+  color: var(--color-text);
+  text-decoration: none;
 }
 
-@media (max-width: 900px) {
-  .art-gallery {
-    column-count: 2;
-  }
-}
-@media (max-width: 600px) {
-  .art-gallery {
-    column-count: 1;
-  }
+.art-exhibit:hover {
+  color: var(--color-text);
 }
 
-.art-item {
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 2rem;
-  background: var(--secondary-bg);
-  border-radius: 12px;
-  box-shadow: 0 2px 12px var(--card-shadow);
-  border: 1px solid var(--card-border);
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-
-.art-item:hover {
-  box-shadow: 0 8px 24px var(--card-shadow);
-}
-
-.art-item img {
-  width: 100%;
+.art-exhibit__frame {
   display: block;
-  border-radius: 12px 12px 0 0;
+  width: min(100%, 46rem);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.art-exhibit__mat {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-sunk);
+  border: 1px solid var(--color-border);
+}
+
+.art-exhibit__img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform 0.3s cubic-bezier(0.4, 2, 0.6, 1);
 }
 
-.art-item img:hover {
-  transform: scale(1.05);
-}
-
-.caption {
-  padding: 1rem;
-  font-size: 1rem;
-  color: var(--text-main);
+.art-exhibit__plaque {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
   text-align: center;
 }
-/* lightbox Modal */
-#lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--overlay-dark, rgba(0, 0, 0, 0.85));
-  z-index: 1000;
-  display: none;
+
+.art-exhibit__title {
+  font-family: var(--ff-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-heading);
 }
 
-#lightbox-img {
-  transition: transform 0.3s cubic-bezier(0.4, 2, 0.6, 1);
-  cursor: pointer;
+.art-exhibit:hover .art-exhibit__title {
+  color: var(--color-accent);
+  text-decoration: underline;
 }
-/* For future use */
-/*
-<form id="art-submit-form">
-  <input type="text" name="title" placeholder="Art Title" required>
-  <input type="file" name="image" accept="image/*" required>
-  <button type="submit">Submit Art</button>
-</form>
-*/
+
+.art-exhibit__medium {
+  font-family: var(--ff-accent);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--accent-md);
+  color: var(--color-text-muted);
+}
+
+.art-exhibit__date {
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Masonry ---------- */
+.art-masonry {
+  column-width: 16rem;
+  column-gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.art-card {
+  break-inside: avoid;
+  margin-bottom: var(--space-5);
+}
+
+.art-card__link {
+  display: block;
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+}
+
+.art-card__link:hover {
+  color: var(--color-text);
+}
+
+.art-card__media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-sunk);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Varied heights so the columns read as a wall, not a grid */
+.art-card__media--0 { aspect-ratio: 4 / 5; }
+.art-card__media--1 { aspect-ratio: 1 / 1; }
+.art-card__media--2 { aspect-ratio: 3 / 4; }
+
+.art-card__caption {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-1) 0;
+}
+
+.art-card__title {
+  font-family: var(--ff-display);
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.art-card__link:hover .art-card__title {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.art-card__medium {
+  font-family: var(--ff-accent);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--accent-sm);
+  color: var(--color-text-muted);
+}

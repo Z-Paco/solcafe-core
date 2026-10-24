@@ -1,213 +1,120 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import "../../styles/./templates/postDetail.css";
+import React from "react";
+import { notFound } from "next/navigation";
+import ArticleHeader from "@/components/common/ArticleHeader";
+import PostImage from "@/components/common/PostImage";
+import PostFooter from "@/components/common/PostFooter";
+import ReadingProgress from "@/components/common/ReadingProgress";
+import { getAdjacent, getPostForViewer, getRelated } from "@/lib/posts";
+import {
+  asArray,
+  asRecord,
+  excerpt,
+  safeImageSrc,
+  toParagraphs,
+} from "@/lib/content";
+import "../../styles/templates/postDetail.css";
 
-export default function ArtPostPage() {
-  const params = useParams();
-  const router = useRouter();
-  const { slug } = params;
-  const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userOwnsPost, setUserOwnsPost] = useState(false);
-
-  // Fetch post data
-  useEffect(() => {
-    async function fetchPost() {
-      if (!slug) return;
-
-      try {
-        const { data, error } = await supabase
-          .from("posts")
-          .select("*, profiles(username, avatar_url)")
-          .eq("slug", slug)
-          .eq("content_type", "art")
-          .single();
-
-        if (error) throw error;
-
-        if (!data) {
-          setError("Post not found");
-          return;
-        }
-
-        setPost(data);
-
-        // Check if current user is the post owner
-        if (session && data.user_id === session.user.id) {
-          setUserOwnsPost(true);
-        }
-      } catch (err) {
-        console.error("Error fetching post:", err);
-        setError("Failed to load post. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchPost();
-  }, [slug, supabase, session]);
-
-  // Handle delete post
-  const handleDeletePost = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this post? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-
-    try {
-      const { error } = await supabase.from("posts").delete().eq("id", post.id);
-
-      if (error) throw error;
-
-      router.push("/art");
-    } catch (err) {
-      console.error("Error deleting post:", err);
-      alert("Failed to delete post. Please try again.");
-    }
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = await getPostForViewer("art", slug);
+  if (!post) return { title: "Not found" };
+  const image = safeImageSrc(post.image_url);
+  return {
+    title: post.title,
+    description: excerpt(post.description, 160),
+    alternates: { canonical: `/art/${post.slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: excerpt(post.description, 160),
+      ...(image ? { images: [image] } : {}),
+    },
+    ...(post.published ? {} : { robots: { index: false } }),
   };
+}
 
-  if (loading) {
-    return (
-      <main>
-        <div className="container">
-          <div className="loading">Loading art post...</div>
-        </div>
-      </main>
-    );
-  }
+const text = (v) => (typeof v === "string" ? v.trim() : "");
 
-  if (error || !post) {
-    return (
-      <main>
-        <div className="container">
-          <div className="error-message">{error || "Post not found"}</div>
-          <Link href="/art" className="back-button">
-            Back to Art Gallery
-          </Link>
-        </div>
-      </main>
-    );
-  }
+export default async function ArtPostPage({ params }) {
+  const { slug } = await params;
+  const post = await getPostForViewer("art", slug);
+  if (!post) notFound();
+
+  const metadata = asRecord(post.metadata);
+  const [adjacent, moreLikeThis] = post.published
+    ? await Promise.all([getAdjacent(post), getRelated(post)])
+    : [{ older: null, newer: null }, []];
+  const images = asArray(metadata.images).filter((img) => safeImageSrc(img.url));
+  const medium = text(metadata.medium);
+  const collaborators = text(metadata.collaborators);
 
   return (
-    <main>
-      <div className="container">
-        <div className="post-detail art-post">
-          <div className="post-header">
-            <Link href="/art" className="back-button">
-              ← Back to Gallery
-            </Link>
+    <main id="main-content" className="article article--art">
+      <ReadingProgress />
+      <div className="article__container" id="article-body">
+        <ArticleHeader
+          post={post}
+          backHref="/art"
+          backLabel="Art gallery"
+          eyebrow="Art"
+          editHref={`/art/edit/${post.slug}`}
+          noun="art post"
+          showDek={false}
+        />
 
-            <h1 className="post-title">{post.title}</h1>
-
-            {post.tags && post.tags.length > 0 && (
-              <div className="post-tags">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="tag">
-                    {tag}
-                  </span>
-                ))}
+        {(medium || collaborators) && (
+          <dl className="article__facts">
+            {medium && (
+              <div>
+                <dt>Medium</dt>
+                <dd>{medium}</dd>
               </div>
             )}
-
-            {userOwnsPost && (
-              <div className="post-actions">
-                <Link href={`/art/edit/${post.slug}`} className="edit-button">
-                  Edit
-                </Link>
-                <button className="delete-button" onClick={handleDeletePost}>
-                  Delete
-                </button>
+            {collaborators && (
+              <div>
+                <dt>Collaborators</dt>
+                <dd>{collaborators}</dd>
               </div>
             )}
+          </dl>
+        )}
+
+        {toParagraphs(post.description).length > 0 && (
+          <div className="article__body">
+            {toParagraphs(post.description).map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
           </div>
+        )}
 
-          <div className="post-meta">
-            <div className="author-info">
-              <img
-                src={post.profiles?.avatar_url || "/images/default-avatar.jpg"}
-                alt={post.profiles?.username || "User"}
-                className="author-avatar"
+        {images.length > 0 ? (
+          <div className="article__gallery">
+            {images.map((image, index) => (
+              <figure key={index} className="article__figure">
+                <PostImage
+                  src={image.url}
+                  alt={text(image.caption) || `${post.title}, image ${index + 1}`}
+                  className="article__img article__img--natural"
+                  priority={index === 0}
+                />
+                {text(image.caption) && <figcaption>{text(image.caption)}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        ) : (
+          safeImageSrc(post.image_url) && (
+            <figure className="article__figure">
+              <PostImage
+                src={post.image_url}
+                alt={post.title}
+                className="article__img article__img--natural"
+                priority
               />
-              <span className="author-name">
-                {post.profiles?.username || "Anonymous"}
-              </span>
-            </div>
-            <div className="post-date">
-              {new Date(post.created_at).toLocaleDateString()}
-            </div>
-          </div>
+            </figure>
+          )
+        )}
 
-          <div className="post-description">{post.description}</div>
-
-          {/* Art metadata */}
-          {post.metadata && (
-            <div className="art-metadata">
-              {post.metadata.medium && (
-                <div className="metadata-item">
-                  <span className="metadata-label">Medium:</span>
-                  <span className="metadata-value">{post.metadata.medium}</span>
-                </div>
-              )}
-
-              {post.metadata.collaborators && (
-                <div className="metadata-item">
-                  <span className="metadata-label">Collaborators:</span>
-                  <span className="metadata-value">
-                    {post.metadata.collaborators}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Art gallery */}
-          {post.metadata?.images && post.metadata.images.length > 0 ? (
-            <div className="art-gallery-full">
-              {post.metadata.images.map((image, index) => (
-                <div key={index} className="gallery-item">
-                  <img
-                    src={image.url}
-                    alt={image.caption || `Art image ${index + 1}`}
-                  />
-                  {image.caption && (
-                    <div className="image-caption">{image.caption}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="featured-image">
-              <img src={post.image_url} alt={post.title} />
-            </div>
-          )}
-
-          {/* Comment section placeholder */}
-          <div className="comments-section">
-            <h3>Comments</h3>
-            <div className="comments-placeholder">
-              <p>Comments feature coming soon</p>
-            </div>
-          </div>
-        </div>
+        <PostFooter adjacent={adjacent} related={moreLikeThis} />
       </div>
     </main>
   );

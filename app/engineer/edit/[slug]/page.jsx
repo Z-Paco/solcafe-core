@@ -36,10 +36,12 @@ export default function EditEngineerPage() {
   // Fetch post, user, and role info on mount
   useEffect(() => {
     async function fetchPost() {
+      let redirecting = false;
       try {
         const { data: userData } = await supabase.auth.getUser();
         const user = userData?.user;
         if (!user) {
+          redirecting = true; // keep the loading view up until the redirect lands
           router.push("/login?redirect=/engineer/edit/" + slug);
           return;
         }
@@ -59,7 +61,9 @@ export default function EditEngineerPage() {
         setPost(data);
         setTitle(data.title || "");
         setDescription(data.description || "");
-        setTags(data.tags || "");
+        setTags(
+          Array.isArray(data.tags) ? data.tags.join(", ") : data.tags || ""
+        );
         setIsPublished(data.published);
 
         // Parse metadata for engineering content
@@ -88,7 +92,7 @@ export default function EditEngineerPage() {
       } catch (error) {
         setError("Failed to load project");
       } finally {
-        setLoading(false);
+        if (!redirecting) setLoading(false);
       }
     }
     fetchPost();
@@ -119,6 +123,11 @@ export default function EditEngineerPage() {
       setValidationErrors(errors);
       return;
     }
+
+    const tagsArray = String(tags || "")
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
     if (!validateEngRef.current()) {
       return;
     }
@@ -139,7 +148,7 @@ export default function EditEngineerPage() {
           title,
           description,
           metadata: engineeringContent,
-          tags,
+          tags: tagsArray,
           image_url: finalCoverImage,
           published: isPublished,
           updated_at: new Date().toISOString(),
@@ -238,12 +247,32 @@ export default function EditEngineerPage() {
   };
 
   // Loading and error states
-  if (loading) return <div className="loading-spinner">Loading project...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  if (loading) {
+    return (
+      <main id="main-content">
+        <div className="container">
+          <div className="loading-container" role="status">
+            <p>Loading project...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main id="main-content">
+        <div className="container">
+          <div className="error-message" role="alert">
+            {error}
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   // Main editor UI
   return (
-    <main className="post-editor engineering-content-editor">
+    <main id="main-content" className="post-editor engineering-content-editor">
       <div className="edit-header">
         <h1>Edit Engineering Project</h1>
         <div className="actions">

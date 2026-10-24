@@ -1,21 +1,38 @@
 "use client";
 import React from "react";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import "../styles/auth.css";
 
-export default function LoginPage() {
+// Only same-origin paths: "/news/create" is fine, "//evil.com" or "https://..." is not.
+function safeRedirect(value) {
+  if (typeof value !== "string" || !value.startsWith("/")) return "/";
+  if (value.startsWith("//") || value.startsWith("/\\")) return "/";
+  try {
+    const url = new URL(value, "https://www.solcafe.ca");
+    if (url.origin !== "https://www.solcafe.ca") return "/";
+    return url.pathname + url.search + url.hash;
+  } catch {
+    return "/";
+  }
+}
+
+function LoginForm() {
   const [supabase] = useState(() => createClient());
   const [session, setSession] = useState(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = safeRedirect(
+    searchParams.get("redirect") ?? searchParams.get("returnUrl")
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // if already logged in, redirect home
+  // if already logged in (or once sign-in succeeds), go to the requested page
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
     const {
@@ -25,8 +42,8 @@ export default function LoginPage() {
   }, [supabase]);
 
   useEffect(() => {
-    if (session) router.push("/");
-  }, [session, router]);
+    if (session) router.push(redirectTo);
+  }, [session, router, redirectTo]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -49,7 +66,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="auth-container">
+    <main id="main-content" className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
           <h1>Welcome Back</h1>
@@ -91,10 +108,18 @@ export default function LoginPage() {
         </form>
 
         <div className="auth-links">
-          <Link href="/signup">Don&apos;t have an account? Sign up</Link>
           <Link href="/reset-password">Forgot your password?</Link>
         </div>
       </div>
     </main>
+  );
+}
+
+// useSearchParams needs a Suspense boundary for static prerendering.
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

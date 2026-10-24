@@ -1,143 +1,355 @@
-/* =========================
-   Global CSS Variables - SOLARPUNK THEME
-   ========================= */
+/* =========================================================
+   SolCafe: "Window of Light" (reference: design/window-of-light.html)
+   1. Glass       SolCafe's original hues. Never re-tint them.
+   2. Semantic    what components use; redefined for Vespers (dark)
+   3. Architecture  wall, stone, nave, light
+   4. Scales      type, space, radius, layout
+   Contrast fixes live on the text tokens only; glass and surfaces keep
+   the original sky / lime / sun. Text pairs are checked against WCAG AA.
+   ========================================================= */
+
 :root {
-  /* --------- CORE COLOR PALETTE (Primary controls) --------- */
-  /* These variables have the most impact on your site's appearance */
+  /* ---------- 1. Glass ---------- */
+  --sky: #79c9f4;
+  --sky-deep: #4fa6d8;
+  --lime: #a9d86e;
+  --pear: #bfe94e;
+  --forest: #7ca353;
+  --sun: #fdfb75;
+  --sun-deep: #f3d34a;
+  --lead: #1b2822;
 
-  /* Main brand colors */
-  --theme-primary: #79c9f4; /* light-sky-blue (main brand/accent) */
-  --theme-primary-dark: #649fc5; /* air-superiority-blue (dark accent/hover/footer) */
-  --theme-secondary: #a9d86e; /* forest-green (was yellow, now soothing green) */
+  /* ---------- 2. Semantic (Day) ---------- */
+  --page: #f5f7f5;
+  --ink: #1f2a22;
+  --ink-soft: #4b5649;
+  --rule: rgba(31, 42, 34, 0.16);
+  --rule-strong: rgba(31, 42, 34, 0.34);
+  --gold: #d6ad3c; /* ornament only */
+  --gold-ink: #8a6414; /* text: 4.9:1 on page */
+  --leaf-ink: #3b6618; /* text: 6.3:1 on page */
+  --sky-ink: #1d5e86; /* links: 6.4:1 on page */
 
-  /* Background colors */
-  --theme-background: #fefffe; /* pure white for cards and foreground elements */
-  --page-background: #f5f7f5; /* very light gray-green for the page background */
+  --color-bg: var(--page);
+  --color-surface: #fbfcfa;
+  --color-surface-sunk: #edf1ea;
+  --color-text: var(--ink);
+  --color-text-muted: var(--ink-soft);
+  --color-heading: var(--ink);
+  --color-accent: var(--sky-ink);
+  --color-accent-hover: #0e4468;
+  --color-accent-text: var(--page);
+  --color-accent-soft: #e3f1fa;
+  --color-accent-soft-text: #0f3a55;
+  --color-highlight: var(--sun);
+  --color-highlight-text: var(--ink);
+  --color-tag-bg: #e9f3dc;
+  --color-tag-text: #2c4a17;
+  --color-border: #d5dcd2;
+  --color-border-strong: #b5bfb1;
+  --color-focus: var(--gold-ink);
+  --color-code-bg: #0f1b17;
+  --color-code-text: #eef3ea;
+  --color-error: #a3322a;
+  --color-error-bg: #f8e3e0;
+  --color-success: #2e6a35;
+  --color-success-bg: #e2f0dc;
+  --color-warning: #7a5900;
+  --color-overlay: rgba(15, 27, 23, 0.55);
 
-  /* Text colors */
-  --theme-text-primary: #2f382c; /* black-olive for text on colored bg */
-  --theme-text-secondary: #2f382c; /* black-olive for main text on light bg */
-  --theme-text-muted: #b4a260; /* ecru (muted/secondary text) */
+  /* ---------- 3. Architecture ---------- */
+  --wall: #edf1ea;
+  --course: rgba(31, 42, 34, 0.045);
+  --stone: #e2e8de;
+  --stone-edge: #c6d0c1;
+  --nave: #0f1b17;
+  --nave-ink: #eef3ea;
+  --beam-blend: multiply;
+  --beam-alpha: 0.5;
+  --halo: 0.4;
 
-  /* --------- NATURE ELEMENTS (Secondary palette) --------- */
-  /* Greens, yellows and accent colors for nature-inspired elements */
+  /* Pointed-arch mask shared by every arched window (the mock's 600×1000 arch) */
+  --arch-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 1000' preserveAspectRatio='none'><path d='M0 1000 L0 470 A440 440 0 0 1 300 0 A440 440 0 0 1 600 470 L600 1000 Z'/></svg>");
 
-  --forest-green: #a9d86e; /* softer lime green for forest elements */
-  --forest-dark: #7ca353; /* deeper forest green for shadows/depth */
-  --forest-light: #c5e696; /* lighter forest green for highlights */
-  --forest-accent: #bfe94e; /* pear green for accents */
-  --accent-yellow: #fdfb75; /* icterine (yellow now as accent only) */
+  /* Older names kept so author pages keep resolving */
+  --canola-400: var(--sun-deep);
+  --sky-gradient: linear-gradient(135deg, var(--sky) 0%, var(--lime) 64%, var(--sun) 100%);
+  --sky-band: linear-gradient(90deg, var(--sky), var(--lime), var(--sun));
+  --gradient-chinook: linear-gradient(180deg, var(--wall), var(--page));
 
-  /* --------- FUNCTIONAL MAPPINGS --------- */
-  /* Semantic aliases - changing core colors will update these automatically */
+  /* ---------- 4. Scales ---------- */
+  /* next/font sets --font-display / --font-inscr / --font-body on <html> */
+  --ff-display: var(--font-display), "Cormorant Garamond", Garamond, "Times New Roman", serif;
+  --ff-accent: var(--ff-display);
+  --ff-inscr: var(--font-inscr), "Cinzel", "Trajan Pro", "Times New Roman", serif;
+  --ff-body: var(--font-body), "EB Garamond", Garamond, "Times New Roman", serif;
+  --font-sans: var(--ff-body);
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
 
-  --primary-bg: var(--theme-primary);
-  --primary-bg-dark: var(--theme-primary-dark);
-  --secondary-bg: var(--page-background);
-  --primary-text: var(--theme-text-primary);
-  --secondary-text: var(--theme-text-secondary);
-  --highlight-text: var(--theme-secondary);
-  --muted-text: var(--theme-text-muted);
+  /* Garamond body ramp */
+  --text-xs: 0.875rem;
+  --text-sm: 1rem;
+  --text-base: 1.16rem;
+  --text-lg: clamp(1.2rem, 1.1rem + 0.4vw, 1.36rem);
+  /* Cormorant display ramp (small x-height, so set large) */
+  --text-xl: clamp(1.45rem, 1.3rem + 0.7vw, 1.75rem);
+  --text-2xl: clamp(1.7rem, 1.4rem + 1.3vw, 2.2rem);
+  --text-3xl: clamp(2.1rem, 1.6rem + 2.3vw, 3.1rem);
+  --text-4xl: clamp(2.6rem, 1.8rem + 3.6vw, 4.6rem);
+  --accent-sm: 1.15rem;
+  --accent-md: clamp(1.3rem, 1.15rem + 0.7vw, 1.6rem);
+  --accent-lg: clamp(1.6rem, 1.3rem + 1.4vw, 2.35rem);
+  /* Cinzel inscription labels: short labels only, never sentences */
+  --label-size: 0.74rem;
+  --label-tracking: 0.2em;
 
-  /* --------- COMPONENT STYLING --------- */
-  /* Specific styling for UI components */
+  --leading-tight: 1.08;
+  --leading-snug: 1.3;
+  --leading-body: 1.62;
 
-  /* Cards and containers */
-  --card-border: var(--forest-accent); /* pear as a soft border */
-  --card-shadow: rgba(0, 0, 0, 0.05);
-  --card-hover-shadow: rgba(
-    169,
-    216,
-    110,
-    0.25
-  ); /* forest green glow on hover */
-  --forest-border: 2px solid var(--forest-green);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
 
-  /* Text elements */
-  --caption-text: #b4a260; /* ecru */
-  --highlight-bg-subtle: var(--accent-yellow); /* yellow as highlight bg */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
 
-  /* Backgrounds and sections */
-  --primary-bg-subtle: var(
-    --forest-green
-  ); /* forest green for subtle backgrounds */
-  --footer-bg: var(--theme-primary-dark);
-  --footer-text: var(--theme-background);
+  --shadow-sm: 0 1px 2px rgba(15, 27, 23, 0.06), 0 1px 3px rgba(15, 27, 23, 0.08);
+  --shadow-md: 0 4px 12px rgba(15, 27, 23, 0.08), 0 12px 32px rgba(15, 27, 23, 0.06);
 
-  /* --------- GRADIENTS --------- */
-  /* Dramatic visual effects for sections and backgrounds */
+  --focus-outline: 2px solid var(--color-focus);
+  --focus-offset: 4px;
 
-  --hero-gradient: linear-gradient(
-    135deg,
-    var(--theme-primary) 0%,
-    var(--forest-green) 70%,
-    var(--accent-yellow) 100%
-  );
+  --measure: 62ch;
+  --width-page: 74rem;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
 
-  /* Sky-to-forest-to-gold gradient for hero backgrounds */
-  --forest-to-light-gradient: linear-gradient(
-    135deg,
-    var(--forest-dark) 0%,
-    var(--forest-light) 70%,
-    var(--accent-yellow) 100%
-  ); /* Forest-to-gold gradient for nature sections */
-
-  /* --------- UTILITY & ACCESSIBILITY --------- */
-  /* Helper colors for specific UI needs */
-
-  --neutral-light: #fefffe; /* white - needed for skip-link */
-  --light-overlay: rgba(254, 255, 254, 0.1);
-  --light-line: rgba(254, 255, 254, 0.3);
-  --overlay-dark: rgba(100, 159, 197, 0.85); /* air-superiority-blue */
-
-  /* --------- STATUS COLORS --------- */
-  /* Colors for notifications, alerts, and feedback */
-
-  --error-bg-subtle: rgba(235, 87, 87, 0.1); /* light red background */
-  --error-text: #d64545; /* brick red - accessible and less jarring */
-  --warning-text: #e69c41; /* amber orange for warnings */
-  --success-text: #3aab58; /* green for success messages */
+  color-scheme: light;
 }
 
-/* =========================
-   Global Styles
-   ========================= */
-* {
-  margin: 0;
-  padding: 0;
+/* ---------- Vespers: system preference unless the visitor chose Day ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0b1512;
+    --ink: #eaf0e5;
+    --ink-soft: #b7c2ae;
+    --rule: rgba(234, 240, 229, 0.14);
+    --rule-strong: rgba(234, 240, 229, 0.32);
+    --gold: #e2c068;
+    --gold-ink: #e2c068;
+    --leaf-ink: #c3e590;
+    --sky-ink: #9fd6f7;
+    --color-surface: #111f1a;
+    --color-surface-sunk: #08110e;
+    --color-accent-hover: #c9e9fb;
+    --color-accent-soft: #12303f;
+    --color-accent-soft-text: #cfeaf9;
+    --color-highlight-text: #0b1512;
+    --color-tag-bg: #17281f;
+    --color-tag-text: #c3e590;
+    --color-border: #24342d;
+    --color-border-strong: #3a4d43;
+    --color-code-bg: #060d0b;
+    --color-code-text: #eaf0e5;
+    --color-error: #ff9e92;
+    --color-error-bg: #3a1d1a;
+    --color-success: #9bd59a;
+    --color-success-bg: #18301c;
+    --color-warning: #e2c068;
+    --color-overlay: rgba(0, 0, 0, 0.6);
+    --wall: #0c1613;
+    --course: rgba(234, 240, 229, 0.035);
+    --stone: #1a2722;
+    --stone-edge: #2a3a32;
+    --nave: #060d0b;
+    --beam-blend: screen;
+    --beam-alpha: 0.34;
+    --halo: 0.26;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --page: #0b1512;
+  --ink: #eaf0e5;
+  --ink-soft: #b7c2ae;
+  --rule: rgba(234, 240, 229, 0.14);
+  --rule-strong: rgba(234, 240, 229, 0.32);
+  --gold: #e2c068;
+  --gold-ink: #e2c068;
+  --leaf-ink: #c3e590;
+  --sky-ink: #9fd6f7;
+  --color-surface: #111f1a;
+  --color-surface-sunk: #08110e;
+  --color-accent-hover: #c9e9fb;
+  --color-accent-soft: #12303f;
+  --color-accent-soft-text: #cfeaf9;
+  --color-highlight-text: #0b1512;
+  --color-tag-bg: #17281f;
+  --color-tag-text: #c3e590;
+  --color-border: #24342d;
+  --color-border-strong: #3a4d43;
+  --color-code-bg: #060d0b;
+  --color-code-text: #eaf0e5;
+  --color-error: #ff9e92;
+  --color-error-bg: #3a1d1a;
+  --color-success: #9bd59a;
+  --color-success-bg: #18301c;
+  --color-warning: #e2c068;
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --wall: #0c1613;
+  --course: rgba(234, 240, 229, 0.035);
+  --stone: #1a2722;
+  --stone-edge: #2a3a32;
+  --nave: #060d0b;
+  --beam-blend: screen;
+  --beam-alpha: 0.34;
+  --halo: 0.26;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
-  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Use viewport height to ensure full height */
-  font-family: arial, sans-serif;
-  line-height: 1.6;
-  background: var(--page-background); /* slightly darker background */
-  color: var(--secondary-text);
-  text-align: center;
+  font-family: var(--ff-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 main {
-  flex: 1 0 auto; /* This makes the main content area grow to push footer down */
+  flex: 1 0 auto;
   width: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* The gap above the footer lives on the page, not on the footer */
+  padding-bottom: var(--space-8);
 }
 
-/* Global utility styles only */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-heading);
+  line-height: var(--leading-tight);
+  font-family: var(--ff-display);
+  font-weight: 500;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-sm);
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+pre,
+code {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--color-highlight);
+  color: var(--color-highlight-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   Utilities and shared primitives
+   ========================================================= */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  width: 100%;
+  max-width: var(--width-page);
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
 .sr-only {
@@ -152,123 +364,538 @@ main {
   border-width: 0;
 }
 
-/* Accessibility */
 .skip-link {
-  background: var(--primary-bg-dark);
-  color: var(--neutral-light);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  position: relative;
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
   z-index: 1000;
-  display: inline-block;
-  margin: 1rem 0;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--page);
+  font-family: var(--ff-inscr);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-200%);
 }
 
 .skip-link:focus {
-  outline: 2px dashed var(--highlight-text);
-  outline-offset: 2px;
+  transform: none;
+  color: var(--page);
 }
 
-/* Apply improved footer with sky-to-forest gradient */
-footer {
-  flex-shrink: 0;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--theme-primary-dark) 0%,
-    var(--forest-dark) 85%,
-    var(--accent-yellow) 100%
-  );
-  color: var(--footer-text);
-  padding: 2rem 0;
-  box-shadow: 0 -4px 16px rgba(169, 216, 110, 0.15);
+/* Inscription capitals (Cinzel): short labels, dates, kickers */
+.inscr,
+.eyebrow,
+.meta {
+  display: inline-block;
+  font-family: var(--ff-inscr);
+  font-size: var(--label-size);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  line-height: 1.6;
 }
 
-/* Forest-themed card styling */
-.card {
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  background-color: var(--card-bg); /* pure white cards */
-  box-shadow: 0 3px 8px var(--card-shadow);
-  transition: all 0.2s ease;
+.eyebrow {
+  color: var(--gold-ink);
 }
 
-.card:hover {
-  box-shadow: 0 5px 15px var(--card-hover-shadow);
-  border-color: var(--forest-green);
+.meta {
+  color: var(--gold-ink);
 }
 
-/* Nature-inspired section styling */
-.nature-section {
-  background: var(--forest-to-light-gradient);
-  padding: 2rem;
-  border-radius: 12px;
-  color: var(--theme-text-primary);
+/* Cormorant italic for quotes and epigraphs */
+.accent-italic {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 500;
 }
 
-/* Primary buttons with forest hover */
-.btn-primary {
-  background-color: var(--theme-primary);
-  color: var(--theme-text-primary);
-  border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--theme-primary-dark);
-  box-shadow: 0 0 0 3px var(--forest-light);
-}
-
-/* Green eco-buttons for sustainability actions */
-.btn-eco {
-  background-color: var(--forest-green);
-  color: var(--theme-text-primary);
-  border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-eco:hover {
-  background-color: var(--forest-dark);
-}
-
-/* Accent sections with subtle patterns */
-.accent-section {
-  position: relative;
-  background-color: var(--forest-light);
-  border-left: 4px solid var(--forest-dark);
-  padding: 1.5rem;
-  margin: 2rem 0;
-  border-radius: 0 8px 8px 0;
-}
-
-/* Forest border for important content */
-.forest-border {
-  border: var(--forest-border);
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-/* Role icon shared styles */
-.role-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1.5rem;
-  display: flex;
+/* Buttons: inscription caps on ink, with a gilded edge */
+.btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
+  min-height: 3rem;
+  padding: 0.8rem 1.6rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--ff-inscr);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, color 0.3s ease, background-color 0.3s ease;
 }
 
-.role-icon img {
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--page);
+  box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 4px transparent;
+}
+
+.btn--primary:hover {
+  color: var(--page);
+  box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 4px rgba(214, 173, 60, 0.28);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.btn--secondary:hover {
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--color-error);
+  box-shadow: inset 0 0 0 1px var(--color-error);
+}
+
+.btn--danger:hover {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.btn--sm {
+  min-height: 2.75rem; /* keep a 44px target */
+  padding: 0.5rem 1.1rem;
+}
+
+/* Tags as glass beads: a small lozenge of glass, then the word */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ff-inscr);
+  font-size: var(--label-size);
+  font-weight: 500;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.tag::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  background: var(--bead, var(--lime));
+  box-shadow: 0 0 0 1px var(--lead);
+}
+
+.tag-list > li:nth-child(3n + 1) .tag,
+.tag-list > .tag:nth-child(3n + 1) {
+  --bead: var(--sun);
+}
+
+.tag-list > li:nth-child(3n + 2) .tag,
+.tag-list > .tag:nth-child(3n + 2) {
+  --bead: var(--lime);
+}
+
+.tag-list > li:nth-child(3n) .tag,
+.tag-list > .tag:nth-child(3n) {
+  --bead: var(--sky);
+}
+
+/* Generic card (legacy pages such as /about/roles) */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Status messages */
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunk);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.notice--error {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border-color: transparent;
+}
+
+.empty-note {
+  padding: var(--space-7) var(--space-4);
+  text-align: center;
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+}
+
+/* Section head: Cormorant title, a gilded rule with a lozenge, a quiet link */
+.sec-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.sec-head__title {
+  font-size: var(--text-3xl);
+}
+
+.sec-head__rule {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.sec-head__rule::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-2px, -50%) rotate(45deg);
+  background: var(--gold);
+}
+
+.sec-head__link {
+  font-family: var(--ff-inscr);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  padding-block: 0.7rem;
+}
+
+.sec-head__link:hover {
+  color: var(--gold-ink);
+}
+
+@media (max-width: 680px) {
+  .sec-head {
+    grid-template-columns: 1fr auto;
+  }
+
+  .sec-head__rule {
+    display: none;
+  }
+}
+
+/* Page intro shared by index pages: inscription, Cormorant title, italic lede */
+.page-intro {
+  padding-block: var(--space-7) var(--space-6);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.page-intro__title {
+  font-size: var(--text-4xl);
+  font-weight: 400;
+}
+
+.page-intro__lede {
+  max-width: 44rem;
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--accent-lg);
+  line-height: 1.3;
+  color: var(--color-text-muted);
+}
+
+.page-intro__actions {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.page-intro__actions:empty {
+  display: none;
+}
+
+/* =========================================================
+   Glass
+   ========================================================= */
+
+/* A post's window: image or glass inside a gilded pointed arch */
+.arch-window {
+  position: relative;
+  display: block;
+  padding: 6px;
+  aspect-ratio: var(--arch-ratio, 3 / 4);
+}
+
+.arch-window::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  background: linear-gradient(180deg, var(--gold), var(--stone-edge));
+}
+
+.arch-window__glass {
+  position: relative;
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  overflow: hidden;
+  -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat;
+  mask: var(--arch-mask) center / 100% 100% no-repeat;
+  background: var(--lead);
+}
+
+.arch-window__img,
+.glass-panel {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  transition: transform 0.8s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:hover .arch-window__img,
+  a:hover .glass-panel,
+  .zoom:hover .arch-window__img,
+  .zoom:hover .glass-panel {
+    transform: scale(1.035);
+  }
+}
+
+/* Slow turning: turbine blades and the great rose */
+.rotor {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: glass-spin 18s linear infinite;
+}
+
+.rose-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: glass-spin 300s linear infinite;
+}
+
+@keyframes glass-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotor,
+  .rose-ring {
+    animation: none !important;
+  }
+}
+
+/* Older cover fallback (author pages); the glass gradient in place of the sky */
+.sky-fill {
+  background: var(--sky-gradient);
+}
+
+.cover__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* =========================================================
+   Copy slots: a ruled page waiting for the builder's words
+   (components/common/CopySlot.jsx)
+   ========================================================= */
+.scribe {
+  --lh: 1.85rem;
+  position: relative;
+  display: grid;
+  padding-left: 14px;
+  border-left: 1px solid var(--rule-strong);
+  color: var(--ink);
+  text-align: left;
+}
+
+.scribe--display {
+  --lh: clamp(3rem, 6vw, 4.6rem);
+}
+
+.scribe--heading {
+  --lh: 3rem;
+}
+
+.scribe--lede {
+  --lh: 2.1rem;
+}
+
+.scribe--small {
+  --lh: 1.3rem;
+}
+
+.scribe--inline {
+  display: inline-grid;
+  min-width: 150px;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.scribe__ln {
+  height: var(--lh);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.scribe__ln ~ .scribe__ln ~ .scribe__ln:nth-last-child(2) {
+  width: 88%;
+}
+
+.scribe__ln ~ .scribe__ln:last-child {
+  width: 64%;
+}
+
+.scribe__tag {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  max-width: calc(100% - 14px);
+  transform: translateY(-50%);
+  padding-right: 0.6rem;
+  background: var(--scribe-bg, var(--color-bg));
+  color: var(--gold-ink);
+  font-family: var(--ff-inscr);
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scribe--inline .scribe__tag {
+  left: 0;
+}
+
+/* The slot's name set at the real size, so the type scale reads first */
+.scribe__ghost {
+  position: absolute;
+  left: 14px;
+  right: 0;
+  top: 0;
+  height: var(--lh);
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 0.1em;
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: calc(var(--lh) * 0.72);
+  line-height: 1;
+  color: currentColor;
+  opacity: 0.14;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* =========================================================
+   Empty state: a small window and the section's copy slot
+   ========================================================= */
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-4) var(--space-7);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+
+.empty-state__window {
+  width: min(100%, 9rem);
+}
+
+.empty-state__text {
+  width: min(100%, 32rem);
+  margin-inline: auto;
+}
+
+/* =========================================================
+   Hover affordances and reveals (motion-safe)
+   ========================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition: transform 0.3s ease;
+  }
+
+  .lift:hover,
+  .lift:focus-within {
+    transform: translateY(-3px);
+  }
+
+  [data-reveal] {
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition-delay: calc(var(--reveal-i, 0) * 90ms);
+  }
+
+  html[data-js] [data-reveal]:not(.is-in) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Long strings (URLs, quotes) never force sideways scroll */
+.article__body,
+.article__sources,
+.article__pullquote,
+.article__notes {
+  overflow-wrap: anywhere;
 }

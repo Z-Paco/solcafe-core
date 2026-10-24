@@ -1,174 +1,118 @@
 import React from "react";
 import Link from "next/link";
+import Chronicle from "./Chronicle";
+import CopySlot from "./CopySlot";
+import Lancet from "./Lancet";
+import SectionHead from "./SectionHead";
+import HeroWindow from "../glass/HeroWindow";
+import LightBeams from "../glass/LightBeams";
+import Motes from "../glass/Motes";
+import RoseWindow from "../glass/RoseWindow";
+import { listPublished } from "@/lib/posts";
 import "../../app/styles/home.css";
+import "../../app/styles/collections.css";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [news, art, engineering] = await Promise.all([
+    listPublished("news", 3),
+    listPublished("art", 1),
+    listPublished("engineering", 1),
+  ]);
+
   return (
-    <main id="main-content">
-      {/* Hero section with visual impact */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1>Solcafe</h1>
-          <h2>Envisioning a Sustainable Future Through Stewardship</h2>
-          <p className="hero-subtitle">
-            A community where faith, creativity, and innovation intersect to
-            create a brighter, greener tomorrow
-          </p>
-          <div className="hero-cta">
-            <Link href="/about" className="btn-primary">
-              Learn More
-            </Link>
-            <Link href="/signup" className="btn-eco">
-              Join Our Community
-            </Link>
+    <main id="main-content" className="home">
+      {/* The nave: a window of light falling across the stone onto the words */}
+      <section className="nave" aria-labelledby="home-title">
+        <LightBeams className="nave__beams" />
+        <Motes className="nave__motes" />
+        <div className="nave__inner container">
+          <div className="nave__text">
+            <p className="inscr nave__eyebrow">News · Art · Engineering</p>
+            <CopySlot
+              id="home.mission"
+              as="h1"
+              size="display"
+              label="Headline · your words"
+              ghost="Your headline"
+              fallback="SolCafe"
+              htmlId="home-title"
+              className="nave__title"
+              lines={2}
+            />
+            <CopySlot
+              id="home.lede"
+              as="p"
+              size="lede"
+              label="A sentence or two"
+              ghost="your opening sentence"
+              className="nave__lede"
+              lines={3}
+            />
+            <div className="nave__actions">
+              <Link href="/news" className="btn btn--primary">
+                Read the news
+              </Link>
+              <Link href="/about" className="btn btn--secondary">
+                About SolCafe
+              </Link>
+            </div>
+          </div>
+          <div className="nave__window">
+            <span className="nave__halo" aria-hidden="true" />
+            <HeroWindow className="nave__glass" />
           </div>
         </div>
       </section>
 
-      {/* Explanation section */}
-      <section className="mission-section card">
-        <h2>Our Mission</h2>
-        <p>
-          Solcafe is where sustainability meets community. We bring together
-          artists, engineers, and knowledge keepers to collaborate on projects
-          that care for our Earth while building vibrant communities.
-        </p>
-        <p>
-          Inspired by solarpunk ideals and grounded in our commitment to
-          stewardship, we&apos;re creating spaces that spark creativity and inspire
-          meaningful change.
-        </p>
+      <section className="home-section container" aria-labelledby="home-news-heading">
+        <SectionHead id="home-news-heading" title="Latest news" href="/news" linkLabel="All news" />
+        <Chronicle posts={news.posts} error={news.error} />
       </section>
 
-      {/* Content categories section */}
-      <section className="features-section">
-        <h2>Explore Our Community</h2>
-        <div className="features-grid">
-          <div className="feature card">
-            <div className="feature-icon">🎨</div>
-            <h3>Art & Creativity</h3>
-            <p>
-              Discover and share solarpunk-inspired artwork, stories, and
-              creative visions.
-            </p>
-            <Link href="/art" className="feature-link">
-              Explore Art <span className="arrow">→</span>
-            </Link>
-          </div>
-
-          <div className="feature card">
-            <div className="feature-icon">⚙️</div>
-            <h3>Engineering & Projects</h3>
-            <p>
-              See sustainable projects, share your own work, and join
-              engineering discussions.
-            </p>
-            <Link href="/engineer" className="feature-link">
-              Explore Engineering <span className="arrow">→</span>
-            </Link>
-          </div>
-
-          <div className="feature card">
-            <div className="feature-icon">📰</div>
-            <p>
-              Stay informed with community news, research, and the latest
-              sustainability insights.
-            </p>
-            <Link href="/news" className="feature-link">
-              Read News <span className="arrow">→</span>
-            </Link>
-          </div>
+      <section className="home-section container" aria-labelledby="home-works-heading">
+        <SectionHead id="home-works-heading" title="Art & engineering" />
+        <div className="lancets">
+          <RoseWindow variant="oculus" className="lancets__oculus" />
+          <Lancet post={art.posts[0]} type="art" emptySlot="art.empty" />
+          <Lancet post={engineering.posts[0]} type="engineering" emptySlot="engineer.empty" />
         </div>
       </section>
 
-      {/* Roles Explanation Section */}
-      <section className="roles-section">
-        <h2>Choose Your Role</h2>
-        <p className="roles-intro">
-          Solcafe welcomes all who want to build a better future. Your expertise
-          will grow and develop as you explore posts made by the community.
-          Choose where you fit best:
-        </p>
-
-        <div className="roles-grid">
-          {/* Dreamer Role Card */}
-          <div className="role-card card">
-            <div className="role-icon">
-              <img src="/images/icons/dreamer-icon.svg" alt="Dreamer icon" />
-            </div>
-            <h3>Dreamer</h3>
-            <p>
-              Artists, visionaries, and storytellers who imagine sustainable
-              futures through creative expression.
-            </p>
-            <ul className="role-traits">
-              <li>Create inspiring art and stories</li>
-              <li>Envision how spaces could be transformed</li>
-              <li>Share hopeful visions of the future</li>
-            </ul>
-          </div>
-
-          {/* Techie Role Card */}
-          <div className="role-card card">
-            <div className="role-icon">
-              <img src="/images/icons/techie-icon.svg" alt="Techie icon" />
-            </div>
-            <h3>Techie</h3>
-            <p>
-              Engineers, makers, and problem-solvers who build practical
-              solutions for sustainable living.
-            </p>
-            <ul className="role-traits">
-              <li>Design sustainable technologies</li>
-              <li>Build and share DIY projects</li>
-              <li>Collaborate on technical challenges</li>
-            </ul>
-          </div>
-
-          {/* Book Keeper Role Card */}
-          <div className="role-card card">
-            <div className="role-icon">
-              <img
-                src="/images/icons/bookkeeper-icon.svg"
-                alt="Book Keeper icon"
+      {/* The canticle: the lens, under the great rose */}
+      <section className="canticle" aria-labelledby="home-lens-heading">
+        <div className="canticle__inner container">
+          <RoseWindow variant="big" className="canticle__rose" />
+          <div className="canticle__text">
+            <p className="inscr canticle__eyebrow">The lens</p>
+            <CopySlot
+              id="home.lens.heading"
+              as="h2"
+              size="heading"
+              label="Heading"
+              ghost="Your heading"
+              fallback="The lens"
+              htmlId="home-lens-heading"
+            />
+            <CopySlot id="home.lens.body" as="p" size="lede" label="A few sentences" lines={4} />
+            <figure className="canticle__epigraph">
+              <CopySlot
+                id="home.lens.epigraph"
+                as="blockquote"
+                size="lede"
+                label="Epigraph, cited"
+                className="accent-italic"
+                lines={2}
               />
+              <figcaption>
+                <CopySlot id="home.lens.epigraphSource" as="span" size="small" label="Source" />
+              </figcaption>
+            </figure>
+            <div>
+              <Link href="/about" className="btn btn--primary canticle__btn">
+                About SolCafe
+              </Link>
             </div>
-            <h3>Book Keeper</h3>
-            <p>
-              Researchers, writers, and knowledge-sharers who collect and
-              preserve wisdom for future generations.
-            </p>
-            <ul className="role-traits">
-              <li>Research sustainable practices</li>
-              <li>Document successful projects</li>
-              <li>Share educational resources</li>
-            </ul>
           </div>
-        </div>
-
-        <div className="roles-cta">
-          <p>
-            Most members contribute across multiple roles - find where your
-            passion leads you!
-          </p>
-          <Link href="/about#roles" className="btn-eco">
-            Learn More About Roles
-          </Link>
-        </div>
-      </section>
-
-      {/* Community highlights or call to action */}
-      <section className="join-section">
-        <div className="join-content">
-          <h2>Join a Growing Movement</h2>
-          <p>
-            Connect with others who share your passion for creating a more
-            sustainable and beautiful world. Whether you&apos;re a dreamer, a
-            builder, or a knowledge keeper, there&apos;s a place for you at Solcafe.
-          </p>
-          <Link href="/signup" className="btn-primary">
-            Get Started Today
-          </Link>
         </div>
       </section>
     </main>

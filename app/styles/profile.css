@@ -2,9 +2,9 @@
   max-width: 900px;
   margin: 2rem auto;
   padding: 2rem 1.5rem;
-  background: var(--secondary-bg);
+  background: var(--color-surface);
   border-radius: 14px;
-  box-shadow: 0 2px 16px var(--card-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Profile header with avatar and info */
@@ -20,7 +20,7 @@
   height: 120px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid var(--highlight-text);
+  border: 3px solid var(--color-accent);
   position: relative; /* For positioning the role emblem*/
 }
 
@@ -37,20 +37,20 @@
   right: -10px;
   width: 40px;
   border-radius: 50%;
-  background: var(--highlight-text);
+  background: var(--color-highlight);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--secondary-bg);
+  border: 2px solid var(--color-surface);
 }
 
 .profile-info h1 {
   margin-bottom: 0.5rem;
-  color: var(--secondary-text);
+  color: var(--color-text);
 }
 
 .username {
-  color: var(--muted-text);
+  color: var(--color-text-muted);
   margin-bottom: 0.7rem;
 }
 /* Role Styling */
@@ -66,20 +66,20 @@
 }
 
 .primary {
-  color: var(--primary-bg-dark);
+  color: var(--color-accent);
 }
 
 .secondary {
-  color: var(--muted-text);
+  color: var(--color-text-muted);
 }
 
 .role-separator {
-  color: var(--muted-text);
+  color: var(--color-text-muted);
 }
 
 .role-level {
-  background: var(--highlight-text);
-  color: var(--secondary-bg);
+  background: var(--color-highlight);
+  color: var(--color-accent-text);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -90,9 +90,9 @@
 .role-journey {
   margin: 2rem 0;
   padding: 1rem;
-  background: var(--primary-bg);
+  background: var(--color-accent-soft);
   border-radius: 10px;
-  color: var(--primary-text);
+  color: var(--color-text);
 }
 
 .journey-path {
@@ -106,7 +106,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background: var(--light-overlay);
+  background: var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,21 +115,21 @@
 }
 
 .journey-active {
-  background: var(--highlight-text);
-  color: var(--secondary-bg);
+  background: var(--color-highlight);
+  color: var(--color-accent-text);
 }
 
 .journey-line {
   flex-grow: 1;
   height: 3px;
-  background: var(--light-line);
+  background: var(--color-border-strong);
 }
 /* Tabs for navigation */
 .profile-tabs {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 1rem;
 }
 
@@ -139,13 +139,13 @@
   border: none;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--muted-text);
+  color: var(--color-text-muted);
   cursor: pointer;
 }
 
 .tab.active {
-  color: var(--primary-bg-dark);
-  border-bottom: 3px solid var(--highlight-text);
+  color: var(--color-accent);
+  border-bottom: 3px solid var(--color-accent);
 }
 
 /* Content section */
@@ -155,7 +155,7 @@
 
 .placeholder-text {
   text-align: center;
-  color: var(--muted-text);
+  color: var(--color-text-muted);
   padding: 3rem 1rem;
 }
 
@@ -190,7 +190,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: var(--highlight-bg-subtle);
+  background: var(--color-tag-bg);
   border-radius: 8px;
 }
 
@@ -198,8 +198,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--highlight-text);
-  color: var(--neutral-light);
+  background: var(--color-highlight);
+  color: var(--color-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,7 +219,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: var(--primary-bg-subtle);
+  background: var(--color-tag-bg);
   border-radius: 8px;
   transition: transform 0.2s;
 }
@@ -230,7 +230,7 @@
 
 .milestone-icon {
   font-size: 1.5rem;
-  color: var(--primary-bg-dark);
+  color: var(--color-accent);
 }
 
 /* Settings form */
@@ -252,13 +252,13 @@
 .form-group textarea {
   width: 100%;
   padding: 0.8rem;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
 }
 
 .settings-save-btn {
-  background: var(--primary-bg-dark);
-  color: var(--neutral-light);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
@@ -267,7 +267,7 @@
 }
 
 .settings-save-btn:hover {
-  background: var(--primary-bg);
+  background: var(--color-accent-hover);
 }
 
 /* Avatar upload component */
@@ -297,8 +297,8 @@
 }
 
 .upload-button {
-  background: var(--highlight-text);
-  color: var(--secondary-bg);
+  background: var(--color-highlight);
+  color: var(--color-accent-text);
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 4px;
@@ -307,7 +307,7 @@
 }
 
 .upload-button:disabled {
-  background: var(--muted-text);
+  background: var(--color-border-strong);
   cursor: not-allowed;
 }
 
@@ -357,8 +357,8 @@
 }
 
 .success-message {
-  background-color: var(--highlight-bg-subtle);
-  color: var(--primary-bg-dark);
+  background-color: var(--color-tag-bg);
+  color: var(--color-accent);
   padding: 0.8rem;
   border-radius: 4px;
   margin-bottom: 1rem;

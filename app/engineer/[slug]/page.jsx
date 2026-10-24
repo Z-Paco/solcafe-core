@@ -1,322 +1,207 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import React from "react";
+import { notFound } from "next/navigation";
+import ArticleHeader from "@/components/common/ArticleHeader";
+import PostImage from "@/components/common/PostImage";
+import PostFooter from "@/components/common/PostFooter";
+import ReadingProgress from "@/components/common/ReadingProgress";
+import { getAdjacent, getPostForViewer, getRelated } from "@/lib/posts";
+import {
+  asArray,
+  asRecord,
+  excerpt,
+  readingMinutes,
+  safeImageSrc,
+  toParagraphs,
+} from "@/lib/content";
 import "../../styles/templates/postDetail.css";
 
-export default function EngineeringPostPage() {
-  const params = useParams();
-  const router = useRouter();
-  const { slug } = params;
-  const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userOwnsPost, setUserOwnsPost] = useState(false);
-
-  // Fetch post data and user role
-  useEffect(() => {
-    async function fetchPost() {
-      if (!slug) return;
-
-      try {
-        // Fetch post
-        const { data, error } = await supabase
-          .from("posts")
-          .select("*, profiles(username, avatar_url)")
-          .eq("slug", slug)
-          .eq("content_type", "engineering")
-          .single();
-
-        if (error) throw error;
-        if (!data) {
-          setError("Project not found");
-          return;
-        }
-        setPost(data);
-
-        if (session && data.user_id === session.user.id) {
-          setUserOwnsPost(true);
-        }
-      } catch (err) {
-        console.error("Error fetching project:", err);
-        setError("Failed to load project. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchPost();
-  }, [slug, supabase, session]);
-
-  // Handle delete post
-  const handleDeletePost = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this project? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-
-    try {
-      const { error } = await supabase.from("posts").delete().eq("id", post.id);
-
-      if (error) throw error;
-
-      router.push("/engineer");
-    } catch (err) {
-      console.error("Error deleting project:", err);
-      alert("Failed to delete project. Please try again.");
-    }
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = await getPostForViewer("engineering", slug);
+  if (!post) return { title: "Not found" };
+  const image = safeImageSrc(post.image_url);
+  return {
+    title: post.title,
+    description: excerpt(post.description, 160),
+    alternates: { canonical: `/engineer/${post.slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: excerpt(post.description, 160),
+      ...(image ? { images: [image] } : {}),
+    },
+    ...(post.published ? {} : { robots: { index: false } }),
   };
+}
 
-  if (loading) {
-    return (
-      <main>
-        <div className="container">
-          <div className="loading">Loading project details...</div>
-        </div>
-      </main>
-    );
-  }
+const text = (v) => (typeof v === "string" ? v.trim() : "");
 
-  if (error || !post) {
-    return (
-      <main>
-        <div className="container">
-          <div className="error-message">{error || "Project not found"}</div>
-          <Link href="/engineer" className="back-button">
-            Back to Engineering Projects
-          </Link>
-        </div>
-      </main>
-    );
-  }
+export default async function EngineeringPostPage({ params }) {
+  const { slug } = await params;
+  const post = await getPostForViewer("engineering", slug);
+  if (!post) notFound();
 
-  const canEditOrDelete = userOwnsPost;
+  const metadata = asRecord(post.metadata);
+  const [adjacent, moreLikeThis] = post.published
+    ? await Promise.all([getAdjacent(post), getRelated(post)])
+    : [{ older: null, newer: null }, []];
+  const overview = toParagraphs(metadata.overview);
+  const difficulty = text(metadata.difficulty);
+  const timeRequired = text(metadata.timeRequired);
+  const materials = asArray(metadata.materials).filter((m) => text(m.name));
+  const schematics = asArray(metadata.schematics).filter((s) =>
+    safeImageSrc(s.url)
+  );
+  const steps = asArray(metadata.steps).filter(
+    (s) => text(s.title) || text(s.description)
+  );
+  const snippets = asArray(metadata.codeSnippets).filter((s) => text(s.code));
 
   return (
-    <main>
-      <div className="container">
-        <div className="post-detail engineering-post">
-          <div className="post-header">
-            <Link href="/engineer" className="back-button">
-              ← Back to Projects
-            </Link>
-
-            <h1 className="post-title">{post.title}</h1>
-
-            {post.tags && post.tags.length > 0 && (
-              <div className="post-tags">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {canEditOrDelete && (
-              <div className="post-actions">
-                <Link
-                  href={`/engineer/edit/${post.slug}`}
-                  className="edit-button"
-                >
-                  Edit
-                </Link>
-                <button className="delete-button" onClick={handleDeletePost}>
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="post-meta">
-            <div className="author-info">
-              <img
-                src={post.profiles?.avatar_url || "/images/default-avatar.jpg"}
-                alt={post.profiles?.username || "User"}
-                className="author-avatar"
-              />
-              <span className="author-name">
-                {post.profiles?.username || "Anonymous"}
-              </span>
-            </div>
-            <div className="post-date">
-              {new Date(post.created_at).toLocaleDateString()}
-            </div>
-          </div>
-
-          <div className="post-description">{post.description}</div>
-
-          {/* Featured image */}
-          <div className="featured-image">
-            <img src={post.image_url} alt={post.title} />
-          </div>
-
-          {/* Engineering metadata */}
-          {post.metadata && (
-            <div className="engineering-content">
-              {/* Project overview */}
-              {post.metadata.overview && (
-                <div className="section">
-                  <h2>Project Overview</h2>
-                  <div className="project-overview">
-                    {post.metadata.overview}
-                  </div>
-                </div>
-              )}
-
-              {/* Project metadata */}
-              <div className="project-meta-container">
-                {post.metadata.difficulty && (
-                  <div className="project-meta-item">
-                    <div className="meta-icon">⚙️</div>
-                    <div className="meta-label">Difficulty</div>
-                    <div className="meta-value">
-                      {post.metadata.difficulty.charAt(0).toUpperCase() +
-                        post.metadata.difficulty.slice(1)}
-                    </div>
-                  </div>
-                )}
-
-                {post.metadata.timeRequired && (
-                  <div className="project-meta-item">
-                    <div className="meta-icon">⏱️</div>
-                    <div className="meta-label">Time Required</div>
-                    <div className="meta-value">
-                      {post.metadata.timeRequired}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Materials list */}
-              {post.metadata.materials &&
-                post.metadata.materials.length > 0 && (
-                  <div className="section">
-                    <h2>Materials</h2>
-                    <ul className="materials-list">
-                      {post.metadata.materials.map((material, index) => (
-                        <li key={index} className="material-item">
-                          <span className="material-name">{material.name}</span>
-                          {material.quantity && (
-                            <span className="material-quantity">
-                              {material.quantity} {material.unit || ""}
-                            </span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-              {/* Schematics/diagrams */}
-              {post.metadata.schematics &&
-                post.metadata.schematics.length > 0 && (
-                  <div className="section">
-                    <h2>Schematics & Diagrams</h2>
-                    <div className="schematics-gallery">
-                      {post.metadata.schematics.map((schematic, index) => (
-                        <div key={index} className="schematic-item">
-                          <img
-                            src={schematic.url}
-                            alt={schematic.caption || `Schematic ${index + 1}`}
-                          />
-                          {schematic.caption && (
-                            <div className="schematic-caption">
-                              {schematic.caption}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-              {/* Build steps */}
-              {post.metadata.steps && post.metadata.steps.length > 0 && (
-                <div className="section">
-                  <h2>Build Steps</h2>
-                  <div className="steps-list">
-                    {post.metadata.steps.map((step, index) => (
-                      <div key={index} className="step-item">
-                        <div className="step-header">
-                          <div className="step-number">{index + 1}</div>
-                          {step.title && (
-                            <h3 className="step-title">{step.title}</h3>
-                          )}
-                        </div>
-                        <div className="step-content">
-                          {step.imageUrl && (
-                            <div className="step-image">
-                              <img
-                                src={step.imageUrl}
-                                alt={`Step ${index + 1}`}
-                              />
-                            </div>
-                          )}
-                          <div className="step-description">
-                            {step.description}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Code snippets */}
-              {post.metadata.codeSnippets &&
-                post.metadata.codeSnippets.length > 0 && (
-                  <div className="section">
-                    <h2>Code Snippets</h2>
-                    <div className="code-snippets">
-                      {post.metadata.codeSnippets.map((snippet, index) => (
-                        <div key={index} className="code-snippet">
-                          <div className="snippet-header">
-                            {snippet.description && (
-                              <div className="snippet-description">
-                                {snippet.description}
-                              </div>
-                            )}
-                            {snippet.language && (
-                              <div className="snippet-language">
-                                {snippet.language}
-                              </div>
-                            )}
-                          </div>
-                          <pre className="code-block">
-                            <code>{snippet.code}</code>
-                          </pre>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-            </div>
+    <main id="main-content" className="article article--engineering">
+      <ReadingProgress />
+      <div className="article__container" id="article-body">
+        <ArticleHeader
+          post={post}
+          backHref="/engineer"
+          backLabel="All projects"
+          eyebrow="Engineering"
+          editHref={`/engineer/edit/${post.slug}`}
+          noun="project"
+          readMinutes={readingMinutes(
+            post.description,
+            metadata.overview,
+            ...steps.map((s) => s.description)
           )}
+        />
 
-          {/* Comment section placeholder */}
-          <div className="comments-section">
-            <h3>Comments</h3>
-            <div className="comments-placeholder">
-              <p>Comments feature coming soon</p>
+        {(difficulty || timeRequired) && (
+          <dl className="article__facts">
+            {difficulty && (
+              <div>
+                <dt>Difficulty</dt>
+                <dd className="article__capitalize">{difficulty}</dd>
+              </div>
+            )}
+            {timeRequired && (
+              <div>
+                <dt>Time required</dt>
+                <dd>{timeRequired}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+
+        {safeImageSrc(post.image_url) && (
+          <figure className="article__figure article__figure--wide">
+            <PostImage src={post.image_url} alt="" className="article__img" priority />
+          </figure>
+        )}
+
+        {overview.length > 0 && (
+          <section className="article__section" aria-labelledby="overview-heading">
+            <h2 id="overview-heading" className="article__section-title">
+              Overview
+            </h2>
+            <div className="article__body">
+              {overview.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
             </div>
-          </div>
-        </div>
+          </section>
+        )}
+
+        {materials.length > 0 && (
+          <section className="article__section" aria-labelledby="materials-heading">
+            <h2 id="materials-heading" className="article__section-title">
+              Materials
+            </h2>
+            <ul className="article__materials">
+              {materials.map((m, i) => (
+                <li key={i}>
+                  <span>{text(m.name)}</span>
+                  {text(m.quantity) && (
+                    <span className="article__material-qty">
+                      {text(m.quantity)} {text(m.unit)}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {schematics.length > 0 && (
+          <section className="article__section" aria-labelledby="schematics-heading">
+            <h2 id="schematics-heading" className="article__section-title">
+              Schematics and diagrams
+            </h2>
+            <div className="article__gallery">
+              {schematics.map((s, i) => (
+                <figure key={i} className="article__figure">
+                  <PostImage
+                    src={s.url}
+                    alt={text(s.caption) || `Schematic ${i + 1}`}
+                    className="article__img article__img--natural"
+                  />
+                  {text(s.caption) && <figcaption>{text(s.caption)}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {steps.length > 0 && (
+          <section className="article__section" aria-labelledby="steps-heading">
+            <h2 id="steps-heading" className="article__section-title">
+              Build steps
+            </h2>
+            <ol className="article__steps">
+              {steps.map((step, i) => (
+                <li key={i} className="article__step">
+                  {text(step.title) && (
+                    <h3 className="article__step-title">{text(step.title)}</h3>
+                  )}
+                  {safeImageSrc(step.imageUrl) && (
+                    <PostImage
+                      src={step.imageUrl}
+                      alt={`Step ${i + 1}`}
+                      className="article__img article__img--natural"
+                    />
+                  )}
+                  {toParagraphs(step.description).map((p, j) => (
+                    <p key={j}>{p}</p>
+                  ))}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {snippets.length > 0 && (
+          <section className="article__section" aria-labelledby="code-heading">
+            <h2 id="code-heading" className="article__section-title">
+              Code
+            </h2>
+            {snippets.map((snippet, i) => (
+              <figure key={i} className="code-block">
+                {(text(snippet.description) || text(snippet.language)) && (
+                  <figcaption className="code-block__header">
+                    <span>{text(snippet.description)}</span>
+                    {text(snippet.language) && (
+                      <span className="code-block__lang">{text(snippet.language)}</span>
+                    )}
+                  </figcaption>
+                )}
+                <pre className="code-block__pre" tabIndex={0}>
+                  <code>{snippet.code}</code>
+                </pre>
+              </figure>
+            ))}
+          </section>
+        )}
+
+        <PostFooter adjacent={adjacent} related={moreLikeThis} />
       </div>
     </main>
   );

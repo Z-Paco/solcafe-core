@@ -1,0 +1,37 @@
+/* =========================
+   404 and error pages (app/not-found.tsx, app/error.tsx)
+   ========================= */
+.status-page__inner {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  max-width: 40rem;
+  padding-block: var(--space-8) var(--space-7);
+  text-align: center;
+}
+
+.status-page__art {
+  width: min(100%, 24rem);
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--sky-gradient);
+  border: 1px solid var(--color-border);
+}
+
+.status-page__title {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+}
+
+.status-page__title .copy-slot,
+.status-page__body .copy-slot {
+  min-width: min(100%, 24rem);
+}
+
+.status-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}

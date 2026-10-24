@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import "../styles/auth.css";
 
-export default function VerifyPage() {
+function VerifyContent() {
   const [supabase] = useState(() => createClient());
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,7 +67,7 @@ export default function VerifyPage() {
   };
 
   return (
-    <main className="auth-container solarpunk-bg">
+    <main id="main-content" className="auth-container solarpunk-bg">
       <div className="auth-card">
         <div className="auth-confirmation">
           {verificationStatus === "verifying" && (
@@ -111,12 +111,12 @@ export default function VerifyPage() {
                   : "Resend Verification Email"}
               </button>
               {resendStatus === "sent" && (
-                <div className="form-helper" style={{ color: "green" }}>
+                <div className="form-helper" style={{ color: "var(--color-success)" }}>
                   Verification email sent! Please check your inbox.
                 </div>
               )}
               {resendStatus === "error" && (
-                <div className="form-helper" style={{ color: "red" }}>
+                <div className="form-helper" style={{ color: "var(--color-error)" }}>
                   Could not resend email. Please try again or contact support.
                 </div>
               )}
@@ -128,5 +128,14 @@ export default function VerifyPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+// useSearchParams needs a Suspense boundary now that pages prerender statically.
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyContent />
+    </Suspense>
   );
 }

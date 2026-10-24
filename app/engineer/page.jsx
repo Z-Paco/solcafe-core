@@ -1,166 +1,116 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
+import React from "react";
 import Link from "next/link";
+import AuthorActions from "@/components/common/AuthorActions";
+import Cover from "@/components/common/Cover";
+import CopySlot from "@/components/common/CopySlot";
+import EmptyState from "@/components/common/EmptyState";
+import PageIntro from "@/components/common/PageIntro";
+import { copyText } from "@/content/copy";
+import { listPublished } from "@/lib/posts";
+import { asRecord, formatDate, isoDate, toTags } from "@/lib/content";
 import "../styles/engineer.css";
 
-// Project Card component
-function ProjectCard({ project }) {
-  // Safety check in case project is undefined
-  if (!project) return null;
+export const metadata = {
+  title: "Engineering",
+  description: copyText("engineer.metaDescription"),
+  alternates: { canonical: "/engineer" },
+};
 
-  // Function to safely handle tags that could be in different formats
-  const renderTags = (tags) => {
-    if (!tags) return null;
-
-    // If tags is already an array
-    if (Array.isArray(tags)) {
-      return tags.map((tag) => (
-        <span className="tag" key={tag.trim()}>
-          {tag.trim()}
-        </span>
-      ));
-    }
-
-    // If tags is a string
-    if (typeof tags === "string") {
-      return tags.split(",").map((tag) => (
-        <span className="tag" key={tag.trim()}>
-          {tag.trim()}
-        </span>
-      ));
-    }
-
-    // If tags is in another format, convert to string
-    return String(tags)
-      .split(",")
-      .map((tag) => (
-        <span className="tag" key={tag.trim()}>
-          {tag.trim()}
-        </span>
-      ));
-  };
+function ProjectCard({ project, lead = false, index = 0 }) {
+  const tags = toTags(project.tags);
+  const difficulty = asRecord(project.metadata).difficulty;
+  const Heading = lead ? "h2" : "h3";
 
   return (
-    <Link href={`/engineer/${project.slug || ""}`} className="project-link">
-      <div className="project-card">
-        {project.image_url ? (
-          <div className="project-image">
-            <img
-              src={project.image_url}
-              alt={project.title || "Engineering project"}
-              onError={(e) => {
-                // If image fails to load, replace with placeholder
-                e.target.onerror = null;
-                e.target.style.display = "none";
-                e.target.parentNode.classList.add("placeholder-image");
-                e.target.parentNode.innerHTML =
-                  "<span>Engineering Project</span>";
-              }}
-            />
-          </div>
-        ) : (
-          <div className="placeholder-image">
-            <span>Engineering Project</span>
-          </div>
-        )}
-        <div className="project-content">
-          <h3>{project.title || "Untitled Project"}</h3>
-          <p>{project.description || "No description available"}</p>
-          <div className="project-tags">{renderTags(project.tags)}</div>
-          <span className="submitted-by">
-            By {project.author_name || "Anonymous"}
-          </span>
+    <li
+      className={`project-card${lead ? " project-card--lead" : ""}`}
+      data-reveal
+      style={{ "--reveal-i": index % 3 }}
+    >
+      <article className="project-card__inner lift zoom">
+        <div className="project-card__media">
+          <Cover
+            src={project.image_url}
+            className="project-card__img"
+            width={lead ? 1100 : 800}
+            height={lead ? 620 : 450}
+            sizes={lead ? "(max-width: 900px) 100vw, 640px" : "(max-width: 640px) 100vw, 33vw"}
+            priority={lead}
+          />
         </div>
-      </div>
-    </Link>
+        <div className="project-card__body">
+          <p className="project-card__meta">
+            <time dateTime={isoDate(project.created_at)}>
+              {formatDate(project.created_at, true)}
+            </time>
+            {typeof difficulty === "string" && difficulty && (
+              <>
+                <span aria-hidden="true"> · </span>
+                <span className="project-card__difficulty">{difficulty}</span>
+              </>
+            )}
+          </p>
+          <Heading className="project-card__title">
+            <Link href={`/engineer/${project.slug}`} className="project-card__link">
+              {project.title || "Untitled project"}
+            </Link>
+          </Heading>
+          {project.description && (
+            <p className="project-card__desc">{project.description}</p>
+          )}
+          {tags.length > 0 && (
+            <ul className="tag-list project-tags" aria-label="Tags">
+              {tags.map((tag) => (
+                <li key={tag} className="tag">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </article>
+    </li>
   );
 }
 
-export default function EngineeringPage() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [supabase] = useState(() => createClient());
-
-  useEffect(() => {
-    async function fetchProjects() {
-      console.log("Fetching engineering projects...");
-      try {
-        // Use a JOIN with the profiles table
-        const { data: postsData, error: postsError } = await supabase
-          .from("posts")
-          .select(
-            `
-        id, 
-        title, 
-        description, 
-        slug, 
-        image_url, 
-        tags, 
-        created_at, 
-        user_id,
-        profiles!user_id(username)
-      `
-          )
-          .eq("content_type", "engineering")
-          .eq("published", true)
-          .order("created_at", { ascending: false });
-
-        console.log("Joined query result:", postsData);
-
-        if (postsError) {
-          throw postsError;
-        }
-
-        if (!postsData || postsData.length === 0) {
-          setProjects([]);
-          return;
-        }
-
-        // Extract username from the joined data
-        const formattedProjects = postsData.map((project) => ({
-          ...project,
-          author_name: project.profiles?.username || "Anonymous",
-        }));
-
-        setProjects(formattedProjects);
-      } catch (error) {
-        console.error("Error fetching engineering projects:", error.message);
-        setProjects([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProjects();
-  }, [supabase]);
+export default async function EngineeringPage() {
+  const { posts, error } = await listPublished("engineering");
+  const [lead, ...rest] = posts;
 
   return (
-    <main className="engineer-content">
-      <h2>Engineering Projects</h2>
-      <p>Explore solarpunk engineering, DIY guides, and technical resources.</p>
+    <main id="main-content" className="engineer-index">
+      <div className="container">
+        <PageIntro
+          eyebrow="Engineering"
+          title={<h1 className="page-intro__title">Engineering projects</h1>}
+          lede={<CopySlot id="engineer.lede" as="p" className="page-intro__lede" lines={2} />}
+          actions={
+            <AuthorActions createHref="/engineer/create" createLabel="New engineering post" />
+          }
+        />
 
-      <div className="action-bar">
-        <Link href="/engineer/create" className="create-button">
-          Share Your Project
-        </Link>
-      </div>
-
-      <section className="featured-projects">
-        {loading ? (
-          <div className="loading-spinner">Loading projects...</div>
-        ) : projects.length > 0 ? (
-          <div className="projects-grid">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        ) : (
-          <div className="empty-state">
-            <p>No engineering projects yet. Be the first to share one!</p>
-          </div>
+        {error && (
+          <p className="notice notice--error" role="alert">
+            {error}
+          </p>
         )}
-      </section>
+
+        {!error && posts.length === 0 && <EmptyState slot="engineer.empty" />}
+
+        {lead && (
+          <ul className="project-lead-list">
+            <ProjectCard project={lead} lead />
+          </ul>
+        )}
+
+        {rest.length > 0 && (
+          <ul className="project-grid">
+            {rest.map((project, i) => (
+              <ProjectCard key={project.id} project={project} index={i} />
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }

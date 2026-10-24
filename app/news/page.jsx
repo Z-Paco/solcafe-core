@@ -1,180 +1,165 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { createClient } from "@/lib/supabase/client";
+import AuthorActions from "@/components/common/AuthorActions";
+import Cover from "@/components/common/Cover";
+import CopySlot from "@/components/common/CopySlot";
+import EmptyState from "@/components/common/EmptyState";
+import PageIntro from "@/components/common/PageIntro";
+import { copyText } from "@/content/copy";
+import { listPublished } from "@/lib/posts";
+import {
+  asArray,
+  asRecord,
+  formatDate,
+  isoDate,
+  readingMinutes,
+  toTags,
+} from "@/lib/content";
 import "../styles/news.css";
 
-export default function Newspage() {
-  const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
+export const metadata = {
+  title: "News",
+  description: copyText("news.metaDescription"),
+  alternates: { canonical: "/news" },
+};
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-  const [newsPosts, setNewsPosts] = useState([]);
-  const [featuredPost, setFeaturedPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+function leadImage(post) {
+  const related = asArray(asRecord(post.metadata).relatedLinks);
+  return post.image_url || related[0]?.imageUrl || null;
+}
 
-  // Fetch news posts from Supabase
-  useEffect(() => {
-    async function fetchNewsPosts() {
-      try {
-        const { data, error } = await supabase
-          .from("posts")
-          .select("id, title, description, image_url, slug, created_at, user_id, tags, metadata")
-          .eq("content_type", "news")
-          .eq("published", true)
-          .order("created_at", { ascending: false });
+function minutes(post) {
+  return readingMinutes(post.description, asRecord(post.metadata).mainContent);
+}
 
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-          // Set the first post as featured
-          setFeaturedPost(data[0]);
-          // Set the rest as regular posts
-          setNewsPosts(data.slice(1));
-        } else {
-          setNewsPosts([]);
-        }
-      } catch (err) {
-        console.error("Error fetching news posts:", err);
-        setError("Failed to load news posts");
-      } finally {
-        setLoading(false);
-      }
-    }
+function PostMeta({ post }) {
+  return (
+    <p className="news-meta">
+      <time dateTime={isoDate(post.created_at)}>{formatDate(post.created_at)}</time>
+      <span aria-hidden="true"> · </span>
+      <span>{minutes(post)} min read</span>
+    </p>
+  );
+}
 
-    fetchNewsPosts();
-  }, [supabase]);
+function Tags({ post }) {
+  const tags = toTags(post.tags);
+  if (tags.length === 0) return null;
+  return (
+    <ul className="tag-list" aria-label="Tags">
+      {tags.map((tag) => (
+        <li key={tag} className="tag">
+          {tag}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
-  // Format date
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  // Get a sample of tags to show as kicker
-  const getKicker = (tags) => {
-    if (!tags || tags.length === 0) return "News";
-    return tags.slice(0, 2).join(" • ");
-  };
-
-  if (loading) {
-    return (
-      <main id="main-content">
-        <div className="loading">Loading news...</div>
-      </main>
-    );
-  }
-
-  const heroImage =
-    featuredPost?.image_url ||
-    featuredPost?.metadata?.relatedLinks?.[0]?.imageUrl ||
-    null;
+export default async function NewsPage() {
+  const { posts, error } = await listPublished("news");
+  const [lead, ...rest] = posts;
+  const side = rest.slice(0, 3);
+  const earlier = rest.slice(3);
 
   return (
-    <main id="main-content">
-      {/* Hero top story */}
-      {featuredPost ? (
-        <section className="hero-story">
-          <article>
-            {heroImage ? (
-              <Link href={`/news/${featuredPost.slug}`}>
-                {heroImage.startsWith("/") ? (
-                  <Image
-                    src={heroImage}
-                    alt={featuredPost.title}
-                    width={800}
-                    height={450}
-                  />
-                ) : (
-                  <img src={heroImage} alt={featuredPost.title} />
-                )}
-              </Link>
-            ) : (
-              <div className="no-image-header">
-                <div className="post-category">News</div>
-              </div>
-            )}
-            <h2>
-              <Link href={`/news/${featuredPost.slug}`}>{featuredPost.title}</Link>
-            </h2>
-            <div className="kicker">{getKicker(featuredPost.tags)}</div>
-            <p className="teaser">{featuredPost.description}</p>
-          </article>
-        </section>
-      ) : (
-        <section className="hero-story empty-hero">
-          <article>
-            <h2>Energy news for Alberta</h2>
-            <p className="teaser">Sourced updates on energy stewardship, tracked through a creation-care lens</p>
-          </article>
-        </section>
-      )}
+    <main id="main-content" className="news-index">
+      <div className="container">
+        <PageIntro
+          eyebrow="News"
+          title={<CopySlot id="news.title" as="h1" className="page-intro__title" />}
+          lede={<CopySlot id="news.lede" as="p" className="page-intro__lede" lines={2} />}
+          actions={<AuthorActions createHref="/news/create" createLabel="New news post" />}
+        />
 
-      {/* Blog feed */}
-      <section className="blog-feed">
-        <div className="section-header">
-          <h3>Latest Posts</h3>
-          {session && (
-            <Link href="/news/create" className="create-button">
-              Create News Post
-            </Link>
-          )}
-        </div>
-        
-        {error && <div className="error-message">{error}</div>}
-        
-        {!loading && newsPosts.length === 0 && !featuredPost && (
-          <div className="empty-state">
-            <p>No news posts yet. Check back soon.</p>
-            {session && (
-              <Link href="/news/create" className="create-button">
-                Create News Post
+        {error && (
+          <p className="notice notice--error" role="alert">
+            {error}
+          </p>
+        )}
+
+        {!error && !lead && <EmptyState slot="news.empty" />}
+
+        {lead && (
+          <div className={`news-top${side.length === 0 ? " news-top--solo" : ""}`}>
+            <article className="news-lead lift" data-reveal>
+              <Link
+                href={`/news/${lead.slug}`}
+                className="news-lead__media zoom"
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                <Cover
+                  src={leadImage(lead)}
+                  priority
+                  width={960}
+                  height={600}
+                  sizes="(max-width: 900px) 100vw, 640px"
+                  markSize={72}
+                />
               </Link>
+              <div className="news-lead__body">
+                <span className="eyebrow">Latest</span>
+                <h2 className="news-lead__title">
+                  <Link href={`/news/${lead.slug}`}>{lead.title}</Link>
+                </h2>
+                {lead.description && (
+                  <p className="news-lead__teaser">{lead.description}</p>
+                )}
+                <PostMeta post={lead} />
+                <Tags post={lead} />
+              </div>
+            </article>
+
+            {side.length > 0 && (
+              <aside className="news-side" aria-labelledby="news-side-heading">
+                <h2 id="news-side-heading" className="news-feed__heading">
+                  Also new
+                </h2>
+                <ol className="news-side__list">
+                  {side.map((post, i) => (
+                    <li key={post.id} className="news-side__item lift" data-reveal style={{ "--reveal-i": i + 1 }}>
+                      <article>
+                        <PostMeta post={post} />
+                        <h3 className="news-card__title">
+                          <Link href={`/news/${post.slug}`}>{post.title}</Link>
+                        </h3>
+                        {post.description && (
+                          <p className="news-card__teaser">{post.description}</p>
+                        )}
+                      </article>
+                    </li>
+                  ))}
+                </ol>
+              </aside>
             )}
           </div>
         )}
-        
-        {newsPosts.map(post => (
-          <article key={post.id} className="post-card">
-            <h4>
-              <Link href={`/news/${post.slug}`}>{post.title}</Link>
-            </h4>
-            <time dateTime={new Date(post.created_at).toISOString().split('T')[0]}>
-              {formatDate(post.created_at)}
-            </time>
-            <p>{post.description}</p>
-            {post.tags && post.tags.length > 0 && (
-              <div className="post-tags">
-                {post.tags.map(tag => (
-                  <span key={tag} className="tag">{tag}</span>
-                ))}
-              </div>
-            )}
-          </article>
-        ))}
-      </section>
 
-      {/* Submission Banner */}
-      <section className="submission-banner" aria-live="polite">
-        <h3>Spot a story?</h3>
-        {session ? (
-          <Link href="/news/create" className="create-button">
-            Create News Post
-          </Link>
-        ) : (
-          <p>
-            <Link href="/login?redirect=/news/create">Sign in</Link> to contribute energy news
-          </p>
+        {earlier.length > 0 && (
+          <section className="news-feed" aria-labelledby="news-feed-heading">
+            <h2 id="news-feed-heading" className="news-feed__heading">
+              Earlier posts
+            </h2>
+            <ol className="news-feed__list">
+              {earlier.map((post) => (
+                <li key={post.id} className="news-card" data-reveal>
+                  <article>
+                    <PostMeta post={post} />
+                    <h3 className="news-card__title">
+                      <Link href={`/news/${post.slug}`}>{post.title}</Link>
+                    </h3>
+                    {post.description && (
+                      <p className="news-card__teaser">{post.description}</p>
+                    )}
+                    <Tags post={post} />
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </section>
         )}
-      </section>
+      </div>
     </main>
   );
 }

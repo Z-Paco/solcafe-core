@@ -176,7 +176,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="profile-container">
+    <main id="main-content" className="profile-container">
       <section className="profile-header">
         <div className="profile-avatar">
           <Image

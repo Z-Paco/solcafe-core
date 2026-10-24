@@ -1,0 +1,179 @@
+/* =========================
+   Collections: the news chronicle and the lancets
+   (components/common/Chronicle.jsx, Lancet.jsx)
+   ========================= */
+
+/* ---------- Chronicle ---------- */
+.chronicle {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 2.5rem 4rem;
+}
+
+.chronicle--solo {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 54rem;
+}
+
+.chronicle__lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: end;
+  gap: var(--space-6);
+}
+
+.chronicle__media {
+  display: block;
+}
+
+.chronicle__body {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.chronicle__lead-title {
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+}
+
+.chronicle__entry-title {
+  font-size: 1.7rem;
+}
+
+.chronicle__lead-title a,
+.chronicle__entry-title a,
+.lancet__title a {
+  color: var(--ink);
+  text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 0.45s ease;
+}
+
+.chronicle__lead-title a:hover,
+.chronicle__entry-title a:hover,
+.lancet__title a:hover {
+  background-size: 100% 1px;
+}
+
+.chronicle__desc {
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+}
+
+.chronicle__tags {
+  margin-top: 0.4rem;
+}
+
+.chronicle__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.chronicle__entry {
+  padding-block: 1.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.chronicle__entry article {
+  display: grid;
+  gap: 0.45rem;
+}
+
+@media (max-width: 960px) {
+  .chronicle {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .chronicle__lead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chronicle__media {
+    max-width: 320px;
+  }
+}
+
+/* ---------- Lancets: twin windows under one oculus ---------- */
+.lancets {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem clamp(2rem, 6vw, 5rem);
+  max-width: 900px;
+  margin-inline: auto;
+  padding-top: 3.6rem;
+}
+
+.lancets__oculus {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 96px;
+  transform: translateX(-50%);
+}
+
+.lancet {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.lancet__media {
+  display: block;
+}
+
+.lancet__kind {
+  color: var(--leaf-ink);
+}
+
+.lancet__title {
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+}
+
+.lancet__desc {
+  color: var(--ink-soft);
+}
+
+.lancet__detail {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 680px) {
+  .lancets {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 4.6rem;
+  }
+}
+
+/* ---------- Galleries on the index pages: a row of lancets ---------- */
+.lancet-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-7) clamp(2rem, 4vw, 3.5rem);
+}
+
+/* a single work stands alone, larger, like an exhibit */
+.lancet-gallery--solo {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 32rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.lancet-gallery--solo .lancet__title {
+  font-size: var(--text-3xl);
+}
+
+.lancet-gallery--solo .tag-list {
+  justify-content: center;
+}

@@ -7,20 +7,26 @@ import "../../styles/postEditor.css";
 
 export default function CreateEngineeringPage() {
   const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
   const router = useRouter();
+  const [userId, setUserId] = useState(null);
 
-  // Derived from session — no effect sync needed (avoids cascading renders).
-  const userId = session?.user?.id ?? null;
-  const loading = !session;
+  // Wait for getUser() before deciding to redirect (no redirect on first paint).
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!active) return;
+      if (!user) {
+        router.push("/login?redirect=/engineer/create");
+        return;
+      }
+      setUserId(user.id);
+    });
+    return () => {
+      active = false;
+    };
+  }, [supabase, router]);
+
+  const loading = !userId;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -36,13 +42,6 @@ export default function CreateEngineeringPage() {
   // Engineering-specific content
   const [engineeringContent, setEngineeringContent] = useState({});
 
-  // Redirect side-effect only; userId/loading derive from session above.
-  useEffect(() => {
-    if (!session) {
-      // Redirect if not logged in
-      router.push("/login?redirect=/engineer/create");
-    }
-  }, [session, router]);
 
   // Handle cover image change
   const handleCoverImageChange = (e) => {
@@ -184,7 +183,7 @@ export default function CreateEngineeringPage() {
 
   if (loading) {
     return (
-      <main>
+      <main id="main-content">
         <div className="container">
           <div className="loading-container">
             <p>Loading editor...</p>
@@ -195,7 +194,7 @@ export default function CreateEngineeringPage() {
   }
 
   return (
-    <main>
+    <main id="main-content">
       <div className="container">
         <div className="post-editor engineering-editor">
           <h1>Create Engineering Project</h1>

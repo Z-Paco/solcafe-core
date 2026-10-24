@@ -1,0 +1,620 @@
+<title>SolCafe Design Mock</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout concept: "light through glass". The home page opens in a nave: a stained-glass
+   prairie dawn under a rose, its coloured light falling across the stone onto the words.
+   Art and engineering stand as twin lancets under one oculus. About is a manuscript folio.
+   Glass keeps SolCafe's original sky / lime / sun hues; ink and gold carry the text. */
+:root {
+  --sky: #79c9f4;
+  --sky-deep: #4fa6d8;
+  --lime: #a9d86e;
+  --pear: #bfe94e;
+  --forest: #7ca353;
+  --sun: #fdfb75;
+  --sun-deep: #f3d34a;
+  --lead: #1b2822;
+
+  --page: #f5f7f5;
+  --ink: #1f2a22;
+  --ink-soft: #4b5649;
+  --rule: rgba(31, 42, 34, 0.16);
+  --rule-strong: rgba(31, 42, 34, 0.34);
+  --gold: #d6ad3c;
+  --gold-ink: #8a6414;
+  --leaf-ink: #3b6618;
+  --sky-ink: #1d5e86;
+
+  --wall: #edf1ea;
+  --course: rgba(31, 42, 34, 0.045);
+  --stone: #e2e8de;
+  --stone-edge: #c6d0c1;
+  --beam-blend: multiply;
+  --beam-alpha: 0.5;
+  --nave: #0f1b17;
+  --nave-ink: #eef3ea;
+
+  --f-display: "Cormorant Garamond", Garamond, "Times New Roman", serif;
+  --f-inscr: "Cinzel", "Trajan Pro", "Times New Roman", serif;
+  --f-body: "EB Garamond", Garamond, "Times New Roman", serif;
+  --measure: 62ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0b1512; --ink: #eaf0e5; --ink-soft: #b7c2ae; --rule: rgba(234,240,229,.14); --rule-strong: rgba(234,240,229,.32);
+    --gold: #e2c068; --gold-ink: #e2c068; --leaf-ink: #c3e590; --sky-ink: #9fd6f7;
+    --wall: #0c1613; --course: rgba(234,240,229,.035); --stone: #1a2722; --stone-edge: #2a3a32; --beam-blend: screen; --beam-alpha: .34; --nave: #060d0b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0b1512; --ink: #eaf0e5; --ink-soft: #b7c2ae; --rule: rgba(234,240,229,.14); --rule-strong: rgba(234,240,229,.32);
+  --gold: #e2c068; --gold-ink: #e2c068; --leaf-ink: #c3e590; --sky-ink: #9fd6f7;
+  --wall: #0c1613; --course: rgba(234,240,229,.035); --stone: #1a2722; --stone-edge: #2a3a32; --beam-blend: screen; --beam-alpha: .34; --nave: #060d0b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--f-body); font-size: 1.16rem; line-height: 1.62; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+a { color: var(--sky-ink); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+:focus-visible { outline: 2px solid var(--gold-ink); outline-offset: 4px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 500; line-height: 1.08; margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+.inscr { font-family: var(--f-inscr); font-weight: 500; font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { width: 100%; max-width: 1180px; margin-inline: auto; }
+
+/* mock controls (not part of the site) */
+.mockbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 60; background: #101915; color: #e9efe4; font: 600 .78rem/1 system-ui, sans-serif; padding-block: .5rem; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 61; background: #101915; }
+.mockbar .wrap { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; align-items: center; justify-content: space-between; }
+.mockbar .g { display: flex; gap: .35rem; align-items: center; flex-wrap: wrap; }
+.mockbar .lbl { opacity: .65; letter-spacing: .1em; text-transform: uppercase; font-size: .66rem; margin-right: .25rem; }
+.mockbar button { font: inherit; color: inherit; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22); padding: .42rem .8rem; border-radius: 999px; cursor: pointer; min-height: 32px; }
+.mockbar button[aria-pressed="true"] { background: #e2c068; color: #1a1406; border-color: #e2c068; }
+
+/* header */
+.site-header { background: var(--wall); }
+.site-header .wrap { display: flex; align-items: center; gap: 1rem 2rem; padding-block: 1.1rem; flex-wrap: wrap; border-bottom: 1px solid var(--rule); }
+.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: var(--ink); margin-right: auto; }
+.brand svg { width: 40px; height: 40px; flex: none; }
+.brand .name { font-family: var(--f-display); font-weight: 600; font-size: 1.95rem; letter-spacing: .01em; line-height: 1; display: block; }
+.brand .sub { display: block; margin-top: .45rem; }
+.nav { display: flex; gap: .15rem; flex-wrap: wrap; }
+.nav a { font-family: var(--f-inscr); font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: .7rem .8rem; min-height: 44px; display: inline-flex; align-items: center; border-bottom: 1px solid transparent; }
+.nav a:hover { color: var(--gold-ink); }
+.nav a[aria-current="page"] { color: var(--gold-ink); border-bottom-color: var(--gold); }
+
+/* the builder's words go here: a ruled page awaiting the scribe */
+.scribe { display: grid; position: relative; padding-left: 14px; border-left: 1px solid var(--rule-strong); }
+.scribe { --lh: 1.85rem; }
+.scribe .ln { height: var(--lh); border-bottom: 1px solid var(--rule-strong); }
+.scribe .ln ~ .ln ~ .ln:nth-last-child(2) { width: 88%; }
+.scribe .ln ~ .ln:last-child { width: 64%; }
+.scribe .tag { position: absolute; left: 14px; top: 0; transform: translateY(-50%); background: var(--tagbg, var(--page)); padding-right: .6rem; color: var(--gold-ink); font-family: var(--f-inscr); font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap; max-width: calc(100% - 14px); overflow: hidden; text-overflow: ellipsis; }
+.scribe.on-nave { border-left-color: rgba(238,243,234,.32); --tagbg: var(--nave); }
+.scribe.on-nave .ln { border-bottom-color: rgba(238,243,234,.32); }
+.scribe.on-nave .tag { color: #e2c068; }
+.scribe.inline { display: inline-grid; min-width: 150px; padding-left: 0; border-left: 0; --tagbg: var(--wall); }
+.scribe.inline .tag { left: 0; }
+.scribe.inline { --lh: 1.3rem; }
+.scribe.bare .tag { background: none; text-shadow: 0 0 6px var(--wall), 0 0 2px var(--wall); }
+/* ghost: the slot's name set at the real size, so the type scale reads before the words exist */
+.scribe .ghost { position: absolute; left: 14px; right: 0; top: 0; height: var(--lh); display: flex; align-items: flex-end; padding-bottom: .1em; font-family: var(--f-display); font-style: italic; font-size: calc(var(--lh) * .72); line-height: 1; color: var(--ink); opacity: .14; pointer-events: none; white-space: nowrap; overflow: hidden; }
+.scribe.on-nave .ghost { color: #eef3ea; opacity: .16; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 50px; padding: .8rem 1.6rem; border-radius: 999px; font-family: var(--f-inscr); font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; transition: box-shadow .3s ease, color .3s ease; }
+.btn--ink { background: var(--ink); color: var(--page); box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 4px transparent; }
+.btn--ink:hover { box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 4px rgba(214,173,60,.28); color: var(--page); }
+.btn--line { color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule-strong); }
+.btn--line:hover { box-shadow: inset 0 0 0 1px var(--gold); color: var(--ink); }
+
+/* hero: the nave */
+.hero { position: relative; overflow: hidden; isolation: isolate; background-color: var(--wall);
+  background-image: linear-gradient(var(--course) 1px, transparent 1px), radial-gradient(80% 70% at 75% 30%, transparent 40%, rgba(0,0,0,.06) 100%);
+  background-size: 100% 68px, 100% 100%; }
+.hero .wrap { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr minmax(0, 470px); gap: 2rem clamp(2rem, 6vw, 6rem); align-items: center; padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(3.5rem, 8vw, 6rem); }
+.hero-text { display: grid; gap: 2.2rem; min-width: 0; --tagbg: transparent; }
+.hero-text .scribe .tag { text-shadow: 0 0 8px var(--wall), 0 0 3px var(--wall); }
+.hero-text .scribe.h1 { --lh: clamp(3rem, 6vw, 4.6rem); }
+.hero-text .scribe.lede { --lh: 2.1rem; max-width: 34rem; }
+.hero .actions { display: flex; gap: .8rem; flex-wrap: wrap; align-items: center; }
+.hero::after { content: ""; position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 12px; background: linear-gradient(var(--stone-edge), var(--stone)); box-shadow: 0 -1px 0 var(--rule-strong); }
+.beams { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: var(--beam-blend); opacity: var(--beam-alpha); filter: blur(9px); animation: beamin 3.2s ease-out both; }
+@keyframes beamin { from { opacity: 0; } to { opacity: var(--beam-alpha); } }
+.window-wrap { position: relative; justify-self: center; width: min(100%, 470px); }
+.window-wrap svg.window { width: 100%; height: auto; display: block; position: relative; z-index: 2; filter: brightness(1) saturate(1) drop-shadow(0 24px 34px rgba(15,27,23,.22)); animation: kindle 2.8s ease-out both; }
+@keyframes kindle { from { filter: brightness(.62) saturate(.6) drop-shadow(0 24px 34px rgba(15,27,23,.22)); } to { filter: brightness(1) saturate(1) drop-shadow(0 24px 34px rgba(15,27,23,.22)); } }
+.halo { position: absolute; z-index: 1; inset: -10% -16% 6%; pointer-events: none; background: radial-gradient(48% 42% at 50% 40%, rgba(253,251,117,var(--halo, .4)), transparent 72%); }
+:root[data-theme="dark"] .halo { --halo: .26; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .halo { --halo: .26; } }
+canvas.motes { position: absolute; z-index: 3; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.rotor { transform-box: fill-box; transform-origin: center; animation: spin 18s linear infinite; }
+.rose-ring { transform-box: fill-box; transform-origin: center; animation: spin 300s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* sections */
+.section { padding-block: clamp(3.5rem, 8vw, 6rem) 0; }
+.sec-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.25rem; margin-bottom: 2.5rem; }
+.sec-head h2 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }
+.sec-head .orn { height: 1px; background: linear-gradient(90deg, var(--gold), transparent); position: relative; }
+.sec-head .orn::before { content: ""; position: absolute; left: 0; top: 50%; width: 9px; height: 9px; transform: translate(-2px, -50%) rotate(45deg); background: var(--gold); }
+.sec-head a { font-family: var(--f-inscr); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; color: var(--ink); padding: .7rem 0; }
+.sec-head a:hover { color: var(--gold-ink); }
+
+.arch { position: relative; aspect-ratio: 3 / 4; -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat; mask: var(--arch-mask) center / 100% 100% no-repeat; background: var(--lead); }
+.arch svg { width: 100%; height: 100%; display: block; }
+.arch-frame { position: relative; padding: 6px; }
+.arch-frame::before { content: ""; position: absolute; inset: 0; -webkit-mask: var(--arch-mask) center / 100% 100% no-repeat; mask: var(--arch-mask) center / 100% 100% no-repeat; background: linear-gradient(180deg, var(--gold), var(--stone-edge)); }
+
+.chron { display: grid; grid-template-columns: 1.3fr 1fr; gap: 2.5rem 4rem; align-items: start; }
+.lead { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 2rem; align-items: end; }
+.date { color: var(--gold-ink); }
+.lead h3 { font-size: clamp(2rem, 3.6vw, 2.9rem); margin: .6rem 0 .7rem; }
+.lead h3 a, .entry h3 a, .lancet h3 a { color: var(--ink); text-decoration: none; background-image: linear-gradient(var(--gold), var(--gold)); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .45s ease; }
+.lead h3 a:hover, .entry h3 a:hover, .lancet h3 a:hover { background-size: 100% 1px; }
+.desc { font-style: italic; color: var(--ink-soft); font-size: 1.2rem; }
+.beads { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; margin-top: 1.1rem; }
+.bead { display: inline-flex; align-items: center; gap: .5rem; color: var(--ink-soft); }
+.bead::before { content: ""; width: 7px; height: 7px; transform: rotate(45deg); background: var(--c, var(--lime)); box-shadow: 0 0 0 1px var(--lead); }
+.list { border-top: 1px solid var(--rule); }
+.entry { padding-block: 1.4rem; border-bottom: 1px solid var(--rule); display: grid; gap: .45rem; }
+.entry h3 { font-size: 1.7rem; }
+
+.lancets { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem clamp(2rem, 6vw, 5rem); max-width: 900px; margin-inline: auto; padding-top: 3.6rem; }
+.oculus { position: absolute; left: 50%; top: 0; width: 96px; transform: translateX(-50%); }
+.lancet { display: grid; gap: .9rem; min-width: 0; }
+.lancet .arch { aspect-ratio: 5 / 6; }
+.lancet .kind { color: var(--leaf-ink); }
+.lancet h3 { font-size: clamp(1.7rem, 3vw, 2.2rem); }
+.lancet p { color: var(--ink-soft); }
+
+.canticle { margin-top: clamp(4.5rem, 10vw, 7.5rem); background: radial-gradient(40% 70% at 24% 50%, rgba(253,251,117,.07), transparent 70%), var(--nave); color: var(--nave-ink); position: relative; overflow: hidden; isolation: isolate; border-block: 1px solid rgba(226,192,104,.4); box-shadow: inset 0 6px 0 -5px rgba(226,192,104,.25), inset 0 -6px 0 -5px rgba(226,192,104,.25); }
+.canticle .wrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 3rem 5rem; align-items: center; padding-block: clamp(3.5rem, 8vw, 6rem); }
+.canticle .rose-big { width: min(100%, 400px); justify-self: center; filter: drop-shadow(0 0 70px rgba(253,251,117,.28)); }
+.canticle .stack { display: grid; gap: 2.4rem; }
+.canticle .scribe.hd { --lh: 3rem; }
+.canticle .scribe.bd { --lh: 2.1rem; }
+.canticle .btn--ink { background: #eef3ea; color: #0f1b17; }
+
+.site-footer .arcade { display: block; width: 100%; height: 34px; color: var(--rule-strong); }
+.site-footer .wrap { padding-block: 1.5rem 2rem; display: grid; gap: 1.6rem; }
+.ft-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; align-items: center; }
+.ft-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; border-top: 1px solid var(--rule); padding-top: 1rem; color: var(--ink-soft); }
+.ft-bottom a { color: var(--ink-soft); }
+
+/* about: a manuscript folio */
+.folio-head { text-align: center; padding-block: clamp(2.5rem, 6vw, 4.5rem) 1rem; display: grid; justify-items: center; gap: 1rem; background: var(--wall); }
+.folio-head h1 { font-size: clamp(3rem, 8vw, 5.2rem); font-weight: 400; letter-spacing: .01em; }
+.folio-head .rose-sm { width: 72px; }
+.folio { display: grid; grid-template-columns: 200px 40px minmax(0, 1fr); gap: 0 1.5rem; max-width: 980px; margin-inline: auto; padding-block: 3rem 1rem; }
+.vine { grid-column: 2; grid-row: 1 / span 20; width: 40px; height: 100%; }
+.rubric { grid-column: 1; text-align: right; color: var(--leaf-ink); padding-top: .55rem; font-size: .78rem; line-height: 1.6; font-family: var(--f-inscr); letter-spacing: .2em; text-transform: uppercase; font-weight: 600; }
+.leaf { grid-column: 3; max-width: var(--measure); font-size: 1.28rem; line-height: 1.7; padding-bottom: 3rem; }
+.leaf p::first-letter { font-family: var(--f-display); float: left; font-size: 4.6em; line-height: .8; padding: .08em .12em 0 0; color: var(--gold-ink); font-weight: 500; }
+.leaf .scribe { --lh: 2.2rem; margin-top: .6rem; }
+.leaf .btns { margin-top: 1.6rem; }
+
+@media (max-width: 960px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .window-wrap { order: -1; width: min(100%, 400px); }
+  .chron { grid-template-columns: 1fr; }
+  .canticle .wrap { grid-template-columns: 1fr; }
+  .canticle .rose-big { width: min(72%, 300px); }
+}
+@media (max-width: 680px) {
+  .lead { grid-template-columns: 1fr; }
+  .lead .arch-frame { max-width: 320px; }
+  .lancets { grid-template-columns: 1fr; padding-top: 4.6rem; }
+  .folio { grid-template-columns: 24px minmax(0, 1fr); gap: 0 1rem; }
+  .vine { grid-column: 1; width: 24px; }
+  .rubric { grid-column: 2; text-align: left; padding-top: 0; margin-bottom: .4rem; }
+  .leaf { grid-column: 2; font-size: 1.18rem; }
+  .sec-head { grid-template-columns: 1fr auto; }
+  .sec-head .orn { display: none; }
+  .nav a { padding: .6rem .55rem; letter-spacing: .14em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rotor, .rose-ring, .beams, .window-wrap svg.window { animation: none; }
+  .btn, .lead h3 a, .entry h3 a, .lancet h3 a { transition: none; }
+}
+</style>
+
+<div class="mockbar gutter" role="region" aria-label="Mock controls">
+  <div class="wrap">
+    <div class="g"><span class="lbl">Page</span>
+      <button type="button" id="b-home" aria-pressed="true">Home</button>
+      <button type="button" id="b-about" aria-pressed="false">About</button>
+    </div>
+    <div class="g"><span class="lbl">Theme</span>
+      <button type="button" id="t-auto" aria-pressed="true">Auto</button>
+      <button type="button" id="t-light" aria-pressed="false">Day</button>
+      <button type="button" id="t-dark" aria-pressed="false">Vespers</button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header gutter">
+  <div class="wrap">
+    <a class="brand" href="#home" data-go="home" aria-label="Solcafe, home">
+      <svg viewBox="0 0 100 100" aria-hidden="true" data-rose="mark"></svg>
+      <span><span class="name">Solcafe</span><span class="scribe inline sub" role="note" aria-label="Placeholder: tagline"><span class="tag">Tagline · §1</span><span class="ln"></span></span></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#home" onclick="return false">News</a>
+      <a href="#home" onclick="return false">Art</a>
+      <a href="#home" onclick="return false">Engineering</a>
+      <a href="#about" data-go="about" id="nav-about">About</a>
+    </nav>
+  </div>
+</header>
+
+<!-- =========================== HOME =========================== -->
+<main id="view-home">
+  <section class="hero gutter">
+    <svg class="beams" id="beams" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <canvas class="motes" id="motes" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-text">
+        <div class="inscr" style="color:var(--gold-ink)">News · Art · Engineering</div>
+        <div class="scribe h1" role="note" aria-label="Placeholder: home headline"><span class="tag">Headline · your words · §2</span><span class="ghost" aria-hidden="true">Your headline</span><span class="ln"></span><span class="ln"></span></div>
+        <div class="scribe lede" role="note" aria-label="Placeholder: line under the headline"><span class="tag">A sentence or two · §2</span><span class="ghost" aria-hidden="true">your opening sentence</span><span class="ln"></span><span class="ln"></span><span class="ln"></span></div>
+        <div class="actions">
+          <a class="btn btn--ink" href="#home" onclick="return false">Read the news</a>
+          <a class="btn btn--line" href="#about" data-go="about">About Solcafe</a>
+        </div>
+      </div>
+      <div class="window-wrap" aria-hidden="true">
+        <div class="halo"></div>
+        <svg class="window" id="window" viewBox="0 0 400 560"></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gutter" aria-labelledby="h-news">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="h-news">Latest news</h2><span class="orn" aria-hidden="true"></span><a href="#home" onclick="return false">All news</a></div>
+      <div class="chron">
+        <article class="lead">
+          <div class="arch-frame"><div class="arch"><svg data-glass="dawn" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div></div>
+          <div>
+            <div class="inscr date">June 22, 2025 · 1 min read</div>
+            <h3><a href="#home" onclick="return false">Solarpunk: Radical Hope</a></h3>
+            <p class="desc">This one is pretty cool,</p>
+            <div class="beads inscr"><span class="bead" style="--c:var(--sun)">solarpunk</span><span class="bead" style="--c:var(--lime)">optimism</span><span class="bead" style="--c:var(--sky)">challenge</span></div>
+          </div>
+        </article>
+        <div class="list">
+          <article class="entry">
+            <div class="inscr date">June 22, 2025 · 1 min read</div>
+            <h3><a href="#home" onclick="return false">Spacesuit for NASA’s Artemis III Moon Surface Mission Debuts</a></h3>
+            <p class="desc">We going to the moon boiis!!!</p>
+            <div class="beads inscr" style="margin-top:.4rem"><span class="bead" style="--c:var(--sky)">moon</span><span class="bead" style="--c:var(--lime)">space 2025</span></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gutter" aria-labelledby="h-works">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="h-works">Art &amp; engineering</h2><span class="orn" aria-hidden="true"></span><a href="#home" onclick="return false">All works</a></div>
+      <div class="lancets">
+        <svg class="oculus" viewBox="0 0 100 100" aria-hidden="true" data-rose="oculus"></svg>
+        <article class="lancet">
+          <div class="arch-frame"><div class="arch"><svg data-glass="night" viewBox="0 0 300 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div></div>
+          <div class="inscr kind">Art</div>
+          <h3><a href="#home" onclick="return false">Test 2 authenticated</a></h3>
+          <p>Big A smellt</p>
+        </article>
+        <article class="lancet">
+          <div class="arch-frame"><div class="arch"><svg data-glass="wind" viewBox="0 0 300 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div></div>
+          <div class="inscr kind">Engineering</div>
+          <h3><a href="#home" onclick="return false">Wind speed Simulator</a></h3>
+          <p>The standard deviation of wind speeds for a 4m 5.5 kW Kestrel</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="canticle gutter" aria-label="The lens">
+    <div class="wrap">
+      <svg class="rose-big" viewBox="0 0 100 100" aria-hidden="true" data-rose="big"></svg>
+      <div class="stack">
+        <div class="inscr" style="color:#e2c068">The lens</div>
+        <div class="scribe on-nave hd" role="note" aria-label="Placeholder: lens heading"><span class="tag">Heading · §3</span><span class="ghost" aria-hidden="true">Your heading</span><span class="ln"></span></div>
+        <div class="scribe on-nave bd" role="note" aria-label="Placeholder: lens body"><span class="tag">A few sentences · §3</span><span class="ln"></span><span class="ln"></span><span class="ln"></span><span class="ln"></span></div>
+        <div class="scribe on-nave bd" role="note" aria-label="Placeholder: epigraph with citation" style="padding-left:2.2rem"><span class="tag" style="left:2.2rem">Epigraph, cited · §3</span><span class="ln"></span><span class="ln"></span></div>
+        <div><a class="btn btn--ink" href="#about" data-go="about">About Solcafe</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- =========================== ABOUT =========================== -->
+<main id="view-about" hidden>
+  <section class="folio-head gutter">
+    <svg class="rose-sm" viewBox="0 0 100 100" aria-hidden="true" data-rose="small"></svg>
+    <h1>About Solcafe</h1>
+  </section>
+  <div class="gutter">
+    <div class="folio">
+      <svg class="vine" id="vine" aria-hidden="true" preserveAspectRatio="none"></svg>
+      <h2 class="rubric">What this is</h2>
+      <div class="leaf"><p>Solcafe is a student-built portfolio project around energy stewardship in Alberta, rooted in a Catholic understanding of creation care. It treats art and engineering as one integrated practice — a place for informative energy content and the creative work that imagines better systems.</p></div>
+      <h2 class="rubric">What you'll find</h2>
+      <div class="leaf"><p>News is the entry point: short, sourced energy updates. Art and engineering posts are secondary — experiments and visual thinking alongside the reporting.</p></div>
+      <h2 class="rubric">Status</h2>
+      <div class="leaf"><p>Built while finishing a Software Development diploma at SAIT, so scope is intentionally capped. Roles (Dreamer, Techie, Book Keeper) are presentational only — they don't gate access or content.</p>
+        <div class="btns"><a class="btn btn--ink" href="#home" onclick="return false">Browse News</a></div></div>
+      <h2 class="rubric">Why creation care</h2>
+      <div class="leaf"><div class="scribe" role="note" aria-label="Placeholder: why creation care"><span class="tag">Your section, with sources · §5</span><span class="ln"></span><span class="ln"></span><span class="ln"></span><span class="ln"></span></div></div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer gutter">
+  <svg class="arcade" viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true" id="arcade"></svg>
+  <div class="wrap">
+    <div class="ft-top">
+      <a class="brand" href="#home" data-go="home" aria-label="Solcafe, home" style="margin-right:0"><svg viewBox="0 0 100 100" aria-hidden="true" data-rose="mark"></svg><span class="name">Solcafe</span></a>
+      <nav class="nav" aria-label="Footer">
+        <a href="#home" onclick="return false">News</a><a href="#home" onclick="return false">Art</a><a href="#home" onclick="return false">Engineering</a><a href="#about" data-go="about">About</a>
+      </nav>
+    </div>
+    <div class="scribe" role="note" aria-label="Placeholder: footer line" style="max-width:520px"><span class="tag">Footer line · §4</span><span class="ln"></span></div>
+    <div class="ft-bottom"><span>© 2026 Solcafe</span><a href="#home" onclick="return false">Author log in</a></div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg", LEAD = "#1b2822";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function el(n, a, p) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  function rng(s) { return function () { s |= 0; s = s + 0x6D2B79F5 | 0; var t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function pick(arr, r) { return arr[Math.floor(r * arr.length) % arr.length]; }
+  var uid = 0; function id(p) { return p + (++uid); }
+
+  /* pointed-arch mask shared by every arched frame */
+  var archPath = "M0 1000 L0 470 A440 440 0 0 1 300 0 A440 440 0 0 1 600 470 L600 1000 Z";
+  document.documentElement.style.setProperty("--arch-mask", "url(\"data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" preserveAspectRatio="none"><path d="' + archPath + '" fill="#000"/></svg>') + "\")");
+
+  /* ---------- sunburst glass: rays of light set the leading (Tiffany / Art Nouveau) ---------- */
+  function sunburst(g, o) {
+    var R = rng(o.seed), rays = o.rays, rings = o.rings, nodes = [], i, k;
+    var a0 = o.a0 != null ? o.a0 : Math.PI, a1 = o.a1 != null ? o.a1 : Math.PI * 2;
+    var angs = []; for (i = 0; i <= rays; i++) { var t = i / rays; angs.push(a0 + (a1 - a0) * t + (i && i < rays ? (R() - .5) * (a1 - a0) / rays * .5 : 0)); }
+    for (k = 0; k < rings.length; k++) { nodes[k] = []; for (i = 0; i <= rays; i++) nodes[k][i] = rings[k] * (k ? 1 + (R() - .5) * .16 : 1); }
+    function P(r, a) { return [o.cx + r * Math.cos(a), o.cy + r * Math.sin(a)]; }
+    function arcTo(r1, aa, r2, ab) { var am = (aa + ab) / 2, rm = (r1 + r2) / 2 / Math.cos((ab - aa) / 2), c = P(rm, am), e = P(r2, ab); return " Q" + c[0].toFixed(1) + " " + c[1].toFixed(1) + " " + e[0].toFixed(1) + " " + e[1].toFixed(1); }
+    var lay = el("g", { stroke: LEAD, "stroke-width": o.lw || 2.4, "stroke-linejoin": "round" }, g);
+    for (k = 0; k < rings.length - 1; k++) for (i = 0; i < rays; i++) {
+      var A = P(nodes[k][i], angs[i]), B = P(nodes[k + 1][i], angs[i]), C = P(nodes[k + 1][i + 1], angs[i + 1]);
+      var d = "M" + A[0].toFixed(1) + " " + A[1].toFixed(1) + " L" + B[0].toFixed(1) + " " + B[1].toFixed(1) + arcTo(nodes[k + 1][i], angs[i], nodes[k + 1][i + 1], angs[i + 1]);
+      var D = P(nodes[k][i + 1], angs[i + 1]); d += " L" + D[0].toFixed(1) + " " + D[1].toFixed(1);
+      d += k ? arcTo(nodes[k][i + 1], angs[i + 1], nodes[k][i], angs[i]) : "";
+      d += " Z";
+      el("path", { d: d, fill: o.color(k, i, R()) }, lay);
+    }
+  }
+  /* banded glass: fields, streamlines — gently curving strips cut into pieces */
+  function bands(g, o) {
+    var R = rng(o.seed), n = o.n, S = 20, lay = el("g", { stroke: LEAD, "stroke-width": o.lw || 2.2, "stroke-linejoin": "round" }, g), curves = [], i, j;
+    for (i = 0; i <= n; i++) { var row = [], ph = R() * 6.28, amp = o.amp * (.6 + R() * .8); for (j = 0; j <= S; j++) { var x = o.w * j / S; row.push([x, o.y0 + (o.y1 - o.y0) * i / n + Math.sin(x / o.w * Math.PI * o.freq + ph) * amp * (i && i < n ? 1 : 0) + (x / o.w) * (o.tilt || 0) * (i / n)]); } curves.push(row); }
+    function along(row, from, to) { var s = ""; var st = from <= to ? 1 : -1; for (var k = from; st > 0 ? k <= to : k >= to; k += st) s += " L" + row[k][0].toFixed(1) + " " + row[k][1].toFixed(1); return s; }
+    for (i = 0; i < n; i++) {
+      // diagonal cuts: each cut meets the lower curve a little further along, like hand-cut glass
+      var top = [0], bot = [0], c = 0, slant = (R() > .5 ? 1 : -1) * (1 + Math.floor(R() * 2));
+      while (c < S) { c += 4 + Math.floor(R() * 5); if (c >= S - 2) c = S; top.push(c); bot.push(c === S ? S : Math.max(1, Math.min(S - 1, c + slant))); }
+      for (var q = 0; q < top.length - 1; q++) {
+        var T = curves[i], B = curves[i + 1];
+        var d = "M" + T[top[q]][0].toFixed(1) + " " + T[top[q]][1].toFixed(1) + along(T, top[q] + 1, top[q + 1]) + along(B, bot[q + 1], bot[q]) + " Z";
+        el("path", { d: d, fill: o.color(i, q, R()) }, lay);
+      }
+    }
+  }
+
+  /* ---------- rose window: spirit above the land ---------- */
+  function rose(g, cx, cy, Rr, opt) {
+    opt = opt || {}; var n = opt.petals || 12, lw = Math.max(.55, Rr * .018), i, a, ring = el("g", { "class": opt.spin ? "rose-ring" : "" }, g);
+    function P(r, ang) { return [cx + r * Math.cos(ang), cy + r * Math.sin(ang)]; }
+    el("circle", { cx: cx, cy: cy, r: Rr, fill: LEAD }, ring);
+    var m = n * 2;
+    for (i = 0; i < m; i++) {           // outer crown of small pointed lights
+      var aa = i / m * 6.2832 - 1.5708, ab = (i + 1) / m * 6.2832 - 1.5708, am = (aa + ab) / 2;
+      var p1 = P(Rr * .8, aa), p2 = P(Rr * .8, ab), p3 = P(Rr * .93, ab - (ab - aa) * .12), tip = P(Rr * .985, am), p4 = P(Rr * .93, aa + (ab - aa) * .12);
+      el("path", { d: "M" + p1 + " L" + p4 + " Q" + P(Rr * .975, aa + (ab - aa) * .2) + " " + tip + " Q" + P(Rr * .975, ab - (ab - aa) * .2) + " " + p3 + " L" + p2 + " Z", fill: i % 2 ? "#79c9f4" : "#4fa6d8", stroke: LEAD, "stroke-width": lw }, ring);
+    }
+    for (i = 0; i < n; i++) {           // petals: pointed vesicas
+      a = i / n * 6.2832 - 1.5708; var w = 6.2832 / n * .42;
+      var inr = P(Rr * .27, a), out = P(Rr * .76, a), c1 = P(Rr * .54, a - w), c2 = P(Rr * .54, a + w);
+      el("path", { d: "M" + inr + " Q" + c1 + " " + out + " Q" + c2 + " " + inr + " Z", fill: ["#a9d86e", "#fdfb75", "#bfe94e", "#f3d34a"][i % 4], stroke: LEAD, "stroke-width": lw }, ring);
+      var oc = P(Rr * .64, a + 6.2832 / n / 2);
+      el("circle", { cx: oc[0], cy: oc[1], r: Rr * .065, fill: "#79c9f4", stroke: LEAD, "stroke-width": lw }, ring);
+      var tc = P(Rr * .4, a + 6.2832 / n / 2);
+      el("circle", { cx: tc[0], cy: tc[1], r: Rr * .04, fill: "#7ca353", stroke: LEAD, "stroke-width": lw * .8 }, ring);
+    }
+    el("circle", { cx: cx, cy: cy, r: Rr * .25, fill: "#fdfb75", stroke: LEAD, "stroke-width": lw * 1.2 }, g);
+    for (i = 0; i < 8; i++) { a = i / 8 * 6.2832; var q1 = P(Rr * .11, a - .3), q2 = P(Rr * .23, a), q3 = P(Rr * .11, a + .3); el("path", { d: "M" + q1 + " L" + q2 + " L" + q3 + " Z", fill: "#f3d34a", stroke: LEAD, "stroke-width": lw * .7 }, g); }
+    el("circle", { cx: cx, cy: cy, r: Rr * .1, fill: "#fdfb75", stroke: LEAD, "stroke-width": lw }, g);
+    el("circle", { cx: cx, cy: cy, r: Rr * .995, fill: "none", stroke: LEAD, "stroke-width": lw * 2.4 }, g);
+    el("circle", { cx: cx, cy: cy, r: Rr * .8, fill: "none", stroke: LEAD, "stroke-width": lw * 1.6 }, g);
+  }
+  document.querySelectorAll("svg[data-rose]").forEach(function (s) {
+    var kind = s.getAttribute("data-rose");
+    if (kind === "big") { var defs = el("defs", {}, s), gid = id("halo"), rg = el("radialGradient", { id: gid }, defs); el("stop", { offset: ".55", "stop-color": "#fdfb75", "stop-opacity": ".45" }, rg); el("stop", { offset: "1", "stop-color": "#fdfb75", "stop-opacity": "0" }, rg); el("circle", { cx: 50, cy: 50, r: 50, fill: "url(#" + gid + ")" }, s); }
+    rose(s, 50, 50, kind === "big" ? 43 : 47, { spin: kind === "big" && !reduce, petals: kind === "mark" ? 8 : 12 });
+  });
+
+  /* ---------- glass panels for the posts ---------- */
+  var sheen = (function () { var h = el("svg", { width: 0, height: 0, style: "position:absolute" }, document.body), d = el("defs", {}, h), g = el("linearGradient", { id: "sheen", x1: "0", y1: "0", x2: ".5", y2: "1" }, d); el("stop", { offset: "0", "stop-color": "#fff", "stop-opacity": ".32" }, g); el("stop", { offset: ".55", "stop-color": "#fff", "stop-opacity": "0" }, g); return "url(#sheen)"; })();
+  var GLASS = {
+    dawn: function (s, w, h) {
+      el("rect", { width: w, height: h, fill: LEAD }, s);
+      sunburst(s, { cx: w * .6, cy: h * .7, rays: 16, rings: [0, 34, 62, 98, 140, 196, 270, 380], seed: 11, a0: Math.PI * .98, a1: Math.PI * 2.02, color: function (k, i, r) { return k < 1 ? "#fdfb75" : k < 2 ? pick(["#fdfb75", "#f6e98a"], r) : k < 3 ? pick(["#eef7b4", "#e1f3a6"], r) : k < 4 ? pick(["#c9ecf9", "#d8f1c4", "#b9e5f8"], r) : k < 5 ? pick(["#9ad6f5", "#b0e0f7"], r) : pick(["#79c9f4", "#5fb6e6", "#4fa6d8"], r); } });
+      bands(s, { w: w, y0: h * .7, y1: h, n: 4, amp: 10, freq: 1.4, seed: 5, tilt: -18, color: function (i, q, r) { return pick([["#a9d86e", "#f3d34a"], ["#7ca353", "#bfe94e"], ["#f3d34a", "#a9d86e"], ["#5e8a3c", "#7ca353"]][i], r); } });
+    },
+    night: function (s, w, h) {
+      el("rect", { width: w, height: h, fill: LEAD }, s);
+      sunburst(s, { cx: w * .66, cy: h * .3, rays: 14, rings: [0, 26, 52, 88, 132, 190, 260, 360], seed: 29, a0: 0, a1: Math.PI * 2, color: function (k, i, r) { return k < 1 ? "#f4f0d2" : k < 2 ? pick(["#e9e2c0", "#d8d0f0"], r) : k < 3 ? pick(["#8a6cc8", "#7a5cb8"], r) : k < 5 ? pick(["#5a3490", "#4a2f86", "#6e3f9e"], r) : pick(["#3c2a7a", "#2f6f9c", "#2a1b55"], r); } });
+      el("circle", { cx: w * .66 + 11, cy: h * .3 - 8, r: 21, fill: "#5a3490", stroke: LEAD, "stroke-width": 2 }, s);
+      [[.18, .14], [.3, .3], [.12, .46], [.44, .12], [.86, .18], [.9, .5]].forEach(function (p) { el("path", { d: "M" + (w * p[0]) + " " + (h * p[1] - 6) + " l2 4 l4 2 l-4 2 l-2 4 l-2 -4 l-4 -2 l4 -2z", fill: "#fdfb75", stroke: LEAD, "stroke-width": .8 }, s); });
+      bands(s, { w: w, y0: h * .78, y1: h, n: 3, amp: 9, freq: 1.2, seed: 8, color: function (i, q, r) { return pick(["#2a1b55", "#24164a", "#3a2470"], r); } });
+    },
+    wind: function (s, w, h) {
+      el("rect", { width: w, height: h, fill: LEAD }, s);
+      bands(s, { w: w, y0: -10, y1: h * .8, n: 7, amp: 22, freq: 2.2, seed: 47, color: function (i, q, r) { return i < 2 ? pick(["#4fa6d8", "#5fb6e6"], r) : i < 4 ? pick(["#79c9f4", "#9ad6f5"], r) : i < 6 ? pick(["#b9e5f8", "#bff6fa", "#9fe3ec"], r) : pick(["#d8fafc", "#eef7b4"], r); } });
+      bands(s, { w: w, y0: h * .8, y1: h, n: 3, amp: 7, freq: 1.3, seed: 6, color: function (i, q, r) { return pick(["#7ca353", "#a9d86e", "#f3d34a"], r); } });
+      [[w * .7, h * .8, 64], [w * .84, h * .81, 46]].forEach(function (t) {
+        el("path", { d: "M" + (t[0] - 2) + " " + t[1] + " L" + (t[0] - .8) + " " + (t[1] - t[2]) + " L" + (t[0] + .8) + " " + (t[1] - t[2]) + " L" + (t[0] + 2) + " " + t[1] + "Z", fill: "#f4f8f1", stroke: LEAD, "stroke-width": 1 }, s);
+        var rt = el("g", { "class": reduce ? "" : "rotor" }, s);
+        for (var k = 0; k < 3; k++) el("path", { d: "M" + t[0] + " " + (t[1] - t[2]) + " l-2 " + (-t[2] * .42) + " l2 -3 l2 3z", fill: "#f4f8f1", stroke: LEAD, "stroke-width": .8, transform: "rotate(" + (k * 120 + 15) + " " + t[0] + " " + (t[1] - t[2]) + ")" }, rt);
+      });
+    }
+  };
+  document.querySelectorAll("svg[data-glass]").forEach(function (s) { var vb = s.viewBox.baseVal; GLASS[s.getAttribute("data-glass")](s, vb.width, vb.height); el("rect", { width: vb.width, height: vb.height, fill: sheen, style: "mix-blend-mode:screen" }, s); });
+
+  /* ---------- the hero window: a prairie dawn in glass ---------- */
+  (function buildWindow() {
+    var s = document.getElementById("window"), R = rng(7), W = 400, H = 560;
+    var inner = "M28 560 L28 262 A234 234 0 0 1 200 34 A234 234 0 0 1 372 262 L372 560 Z";
+    var outer = "M8 560 L8 258 A256 256 0 0 1 200 8 A256 256 0 0 1 392 258 L392 560 Z";
+    var defs = el("defs", {}, s), clip = id("win");
+    el("path", { d: inner }, el("clipPath", { id: clip }, defs));
+    var bl = id("bl"), lg = el("linearGradient", { id: bl, x1: "0", y1: "0", x2: "0", y2: "1" }, defs);
+    el("stop", { offset: "0", "stop-color": "#fff", "stop-opacity": ".26" }, lg); el("stop", { offset: ".6", "stop-color": "#fff", "stop-opacity": "0" }, lg);
+    var fg = id("fr"), fgr = el("linearGradient", { id: fg, x1: "0", y1: "0", x2: "0", y2: "1" }, defs);
+    el("stop", { offset: "0", "stop-color": "var(--stone)" }, fgr); el("stop", { offset: "1", "stop-color": "var(--stone-edge)" }, fgr);
+    el("path", { d: outer, fill: "url(#" + fg + ")" }, s);
+    var g = el("g", { "clip-path": "url(#" + clip + ")" }, s);
+    el("rect", { width: W, height: H, fill: LEAD }, g);
+    // the sky, cut by the sun's own rays
+    sunburst(g, { cx: 232, cy: 424, rays: 22, rings: [0, 30, 58, 92, 134, 184, 244, 318, 420, 560], seed: 3, a0: Math.PI * .96, a1: Math.PI * 2.04, lw: 2.6,
+      color: function (k, i, r) { return k < 1 ? "#fdfb75" : k < 2 ? pick(["#fdfb75", "#f6e98a"], r) : k < 3 ? pick(["#f8f3a0", "#eef7b4"], r) : k < 4 ? pick(["#e6f5b4", "#d9f0b0", "#f3f7c4"], r) : k < 5 ? pick(["#cdeef9", "#d9f2d0", "#c2e9f8"], r) : k < 6 ? pick(["#a9dcf6", "#b9e5f8"], r) : k < 7 ? pick(["#8fd1f4", "#79c9f4"], r) : pick(["#79c9f4", "#5fb6e6", "#4fa6d8"], r); } });
+    el("path", { d: "M182 426 A50 50 0 0 1 282 426 Z", fill: "#fdfb75", stroke: LEAD, "stroke-width": 3 }, g);
+    el("path", { d: "M206 426 A26 26 0 0 1 258 426 Z", fill: "#f3d34a", stroke: LEAD, "stroke-width": 2.4 }, g);
+    // quiet technology on the far horizon
+    var tech = el("g", {}, g);
+    [[306, 416, 24], [330, 420, 18], [352, 418, 14]].forEach(function (t) {
+      el("path", { d: "M" + (t[0] - .9) + " " + t[1] + " L" + (t[0] - .4) + " " + (t[1] - t[2]) + " L" + (t[0] + .4) + " " + (t[1] - t[2]) + " L" + (t[0] + .9) + " " + t[1] + "Z", fill: "#f4f8f1" }, tech);
+      var rt = el("g", { "class": reduce ? "" : "rotor" }, tech);
+      for (var k = 0; k < 3; k++) el("path", { d: "M" + t[0] + " " + (t[1] - t[2]) + " l-.9 " + (-t[2] * .46) + " l.9 -1.4 l.9 1.4z", fill: "#f4f8f1", transform: "rotate(" + (k * 120 + 20) + " " + t[0] + " " + (t[1] - t[2]) + ")" }, rt);
+    });
+    for (var i = 0; i < 6; i++) el("rect", { x: 74 + i * 9, y: 419, width: 7, height: 3, fill: "#2f6f9c", stroke: LEAD, "stroke-width": .6 }, tech);
+    // fields: canola, wheat, and pasture in glass
+    var fieldClip = id("fc"); el("path", { d: "M0 428 C 80 410, 150 412, 220 426 S 340 440, 400 424 L400 560 L0 560Z" }, el("clipPath", { id: fieldClip }, defs));
+    var fg2 = el("g", { "clip-path": "url(#" + fieldClip + ")" }, g);
+    bands(fg2, { w: W, y0: 408, y1: 560, n: 6, amp: 9, freq: 1.3, seed: 21, tilt: -26, lw: 2.6, color: function (k, q, r) { return pick([["#a9d86e", "#bfe94e"], ["#f3d34a", "#fdfb75"], ["#7ca353", "#a9d86e"], ["#f3d34a", "#e9d45a"], ["#5e8a3c", "#7ca353"], ["#4c7330", "#5e8a3c"]][k], r); } });
+    el("path", { d: "M0 428 C 80 410, 150 412, 220 426 S 340 440, 400 424", fill: "none", stroke: LEAD, "stroke-width": 3.2 }, g);
+    // a river of sky winding toward the viewer
+    el("path", { d: "M236 427 C 226 446, 254 458, 230 478 S 184 508, 206 532 S 252 552, 240 560 L 276 560 C 286 548, 238 530, 234 516 S 266 486, 254 470 S 242 442, 248 427 Z", fill: "#9fd8f6", stroke: LEAD, "stroke-width": 2.6 }, g);
+    // aspens: white trunks rising like the columns of a nave
+    function aspen(x, y1, w, lean) {
+      var tg = el("g", {}, g), y0 = 560;
+      el("path", { d: "M" + (x - w / 2) + " " + y0 + " C " + (x - w / 2 + lean * .4) + " " + ((y0 + y1) / 2) + ", " + (x - w / 3 + lean) + " " + (y1 + 22) + ", " + (x + lean) + " " + y1 + " C " + (x + w / 3 + lean) + " " + (y1 + 22) + ", " + (x + w / 2 + lean * .4) + " " + ((y0 + y1) / 2) + ", " + (x + w / 2) + " " + y0 + " Z", fill: "#eef2e8", stroke: LEAD, "stroke-width": 2.2 }, tg);
+      for (var m = 0; m < 6; m++) { var yy = y0 - 26 - m * ((y0 - y1) / 7), off = lean * (1 - (yy - y1) / (y0 - y1)) * .5; el("path", { d: "M" + (x - w / 2 + 2 + off) + " " + yy + " q " + (w / 3) + " -3 " + (w * .55) + " 0", stroke: LEAD, "stroke-width": 1.5, fill: "none" }, tg); }
+    }
+    function leaf(p, x, y, sz, rot, col) {
+      el("path", { d: "M0 " + (-sz) + " Q " + (sz * .62) + " 0 0 " + sz + " Q " + (-sz * .62) + " 0 0 " + (-sz) + " Z", fill: col, stroke: LEAD, "stroke-width": 1.7, transform: "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + rot + ")" }, p);
+    }
+    function crown(cx, cy, sp, n) {
+      // Alberta aspens in their autumn gold, with a few leaves still green
+      var cg = el("g", {}, g);
+      for (var q = 0; q < n; q++) { var ang = R() * 6.2832, rr = Math.sqrt(R()) * sp; leaf(cg, cx + Math.cos(ang) * rr * 1.05, cy + Math.sin(ang) * rr * .9, 10 + R() * 9, Math.floor(R() * 180), pick(["#f3d34a", "#fdfb75", "#e9d45a", "#f3d34a", "#a9d86e", "#bfe94e", "#c5e696", "#fdfb75"], R())); }
+    }
+    aspen(58, 292, 13, 6); aspen(94, 320, 10, -4); aspen(36, 332, 9, 10);
+    aspen(342, 294, 13, -6); aspen(310, 324, 10, 4); aspen(366, 336, 9, -10);
+    crown(60, 318, 58, 70); crown(94, 284, 38, 26); crown(340, 318, 58, 70); crown(306, 284, 38, 26);
+    // the rose
+    rose(el("g", {}, g), 200, 166, 72, { spin: !reduce });
+    // saddle bars that hold the panels
+    [252, 382, 488].forEach(function (yy) { el("line", { x1: 0, y1: yy, x2: W, y2: yy, stroke: LEAD, "stroke-width": 3.4, opacity: .8 }, g); });
+    el("rect", { width: W, height: H, fill: "url(#" + bl + ")", style: "mix-blend-mode:screen" }, g);
+    el("path", { d: inner, fill: "none", stroke: LEAD, "stroke-width": 5 }, s);
+    el("path", { d: inner, fill: "none", stroke: "var(--gold)", "stroke-width": 1.2, transform: "translate(0 0)" }, s);
+    el("rect", { x: 2, y: 552, width: 396, height: 8, fill: "var(--stone-edge)" }, s);
+  })();
+
+  /* ---------- light from the window falling across the nave ---------- */
+  function beams() {
+    var s = document.getElementById("beams"); while (s.firstChild) s.removeChild(s.firstChild);
+    var wide = window.innerWidth > 960;
+    var defs = el("defs", {}, s);
+    // shafts of coloured light, one per band of glass, with gaps between like real mullions
+    var cols = [["#79c9f4", .85, 2.4], ["#79c9f4", .6, 1.4], ["#c5e696", .8, 2.8], ["#fdfb75", .95, 3.4], ["#f3d34a", .8, 1.6], ["#a9d86e", .8, 2.2], ["#79c9f4", .55, 1.2]];
+    cols.forEach(function (c, i) {
+      var gid = id("bm"), lg = el("linearGradient", { id: gid, x1: wide ? "1" : ".5", y1: "0", x2: wide ? ".1" : ".5", y2: "1" }, defs);
+      el("stop", { offset: "0", "stop-color": c[0], "stop-opacity": c[1] }, lg); el("stop", { offset: ".75", "stop-color": c[0], "stop-opacity": c[1] * .35 }, lg); el("stop", { offset: "1", "stop-color": c[0], "stop-opacity": "0" }, lg);
+      var pts, wd = c[2];
+      if (wide) { var sy = 16 + i * 9.5, sx = 66; pts = [[sx, sy], [sx, sy + wd * 1.6], [4 + i * 7.2 + wd * 2.2, 104], [4 + i * 7.2, 104]]; }
+      else { var x0 = 22 + i * 8.5; pts = [[x0, 4], [x0 + wd, 4], [x0 + wd * 1.8 - i * 2, 104], [x0 - i * 2, 104]]; }
+      el("polygon", { points: pts.map(function (p) { return p.join(","); }).join(" "), fill: "url(#" + gid + ")" }, s);
+    });
+  }
+  beams(); window.addEventListener("resize", beams);
+
+  /* ---------- motes drifting in the light ---------- */
+  (function motes() {
+    var c = document.getElementById("motes"), ctx = c.getContext("2d"), R = rng(9), dots = [], W, H, dpr = Math.min(2, window.devicePixelRatio || 1);
+    function size() { var r = c.getBoundingClientRect(); W = r.width; H = r.height; c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    size(); window.addEventListener("resize", size);
+    for (var i = 0; i < 60; i++) dots.push({ u: R(), v: R(), r: .5 + R() * 1.7, s: .00008 + R() * .00025, p: R() * 6.28 });
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H); var wide = W > 960;
+      dots.forEach(function (d) {
+        var v = ((d.v - t * d.s) % 1 + 1) % 1, u = d.u + Math.sin(t * .0003 + d.p) * .02;
+        var x = wide ? W * (0.08 + u * 0.6 + (1 - v) * 0.2) : W * (0.2 + u * 0.6), y = H * (0.12 + v * 0.84);
+        var a = .2 + .55 * Math.abs(Math.sin(t * .0006 + d.p));
+        ctx.beginPath(); ctx.arc(x, y, d.r, 0, 6.283); ctx.fillStyle = "rgba(246,226,120," + a.toFixed(3) + ")"; ctx.fill();
+      });
+      if (!reduce) requestAnimationFrame(draw);
+    }
+    draw(0);
+  })();
+
+  /* ---------- the vine (viriditas) down the folio margin ---------- */
+  function buildVine() {
+    var s = document.getElementById("vine"), box = s.getBoundingClientRect(); if (!box.height) return;
+    while (s.firstChild) s.removeChild(s.firstChild);
+    var h = box.height, w = box.width, R = rng(5), step = 76, y, d = "M" + (w / 2) + " 0";
+    s.setAttribute("viewBox", "0 0 " + w + " " + h);
+    for (y = step; y <= h + step; y += step) d += " S " + (w / 2 + (((y / step) % 2) ? w * .34 : -w * .34)) + " " + (y - step / 2) + ", " + (w / 2) + " " + y;
+    el("path", { d: d, fill: "none", stroke: "var(--leaf-ink)", "stroke-width": 1.3, opacity: .75 }, s);
+    var lv = Math.min(10, w * .3);
+    for (y = 26; y < h - 8; y += 30) {
+      var side = ((y / 30) | 0) % 2 ? 1 : -1, x = w / 2 + side * w * .22, col = pick(["#a9d86e", "#7ca353", "#f3d34a", "#bfe94e", "#c5e696"], R());
+      el("path", { d: "M0 " + (-lv) + " Q " + (lv * .6) + " 0 0 " + lv + " Q " + (-lv * .6) + " 0 0 " + (-lv) + " Z M0 " + (-lv) + " L0 " + lv, fill: col, stroke: LEAD, "stroke-width": .8, transform: "translate(" + x.toFixed(1) + " " + y + ") rotate(" + (side * 48) + ")" }, s);
+    }
+    for (y = 120; y < h - 40; y += 240) { el("circle", { cx: w / 2, cy: y, r: Math.min(6, w * .16), fill: "#fdfb75", stroke: LEAD, "stroke-width": .9 }, s); }
+  }
+
+  /* ---------- footer arcade ---------- */
+  (function () { var s = document.getElementById("arcade"), d = "", n = Math.max(8, Math.round((s.getBoundingClientRect().width || 1200) / 52)), wd = 1200 / n; for (var i = 0; i < n; i++) { var x0 = i * wd, x1 = x0 + wd; d += "M" + x0 + " 34 L" + x0 + " 18 Q " + (x0 + wd * .04) + " 5, " + (x0 + wd / 2) + " 2 Q " + (x1 - wd * .04) + " 5, " + x1 + " 18 L" + x1 + " 34 "; } el("path", { d: d, fill: "none", stroke: "currentColor", "stroke-width": 1.2, "vector-effect": "non-scaling-stroke" }, s); })();
+
+  /* ---------- views + theme (mock controls) ---------- */
+  var views = { home: document.getElementById("view-home"), about: document.getElementById("view-about") };
+  var bH = document.getElementById("b-home"), bA = document.getElementById("b-about"), navAbout = document.getElementById("nav-about");
+  function show(n) {
+    views.home.hidden = n !== "home"; views.about.hidden = n !== "about";
+    bH.setAttribute("aria-pressed", String(n === "home")); bA.setAttribute("aria-pressed", String(n === "about"));
+    if (n === "about") { navAbout.setAttribute("aria-current", "page"); requestAnimationFrame(buildVine); } else navAbout.removeAttribute("aria-current");
+    window.scrollTo(0, 0);
+  }
+  function fromHash() { show(location.hash === "#about" ? "about" : "home"); }
+  window.addEventListener("hashchange", fromHash);
+  window.addEventListener("resize", function () { if (!views.about.hidden) buildVine(); });
+  bH.addEventListener("click", function () { location.hash = "home"; });
+  bA.addEventListener("click", function () { location.hash = "about"; });
+  document.addEventListener("click", function (e) { var a = e.target.closest("[data-go]"); if (a) { e.preventDefault(); location.hash = a.getAttribute("data-go"); } });
+  fromHash();
+  var root = document.documentElement, tb = { auto: document.getElementById("t-auto"), light: document.getElementById("t-light"), dark: document.getElementById("t-dark") };
+  function theme(t) { if (t === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", t); for (var k in tb) tb[k].setAttribute("aria-pressed", String(k === t)); }
+  for (var k in tb) (function (k) { tb[k].addEventListener("click", function () { theme(k); }); })(k);
+})();
+</script>

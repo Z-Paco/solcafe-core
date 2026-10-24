@@ -7,27 +7,16 @@ import "../../../styles/postEditor.css";
 
 export default function EditNewsPage() {
   const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
 
   const [post, setPost] = useState(null);
-  // Derived from session — no effect sync needed (avoids cascading renders).
-  const userId = session?.user?.id ?? null;
-  const [roleId, setRoleId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
   // form fields
   const [title, setTitle] = useState("");
@@ -51,13 +40,19 @@ export default function EditNewsPage() {
   }, []);
 
   useEffect(() => {
-    if (!session) {
-      router.push("/login?redirect=/news/edit/" + slug);
-      return;
-    }
-
     async function fetchPost() {
+      let redirecting = false;
       try {
+        // Wait for getUser() before deciding to redirect.
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          redirecting = true; // keep the loading view up until the redirect lands
+          router.push("/login?redirect=/news/edit/" + slug);
+          return;
+        }
+
         const { data, error } = await supabase
           .from("posts")
           .select("*")
@@ -72,7 +67,7 @@ export default function EditNewsPage() {
           return;
         }
 
-        if (data.user_id !== session.user.id) {
+        if (data.user_id !== user.id) {
           setError("You don't have permission to edit this post");
           return;
         }
@@ -88,12 +83,12 @@ export default function EditNewsPage() {
         console.error("Error fetching post:", err);
         setError("Failed to load post. Please try again.");
       } finally {
-        setLoading(false);
+        if (!redirecting) setLoading(false);
       }
     }
 
     fetchPost();
-  }, [session, router, slug, supabase]);
+  }, [router, slug, supabase]);
 
   // Create slug from title
   const createSlug = (title) => {
@@ -108,8 +103,22 @@ export default function EditNewsPage() {
 
     // Clear previous errors
     setValidationErrors({});
+    const errors = {};
 
-    // Form field validation like in the other edit pages...
+    // Same field rules as the art and engineering edit pages
+    if (!title.trim()) {
+      errors.title = "Title is required";
+    } else if (title.length > 100) {
+      errors.title = "Title must be less than 100 characters";
+    }
+    if (!description.trim()) {
+      errors.description = "Description is required";
+    } else if (description.length > 5000) {
+      errors.description = "Description is too long (max 5000 characters)";
+    }
+    if (tags.length > 200) {
+      errors.tags = "Tags are too long (max 200 characters)";
+    }
 
     // If there are validation errors, show them and stop
     if (Object.keys(errors).length > 0) {
@@ -205,7 +214,7 @@ export default function EditNewsPage() {
 
   if (loading) {
     return (
-      <main>
+      <main id="main-content">
         <div className="container">
           <div className="loading-container">
             <p>Loading editor...</p>
@@ -217,7 +226,7 @@ export default function EditNewsPage() {
 
   if (error && !post) {
     return (
-      <main>
+      <main id="main-content">
         <div className="container">
           <div className="error-message">{error}</div>
           <button
@@ -232,7 +241,7 @@ export default function EditNewsPage() {
   }
 
   return (
-    <main>
+    <main id="main-content">
       <div className="container">
         <div className="post-editor news-editor">
           <h1>Edit News Post</h1>
@@ -254,7 +263,11 @@ export default function EditNewsPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 placeholder="Enter news post title"
+                className={validationErrors.title ? "input-error" : ""}
               />
+              {validationErrors.title && (
+                <div className="field-error">{validationErrors.title}</div>
+              )}
             </div>
 
             <div className="form-group">
@@ -266,7 +279,11 @@ export default function EditNewsPage() {
                 required
                 placeholder="Brief summary of your news post (will appear in cards and previews)"
                 rows="3"
+                className={validationErrors.description ? "input-error" : ""}
               />
+              {validationErrors.description && (
+                <div className="field-error">{validationErrors.description}</div>
+              )}
             </div>
 
             {/* News-specific content editor */}
@@ -285,6 +302,9 @@ export default function EditNewsPage() {
                 onChange={(e) => setTags(e.target.value)}
                 placeholder="Comma-separated tags (e.g., climate, policy, innovation)"
               />
+              {validationErrors.tags && (
+                <div className="field-error">{validationErrors.tags}</div>
+              )}
               <small>Separate tags with commas</small>
             </div>
 

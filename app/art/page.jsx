@@ -1,99 +1,63 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import "../styles/art.css";
+import React from "react";
+import AuthorActions from "@/components/common/AuthorActions";
+import CopySlot from "@/components/common/CopySlot";
+import EmptyState from "@/components/common/EmptyState";
+import Lancet from "@/components/common/Lancet";
+import PageIntro from "@/components/common/PageIntro";
+import { copyText } from "@/content/copy";
+import { listPublished } from "@/lib/posts";
+import { asRecord } from "@/lib/content";
+import "../styles/collections.css";
 
-export default function Artpage() {
-  const [supabase] = useState(() => createClient());
-  const [session, setSession] = useState(null);
+export const metadata = {
+  title: "Art",
+  description: copyText("art.metaDescription"),
+  alternates: { canonical: "/art" },
+};
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-  const [artPosts, setArtPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const mediumOf = (post) => {
+  const medium = asRecord(post.metadata).medium;
+  return typeof medium === "string" ? medium.trim() : "";
+};
 
-  // Fetch art posts from Supabase
-  useEffect(() => {
-    async function fetchArtPosts() {
-      try {
-        const { data, error } = await supabase
-          .from("posts")
-          .select("*")
-          .eq("content_type", "art")
-          .eq("published", true)
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
-        setArtPosts(data || []);
-      } catch (err) {
-        console.error("Error fetching art posts:", err);
-        setError("Failed to load art posts. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchArtPosts();
-  }, [supabase]);
+export default async function ArtPage() {
+  const { posts, error } = await listPublished("art");
 
   return (
-    <main>
-      <div className="page-header">
-        <h1>Art Gallery</h1>
-        {session && (
-          <Link href="/art/create" className="create-button">
-            Create Art Post
-          </Link>
+    <main id="main-content" className="art-index">
+      <PageIntro
+        eyebrow="Art"
+        title={<h1 className="page-intro__title">Art gallery</h1>}
+        lede={<CopySlot id="art.lede" as="p" size="lede" label="Lede" lines={2} className="page-intro__lede" />}
+        actions={<AuthorActions createHref="/art/create" createLabel="New art post" />}
+      />
+
+      <div className="container">
+        {error && (
+          <p className="notice notice--error" role="alert">
+            {error}
+          </p>
+        )}
+
+        {!error && posts.length === 0 && <EmptyState slot="art.empty" kind="night" />}
+
+        {/* One work stands alone, large; more become a row of lancets. */}
+        {posts.length > 0 && (
+          <div className={`lancet-gallery${posts.length === 1 ? " lancet-gallery--solo" : ""}`}>
+            {posts.map((post, i) => (
+              <Lancet
+                key={post.id}
+                post={post}
+                type="art"
+                headingLevel={2}
+                priority={i < 2}
+                detail={mediumOf(post)}
+                sizes={posts.length === 1 ? "(max-width: 680px) 90vw, 520px" : "(max-width: 680px) 90vw, 360px"}
+              />
+            ))}
+          </div>
         )}
       </div>
-
-      {loading ? (
-        <div className="loading">Loading art gallery...</div>
-      ) : error ? (
-        <div className="error-message">{error}</div>
-      ) : artPosts.length === 0 ? (
-        <div className="empty-state">
-          <p>No art posts yet. Be the first to share your artwork!</p>
-          {session && (
-            <Link href="/art/create" className="create-button">
-              Create Art Post
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div className="art-gallery">
-          {artPosts.map((post) => {
-            console.log("Gallery post slug:", post.slug);
-            return (
-              <Link
-                href={`/art/${post.slug}`}
-                key={post.id}
-                className="art-item-link"
-              >
-                <div className="art-item">
-                  {post.image_url && (
-                    <img
-                      src={post.image_url}
-                      alt={post.title}
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                      }}
-                    />
-                  )}
-                  <div className="caption">{post.title}</div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
     </main>
   );
 }

@@ -8,9 +8,9 @@
 }
 
 .auth-card {
-  background: var(--secondary-bg);
+  background: var(--color-surface);
   border-radius: 12px;
-  box-shadow: 0 8px 24px var(--card-shadow);
+  box-shadow: var(--shadow-sm);
   margin: 2rem 0; /* Add margin for better spacing */
   max-height: 90vh; /* Limit height */
   overflow-y: auto; /* Enable scrolling within the card */
@@ -25,12 +25,12 @@
 }
 
 .auth-header h1 {
-  color: var(--secondary-text);
+  color: var(--color-text);
   margin-bottom: 0.5rem;
 }
 
 .auth-header p {
-  color: var(--muted-text);
+  color: var(--color-text-muted);
 }
 
 .auth-form {
@@ -46,28 +46,31 @@
 }
 
 .form-label {
-  color: var(--secondary-text);
+  color: var(--color-text);
   font-weight: 600;
   font-size: 0.95rem;
 }
 
 .form-group input {
+  min-height: 2.75rem;
   padding: 0.8rem 1rem;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: 6px;
   font-size: 1rem;
 }
 
+/* Shared strong focus ring (>= 3:1), not a faint tint */
+.form-group input:focus-visible,
 .form-group input:focus {
-  outline: none;
-  border-color: var(--primary-bg);
-  box-shadow: 0 0 0 2px var(--primary-bg-subtle);
+  outline: var(--focus-outline);
+  outline-offset: 1px;
+  border-color: var(--color-focus);
 }
 
 .auth-button {
   margin-top: 0.5rem;
-  background: var(--primary-bg);
-  color: var(--primary-text);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   border: none;
   padding: 0.9rem;
   border-radius: 6px;
@@ -78,7 +81,7 @@
 }
 
 .auth-button:hover {
-  background: var(--primary-bg-dark);
+  background: var(--color-accent-hover);
 }
 
 .auth-button:disabled {
@@ -87,8 +90,8 @@
 }
 
 .auth-error {
-  background: var(--error-bg-subtle);
-  color: var(--error-text);
+  background: var(--color-error-bg);
+  color: var(--color-error);
   padding: 0.7rem 1rem;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -103,7 +106,7 @@
 }
 
 .auth-links a {
-  color: var(--primary-bg-dark);
+  color: var(--color-accent);
   text-decoration: none;
   font-size: 0.9rem;
 }
@@ -135,15 +138,15 @@
   gap: 1rem;
   padding: 0.8rem;
   border-radius: 8px;
-  background: var(--secondary-bg);
-  border: 1px solid var(--card-border);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .role-option.selected {
-  border-color: var(--highlight-text);
-  background: var(--highlight-bg-subtle);
+  border-color: var(--color-accent);
+  background: var(--color-tag-bg);
 }
 
 /* Make form scrollable on small screens */
@@ -163,16 +166,16 @@
 
 .loading-icon {
   font-size: 3rem;
-  color: var(--primary-bg);
+  color: var(--color-accent);
   margin-bottom: 1rem;
   animation: spin 2s linear infinite;
 }
 
 .error-icon {
   font-size: 3rem;
-  color: var(--error-text);
+  color: var(--color-error);
   margin-bottom: 1rem;
-  border: 3px solid var(--error-text);
+  border: 3px solid var(--color-error);
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -198,23 +201,23 @@
 
 .auth-confirmation h2 {
   margin-bottom: 1rem;
-  color: var(--secondary-text);
+  color: var(--color-text);
 }
 
 .auth-confirmation p {
   margin-bottom: 2rem;
-  color: var(--muted-text);
+  color: var(--color-text-muted);
 }
 
 .confirmation-icon {
   font-size: 3rem;
-  color: var(--highlight-text);
+  color: var(--color-accent);
   margin-bottom: 1rem;
 }
 
 .learn-roles-link {
-  color: var(--primary-bg);
-  background: var(--forest-light);
+  color: var(--color-accent);
+  background: var(--color-tag-bg);
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
   font-size: 1rem;
@@ -222,18 +225,13 @@
   text-decoration: none;
   display: inline-block;
   margin-top: 0.5rem;
-  box-shadow: 0 2px 8px var(--card-shadow);
+  box-shadow: var(--shadow-sm);
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
   border: none;
   cursor: pointer;
 }
 .learn-roles-link:hover {
-  color: var(--primary-bg-dark);
-  background: linear-gradient(
-    138deg,
-    var(--accent-yellow) 0%,
-    var(--forest-green) 60%,
-    var(--forest-light) 100%
-  );
-  box-shadow: 0 4px 16px var(--card-hover-shadow);
+  color: var(--color-accent);
+  background: var(--gradient-chinook);
+  box-shadow: var(--shadow-md);
 }

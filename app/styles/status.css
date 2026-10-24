@@ -1,0 +1,60 @@
+/* =========================
+   404 and error pages (app/not-found.tsx, app/error.tsx)
+   A small dark nave with a single lancet of night glass.
+   ========================= */
+.status-page {
+  padding-bottom: 0;
+  background:
+    radial-gradient(40% 50% at 50% 30%, rgba(253, 251, 117, 0.08), transparent 70%),
+    var(--nave);
+  color: var(--nave-ink);
+  /* the nave is always night, so its text tokens are fixed */
+  --ink: #eef3ea;
+  --ink-soft: #c9d3c1;
+  --rule-strong: rgba(238, 243, 234, 0.32);
+  --gold-ink: #e2c068;
+  --scribe-bg: transparent;
+  --color-heading: #eef3ea;
+  --page: var(--nave);
+}
+
+.status-page__inner {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  max-width: 40rem;
+  padding-block: var(--space-8);
+  text-align: center;
+}
+
+.status-page__window {
+  width: min(60%, 11rem);
+  margin-bottom: var(--space-3);
+  filter: drop-shadow(0 0 40px rgba(253, 251, 117, 0.2));
+}
+
+.status-page__title {
+  font-size: var(--text-3xl);
+  font-weight: 400;
+}
+
+.status-page .scribe {
+  width: min(100%, 28rem);
+}
+
+.status-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.status-page .btn--primary {
+  background: var(--nave-ink);
+  color: var(--nave);
+}
+
+.status-page .btn--secondary {
+  color: var(--nave-ink);
+}

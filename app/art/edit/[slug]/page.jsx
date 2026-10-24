@@ -36,9 +36,11 @@ export default function EditArtPage() {
   // Fetch post, user, and role info on mount
   useEffect(() => {
     async function fetchArt() {
+      let redirecting = false;
       try {
         const { data: user } = await supabase.auth.getUser();
         if (!user?.user) {
+          redirecting = true; // keep the loading view up until the redirect lands
           router.push("/login?redirect=/art/edit/" + slug);
           return;
         }
@@ -58,7 +60,9 @@ export default function EditArtPage() {
         setArt(data);
         setTitle(data.title || "");
         setDescription(data.description || "");
-        setTags(data.tags || "");
+        setTags(
+          Array.isArray(data.tags) ? data.tags.join(", ") : data.tags || ""
+        );
         setIsPublished(data.published);
 
         // Parse metadata for art content
@@ -79,7 +83,7 @@ export default function EditArtPage() {
       } catch (error) {
         setError("Failed to load artwork");
       } finally {
-        setLoading(false);
+        if (!redirecting) setLoading(false);
       }
     }
     fetchArt();
@@ -110,6 +114,11 @@ export default function EditArtPage() {
       setValidationErrors(errors);
       return;
     }
+
+    const tagsArray = String(tags || "")
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
     if (!validateArtRef.current()) {
       return;
     }
@@ -130,7 +139,7 @@ export default function EditArtPage() {
           title,
           description,
           metadata: artContent,
-          tags,
+          tags: tagsArray,
           image_url: finalCoverImage,
           published: isPublished,
           updated_at: new Date().toISOString(),
@@ -233,12 +242,32 @@ export default function EditArtPage() {
   };
 
   // Loading and error states
-  if (loading) return <div className="loading-spinner">Loading artwork...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  if (loading) {
+    return (
+      <main id="main-content">
+        <div className="container">
+          <div className="loading-container" role="status">
+            <p>Loading artwork...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main id="main-content">
+        <div className="container">
+          <div className="error-message" role="alert">
+            {error}
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   // Main editor UI
   return (
-    <main className="post-editor art-content-editor">
+    <main id="main-content" className="post-editor art-content-editor">
       <div className="edit-header">
         <h1>Edit Artwork</h1>
         <div className="actions">

@@ -9,9 +9,13 @@ import { useRouter } from "next/navigation";
 export default function DashboardPage() {
   const [supabase] = useState(() => createClient());
   const [session, setSession] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthChecked(true);
+    });
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
@@ -45,7 +49,8 @@ export default function DashboardPage() {
   }, [session, supabase]);
 
   useEffect(() => {
-    // If not logged in, redirect to login
+    // Wait for the session check before redirecting to login
+    if (!authChecked) return;
     if (!session) {
       router.push("/login?redirect=/dashboard");
       return;
@@ -54,7 +59,7 @@ export default function DashboardPage() {
     if (!session.user.email_confirmed_at) {
       router.push("/verify");
     }
-  }, [session, router]);
+  }, [session, authChecked, router]);
 
   // Loading state
   if (!session || loading) {
@@ -66,7 +71,7 @@ export default function DashboardPage() {
     profile?.display_name || profile?.username || session.user.email;
 
   return (
-    <main className="dashboard-content">
+    <main id="main-content" className="dashboard-content">
       <h1>Dashboard</h1>
       <section className="dashboard-welcome">
         <h2>Welcome back, {displayName}!</h2>
@@ -83,7 +88,7 @@ export default function DashboardPage() {
             <Link href="/engineer">View your Engineering Projects</Link>
           </li>
           <li>
-            <Link href="/news">Read Community News</Link>
+            <Link href="/news">Read the news</Link>
           </li>
           <li>
             <Link href="/profile">Edit your Profile</Link>

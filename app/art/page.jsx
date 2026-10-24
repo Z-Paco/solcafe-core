@@ -1,14 +1,13 @@
 import React from "react";
-import Link from "next/link";
 import AuthorActions from "@/components/common/AuthorActions";
-import Cover from "@/components/common/Cover";
 import CopySlot from "@/components/common/CopySlot";
 import EmptyState from "@/components/common/EmptyState";
+import Lancet from "@/components/common/Lancet";
 import PageIntro from "@/components/common/PageIntro";
 import { copyText } from "@/content/copy";
 import { listPublished } from "@/lib/posts";
-import { asRecord, formatDate } from "@/lib/content";
-import "../styles/art.css";
+import { asRecord } from "@/lib/content";
+import "../styles/collections.css";
 
 export const metadata = {
   title: "Art",
@@ -23,75 +22,40 @@ const mediumOf = (post) => {
 
 export default async function ArtPage() {
   const { posts, error } = await listPublished("art");
-  const [first] = posts;
 
   return (
     <main id="main-content" className="art-index">
-      <div className="container">
-        <PageIntro
-          eyebrow="Art"
-          title={<h1 className="page-intro__title">Art gallery</h1>}
-          lede={<CopySlot id="art.lede" as="p" className="page-intro__lede" lines={2} />}
-          actions={<AuthorActions createHref="/art/create" createLabel="New art post" />}
-        />
+      <PageIntro
+        eyebrow="Art"
+        title={<h1 className="page-intro__title">Art gallery</h1>}
+        lede={<CopySlot id="art.lede" as="p" size="lede" label="Lede" lines={2} className="page-intro__lede" />}
+        actions={<AuthorActions createHref="/art/create" createLabel="New art post" />}
+      />
 
+      <div className="container">
         {error && (
           <p className="notice notice--error" role="alert">
             {error}
           </p>
         )}
 
-        {!error && posts.length === 0 && <EmptyState slot="art.empty" />}
+        {!error && posts.length === 0 && <EmptyState slot="art.empty" kind="night" />}
 
-        {/* One work: shown large, framed like an exhibit. */}
-        {posts.length === 1 && (
-          <Link href={`/art/${first.slug}`} className="art-exhibit lift zoom" data-reveal>
-            <span className="art-exhibit__frame">
-              <span className="art-exhibit__mat">
-                <Cover
-                  src={first.image_url}
-                  className="art-exhibit__img"
-                  width={1200}
-                  height={900}
-                  sizes="(max-width: 900px) 100vw, 720px"
-                  priority
-                  markSize={96}
-                />
-              </span>
-            </span>
-            <span className="art-exhibit__plaque">
-              <span className="art-exhibit__title">{first.title}</span>
-              {mediumOf(first) && <span className="art-exhibit__medium">{mediumOf(first)}</span>}
-              <time className="art-exhibit__date" dateTime={first.created_at}>
-                {formatDate(first.created_at)}
-              </time>
-            </span>
-          </Link>
-        )}
-
-        {/* Two or more: a masonry that keeps growing gracefully. */}
-        {posts.length > 1 && (
-          <ul className="art-masonry">
+        {/* One work stands alone, large; more become a row of lancets. */}
+        {posts.length > 0 && (
+          <div className={`lancet-gallery${posts.length === 1 ? " lancet-gallery--solo" : ""}`}>
             {posts.map((post, i) => (
-              <li key={post.id} className="art-card" data-reveal style={{ "--reveal-i": i % 3 }}>
-                <Link href={`/art/${post.slug}`} className="art-card__link lift zoom">
-                  <span className={`art-card__media art-card__media--${i % 3}`}>
-                    <Cover
-                      src={post.image_url}
-                      className="art-card__img"
-                      width={800}
-                      height={1000}
-                      sizes="(max-width: 640px) 100vw, 33vw"
-                    />
-                  </span>
-                  <span className="art-card__caption">
-                    <span className="art-card__title">{post.title}</span>
-                    {mediumOf(post) && <span className="art-card__medium">{mediumOf(post)}</span>}
-                  </span>
-                </Link>
-              </li>
+              <Lancet
+                key={post.id}
+                post={post}
+                type="art"
+                headingLevel={2}
+                priority={i < 2}
+                detail={mediumOf(post)}
+                sizes={posts.length === 1 ? "(max-width: 680px) 90vw, 520px" : "(max-width: 680px) 90vw, 360px"}
+              />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </main>

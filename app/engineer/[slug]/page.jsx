@@ -4,6 +4,8 @@ import ArticleHeader from "@/components/common/ArticleHeader";
 import PostImage from "@/components/common/PostImage";
 import PostFooter from "@/components/common/PostFooter";
 import ReadingProgress from "@/components/common/ReadingProgress";
+import GlassPanel from "@/components/glass/GlassPanel";
+import { seedFrom } from "@/lib/glass/core";
 import { getAdjacent, getPostForViewer, getRelated } from "@/lib/posts";
 import {
   asArray,
@@ -92,11 +94,14 @@ export default async function EngineeringPostPage({ params }) {
           </dl>
         )}
 
-        {safeImageSrc(post.image_url) && (
-          <figure className="article__figure article__figure--wide">
+        <figure className="article__figure article__figure--wide article__pane" aria-hidden={safeImageSrc(post.image_url) ? undefined : "true"}>
+          {safeImageSrc(post.image_url) ? (
             <PostImage src={post.image_url} alt="" className="article__img" priority />
-          </figure>
-        )}
+          ) : (
+            // no cover: this project's own band of wind glass
+            <GlassPanel kind="wind" seed={seedFrom(post.id)} width={640} height={274} />
+          )}
+        </figure>
 
         {overview.length > 0 && (
           <section className="article__section" aria-labelledby="overview-heading">
@@ -138,7 +143,7 @@ export default async function EngineeringPostPage({ params }) {
             </h2>
             <div className="article__gallery">
               {schematics.map((s, i) => (
-                <figure key={i} className="article__figure">
+                <figure key={i} className="article__figure article__frame">
                   <PostImage
                     src={s.url}
                     alt={text(s.caption) || `Schematic ${i + 1}`}

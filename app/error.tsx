@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import CopySlot from "@/components/common/CopySlot";
-import HorizonArt from "@/components/common/HorizonArt";
+import GlassPanel from "@/components/glass/GlassPanel";
 import "./styles/status.css";
 
 export default function ErrorPage({
@@ -20,10 +20,21 @@ export default function ErrorPage({
   return (
     <main id="main-content" className="status-page">
       <div className="status-page__inner container">
-        <HorizonArt className="status-page__art" turbine={false} />
+        <span className="arch-window status-page__window" style={{ "--arch-ratio": "3 / 4" } as React.CSSProperties} aria-hidden="true">
+          <span className="arch-window__glass">
+            <GlassPanel kind="night" seed={500} width={300} height={400} />
+          </span>
+        </span>
         <span className="eyebrow">Error</span>
-        <CopySlot id="error.heading" as="h1" className="status-page__title" />
-        <CopySlot id="error.body" as="p" className="status-page__body" lines={2} />
+        <CopySlot
+          id="error.heading"
+          as="h1"
+          size="heading"
+          label="Headline"
+          fallback="Something went wrong"
+          className="status-page__title"
+        />
+        <CopySlot id="error.body" as="p" size="lede" label="A sentence or two" className="status-page__body" lines={2} />
         <div className="status-page__actions">
           <button type="button" className="btn btn--primary" onClick={reset}>
             Try again

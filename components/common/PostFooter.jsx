@@ -1,11 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import Cover from "./Cover";
-import { SECTION_LABEL, SECTION_PATH, formatDate } from "@/lib/content";
+import ArchWindow from "../glass/ArchWindow";
+import { SECTION_LABEL, SECTION_PATH, formatDate, isoDate } from "@/lib/content";
 
 const href = (post) => `/${SECTION_PATH[post.content_type]}/${post.slug}`;
 
-/** Previous/next within the section, then related posts by tag. */
+/** Previous/next within the section, then related posts by tag, each in its own small window. */
 export default function PostFooter({ adjacent, related }) {
   const { older, newer } = adjacent;
   return (
@@ -44,13 +44,11 @@ export default function PostFooter({ adjacent, related }) {
             {related.map((post) => (
               <li key={post.id} className="related__item">
                 <Link href={href(post)} className="related__link">
-                  <span className="related__media">
-                    <Cover src={post.image_url} sizes="(max-width: 700px) 100vw, 220px" width={480} height={300} markSize={36} />
-                  </span>
+                  <ArchWindow post={post} type={post.content_type} ratio="4 / 5" sizes="(max-width: 700px) 45vw, 200px" className="related__media" />
                   <span className="related__body">
                     <span className="eyebrow">{SECTION_LABEL[post.content_type]}</span>
                     <span className="related__title">{post.title}</span>
-                    <time className="related__date" dateTime={post.created_at}>
+                    <time className="meta related__date" dateTime={isoDate(post.created_at)}>
                       {formatDate(post.created_at, true)}
                     </time>
                   </span>

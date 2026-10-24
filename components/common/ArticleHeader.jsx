@@ -1,9 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import AuthorActions from "./AuthorActions";
+import RoseWindow from "../glass/RoseWindow";
 import { bylineName, formatDate, isoDate, toTags } from "@/lib/content";
 
-/** Shared header for news / art / engineering detail pages. */
+/**
+ * Shared header for news / art / engineering detail pages: a ruled title
+ * frame, gilded rule and rose above, a double rule below.
+ */
 export default function ArticleHeader({
   post,
   backHref,
@@ -18,12 +22,12 @@ export default function ArticleHeader({
 
   return (
     <header className="article__header">
-      <span className="sky-band" aria-hidden="true" />
       <Link href={backHref} className="article__back">
         <span aria-hidden="true">←</span> {backLabel}
       </Link>
 
       <div className="article__eyebrow-row">
+        <RoseWindow variant="mark" className="article__rose" />
         <span className="eyebrow">{eyebrow}</span>
         {!post.published && <span className="article__draft">Draft</span>}
       </div>
@@ -33,12 +37,10 @@ export default function ArticleHeader({
       {showDek && post.description && <p className="article__dek">{post.description}</p>}
 
       <div className="article__byline">
-        <p>
+        <p className="meta article__meta">
           By <span className="article__author">{bylineName(post.profiles)}</span>
           <span aria-hidden="true"> · </span>
-          <time dateTime={isoDate(post.created_at)}>
-            {formatDate(post.created_at)}
-          </time>
+          <time dateTime={isoDate(post.created_at)}>{formatDate(post.created_at)}</time>
           {readMinutes ? (
             <>
               <span aria-hidden="true"> · </span>
@@ -57,8 +59,8 @@ export default function ArticleHeader({
       {tags.length > 0 && (
         <ul className="tag-list article__tags" aria-label="Tags">
           {tags.map((tag) => (
-            <li key={tag} className="tag">
-              {tag}
+            <li key={tag}>
+              <span className="tag">{tag}</span>
             </li>
           ))}
         </ul>

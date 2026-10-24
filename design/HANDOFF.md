@@ -22,6 +22,19 @@ Steps 1–8 are done:
 
 Lint shows 0 errors, typecheck is clean, and the checkpoint screenshots pass: 0 overflow, one `<h1>`, no slots inside headings, and no console errors at 1280px and 390px in Day and Vespers. Waiting on the builder's approval. After that comes step 9: news, art and engineer, then 404 and error, then the author pages, then cleanup (retire `sky.css`, `SkyClock`, `lib/sky.ts`, `HorizonArt`, `SunMark`, `Cover` and `PageIntro` once nothing imports them).
 
+## Update 2026-10-24 (later)
+The builder approved the checkpoint and the first commit was made: `005f1ff` on `feat/window-of-light`. The rollout is done in the working tree and **not yet committed**, pending the builder's yes:
+- News index (chronicle) and news detail (folio leaf, margin notes, seeded glass band when there is no cover).
+- Art and engineering indexes (lancet galleries; a single work shows as an exhibit) and their details (artwork framed whole in lead and gold; engineering cover pane or wind-glass band).
+- 404 and error pages (a dark nave with one lancet).
+- Author pages pick up the new tokens.
+- Retired: `SkyClock`, `HorizonArt`, `SunMark`, `Cover`, `lib/sky.ts`, and the `sky`, `art`, `engineer` and `news` stylesheets.
+
+Checks:
+- Lint shows 0 errors, typecheck is clean, and the build passes.
+- Every public route passes at 1280px and 390px in Day and Vespers: 0 overflow, one `<h1>`, no slots inside headings, and no console errors (the only error logged is the 404 page's own 404 response).
+- Every text token pair passes WCAG AA; the lowest is gold-ink on the Day wall at 4.69:1.
+
 ## Next, in order (original list)
 1. `components/glass/LightBeams.jsx`. Its write was interrupted, so the file does not exist yet. Port the `beams()` function from `design/window-of-light.html`:
    - seven shafts;

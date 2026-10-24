@@ -20,6 +20,20 @@ function shortLabel(brief) {
  *
  *   <CopySlot id="home.mission" as="h1" size="display" ghost="Your headline" fallback="SolCafe" lines={2} />
  *   <CopySlot id="about.what.body" as="p" paragraphs />
+ *
+ * @param {{
+ *   id: string,
+ *   as?: string,
+ *   className?: string,
+ *   lines?: number,
+ *   paragraphs?: boolean,
+ *   htmlId?: string,
+ *   label?: string,
+ *   ghost?: string,
+ *   size?: "display" | "heading" | "lede" | "small",
+ *   fallback?: string,
+ *   [attribute: string]: unknown,
+ * }} props
  */
 export default function CopySlot({
   id,
@@ -28,10 +42,10 @@ export default function CopySlot({
   lines = 1,
   paragraphs = false,
   htmlId = "",
-  label = undefined,
-  ghost = undefined,
-  size = undefined,
-  fallback = undefined,
+  label,
+  ghost,
+  size,
+  fallback,
   ...rest
 }) {
   const slot = copy[id];

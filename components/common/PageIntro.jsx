@@ -1,17 +1,20 @@
 import React from "react";
+import RoseWindow from "../glass/RoseWindow";
 
 /**
- * Index-page header: sky band, letter-spaced eyebrow, h1, optional lede and
- * actions. `title` and `lede` are nodes so they can be CopySlots.
+ * Index-page header on the wall: a small rose, an inscription, the h1, an
+ * optional lede and actions. `title` and `lede` are nodes so they can be CopySlots.
  */
 export default function PageIntro({ eyebrow, title, lede, actions }) {
   return (
     <header className="page-intro">
-      <span className="sky-band" aria-hidden="true" />
-      <span className="eyebrow">{eyebrow}</span>
-      {title}
-      {lede}
-      {actions && <div className="page-intro__actions">{actions}</div>}
+      <div className="page-intro__inner container">
+        <RoseWindow variant="small" className="page-intro__rose" />
+        <span className="eyebrow">{eyebrow}</span>
+        {title}
+        {lede}
+        {actions && <div className="page-intro__actions">{actions}</div>}
+      </div>
     </header>
   );
 }

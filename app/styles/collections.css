@@ -144,9 +144,36 @@
   color: var(--ink-soft);
 }
 
+.lancet__detail {
+  color: var(--ink-soft);
+}
+
 @media (max-width: 680px) {
   .lancets {
     grid-template-columns: minmax(0, 1fr);
     padding-top: 4.6rem;
   }
+}
+
+/* ---------- Galleries on the index pages: a row of lancets ---------- */
+.lancet-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-7) clamp(2rem, 4vw, 3.5rem);
+}
+
+/* a single work stands alone, larger, like an exhibit */
+.lancet-gallery--solo {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 32rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.lancet-gallery--solo .lancet__title {
+  font-size: var(--text-3xl);
+}
+
+.lancet-gallery--solo .tag-list {
+  justify-content: center;
 }

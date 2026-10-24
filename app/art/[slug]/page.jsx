@@ -90,7 +90,7 @@ export default async function ArtPostPage({ params }) {
         {images.length > 0 ? (
           <div className="article__gallery">
             {images.map((image, index) => (
-              <figure key={index} className="article__figure">
+              <figure key={index} className="article__figure article__frame">
                 <PostImage
                   src={image.url}
                   alt={text(image.caption) || `${post.title}, image ${index + 1}`}
@@ -103,7 +103,7 @@ export default async function ArtPostPage({ params }) {
           </div>
         ) : (
           safeImageSrc(post.image_url) && (
-            <figure className="article__figure">
+            <figure className="article__figure article__frame">
               <PostImage
                 src={post.image_url}
                 alt={post.title}

@@ -4,6 +4,8 @@ import ArticleHeader from "@/components/common/ArticleHeader";
 import PostImage from "@/components/common/PostImage";
 import PostFooter from "@/components/common/PostFooter";
 import ReadingProgress from "@/components/common/ReadingProgress";
+import GlassPanel from "@/components/glass/GlassPanel";
+import { seedFrom } from "@/lib/glass/core";
 import { getAdjacent, getPostForViewer, getRelated } from "@/lib/posts";
 import {
   asArray,
@@ -96,11 +98,14 @@ export default async function NewsPostPage({ params }) {
           </figure>
         )}
 
-        {safeImageSrc(cover) && (
-          <figure className="article__figure article__figure--wide">
+        <figure className="article__figure article__figure--wide article__pane" aria-hidden={safeImageSrc(cover) ? undefined : "true"}>
+          {safeImageSrc(cover) ? (
             <PostImage src={cover} alt="" className="article__img" priority />
-          </figure>
-        )}
+          ) : (
+            // no cover: this post's own band of dawn glass
+            <GlassPanel kind="dawn" seed={seedFrom(post.id)} width={640} height={274} />
+          )}
+        </figure>
 
         <div className="article__layout" id="article-body">
           {paragraphs.length > 0 && (

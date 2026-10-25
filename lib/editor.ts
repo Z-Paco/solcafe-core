@@ -33,10 +33,12 @@ export function createSlug(title: string) {
   return slug || "post";
 }
 
-/** Append -2, -3, ... until no other post of this type uses the slug. */
+/**
+ * Append -2, -3, ... until no other post uses the slug. The check spans every
+ * type because public.posts has a single unique index on slug (posts_slug_key).
+ */
 export async function uniqueSlug(
   supabase: SupabaseClient,
-  type: PostType,
   base: string,
   excludeId?: string
 ) {
@@ -45,7 +47,6 @@ export async function uniqueSlug(
     let query = supabase
       .from("posts")
       .select("id")
-      .eq("content_type", type)
       .eq("slug", candidate)
       .limit(1);
     if (excludeId) query = query.neq("id", excludeId);

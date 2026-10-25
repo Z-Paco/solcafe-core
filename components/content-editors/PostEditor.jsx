@@ -214,7 +214,7 @@ export default function PostEditor({ mode, initialType = "news", slug }) {
           .eq("id", post.id);
         if (updateError) throw updateError;
       } else {
-        finalSlug = await uniqueSlug(supabase, type, createSlug(title));
+        finalSlug = await uniqueSlug(supabase, createSlug(title));
         const { error: insertError } = await supabase
           .from("posts")
           .insert({ ...row, content_type: type, user_id: userId, slug: finalSlug });

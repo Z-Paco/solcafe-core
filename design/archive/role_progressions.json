@@ -1,0 +1,236 @@
+{
+  "note": "Archive of public.role_progressions, dropped 2026-10-25 (the Solaris Engine roles are presentational only). 16 rows, copied from the table before the drop.",
+  "rows": [
+    {
+      "id": 1,
+      "role_name": "Dreamer",
+      "type": "base",
+      "stage_name": "Seedling",
+      "threshold": 10,
+      "emoji": "🌱",
+      "description": "Newcomer stage for Dreamer",
+      "requirements": [],
+      "stage": 1
+    },
+    {
+      "id": 2,
+      "role_name": "Dreamer",
+      "type": "base",
+      "stage_name": "Sojourner",
+      "threshold": 10,
+      "emoji": "🌿",
+      "description": "Contributor stage for Dreamer",
+      "requirements": [],
+      "stage": 2
+    },
+    {
+      "id": 3,
+      "role_name": "Dreamer",
+      "type": "base",
+      "stage_name": "Lunanaut",
+      "threshold": 50,
+      "emoji": "🌙",
+      "description": "Veteran stage for Dreamer",
+      "requirements": [],
+      "stage": 3
+    },
+    {
+      "id": 4,
+      "role_name": "Techie",
+      "type": "base",
+      "stage_name": "Tinkerer",
+      "threshold": 10,
+      "emoji": "🔧",
+      "description": "Newcomer stage for Techie",
+      "requirements": [],
+      "stage": 1
+    },
+    {
+      "id": 5,
+      "role_name": "Techie",
+      "type": "base",
+      "stage_name": "Code Walker",
+      "threshold": 10,
+      "emoji": "💻",
+      "description": "Contributor stage for Techie",
+      "requirements": [],
+      "stage": 2
+    },
+    {
+      "id": 6,
+      "role_name": "Techie",
+      "type": "base",
+      "stage_name": "System Sage",
+      "threshold": 50,
+      "emoji": "🧠",
+      "description": "Veteran stage for Techie",
+      "requirements": [],
+      "stage": 3
+    },
+    {
+      "id": 7,
+      "role_name": "Book Keeper",
+      "type": "base",
+      "stage_name": "Scribe",
+      "threshold": 10,
+      "emoji": "📖",
+      "description": "Newcomer stage for Book Keeper",
+      "requirements": [],
+      "stage": 1
+    },
+    {
+      "id": 8,
+      "role_name": "Book Keeper",
+      "type": "base",
+      "stage_name": "Curator",
+      "threshold": 10,
+      "emoji": "📚",
+      "description": "Contributor stage for Book Keeper",
+      "requirements": [],
+      "stage": 2
+    },
+    {
+      "id": 9,
+      "role_name": "Book Keeper",
+      "type": "base",
+      "stage_name": "Lore Weaver",
+      "threshold": 50,
+      "emoji": "🕸️",
+      "description": "Veteran stage for Book Keeper",
+      "requirements": [],
+      "stage": 3
+    },
+    {
+      "id": 10,
+      "role_name": "Synthesizer",
+      "type": "hybrid",
+      "stage_name": "Synthesizer",
+      "threshold": 30,
+      "emoji": "🔬",
+      "description": "Hybrid: Dreamer + Book Keeper + Techie",
+      "requirements": [
+        {
+          "role": "Dreamer",
+          "stage": 2
+        },
+        {
+          "role": "Techie",
+          "stage": 2
+        },
+        {
+          "role": "Book Keeper",
+          "stage": 2
+        }
+      ],
+      "stage": 2
+    },
+    {
+      "id": 11,
+      "role_name": "Architect",
+      "type": "hybrid",
+      "stage_name": "Architect",
+      "threshold": 30,
+      "emoji": "🏛️",
+      "description": "Hybrid: Dreamer + Techie",
+      "requirements": [
+        {
+          "role": "Dreamer",
+          "stage": 2
+        },
+        {
+          "role": "Techie",
+          "stage": 2
+        }
+      ],
+      "stage": 2
+    },
+    {
+      "id": 12,
+      "role_name": "Chronicler",
+      "type": "hybrid",
+      "stage_name": "Chronicler",
+      "threshold": 30,
+      "emoji": "📝",
+      "description": "Hybrid: Dreamer + Book Keeper",
+      "requirements": [
+        {
+          "role": "Dreamer",
+          "stage": 2
+        },
+        {
+          "role": "Book Keeper",
+          "stage": 2
+        }
+      ],
+      "stage": 2
+    },
+    {
+      "id": 13,
+      "role_name": "Technologist",
+      "type": "hybrid",
+      "stage_name": "Technologist",
+      "threshold": 30,
+      "emoji": "🧪",
+      "description": "Hybrid: Techie + Book Keeper",
+      "requirements": [
+        {
+          "role": "Techie",
+          "stage": 2
+        },
+        {
+          "role": "Book Keeper",
+          "stage": 2
+        }
+      ],
+      "stage": 2
+    },
+    {
+      "id": 14,
+      "role_name": "Luminar",
+      "type": "exalted",
+      "stage_name": "Luminar",
+      "threshold": 50,
+      "emoji": "✨",
+      "description": "Exalted: Dreamer",
+      "requirements": [
+        {
+          "role": "Dreamer",
+          "stage": 3
+        }
+      ],
+      "stage": 3
+    },
+    {
+      "id": 15,
+      "role_name": "Artificer",
+      "type": "exalted",
+      "stage_name": "Artificer",
+      "threshold": 50,
+      "emoji": "⚙️",
+      "description": "Exalted: Techie",
+      "requirements": [
+        {
+          "role": "Techie",
+          "stage": 3
+        }
+      ],
+      "stage": 3
+    },
+    {
+      "id": 16,
+      "role_name": "Archivist",
+      "type": "exalted",
+      "stage_name": "Archivist",
+      "threshold": 50,
+      "emoji": "🗄️",
+      "description": "Exalted: Book Keeper",
+      "requirements": [
+        {
+          "role": "Book Keeper",
+          "stage": 3
+        }
+      ],
+      "stage": 3
+    }
+  ]
+}

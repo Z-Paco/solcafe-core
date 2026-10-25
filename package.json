@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "copy:check": "node scripts/check-copy.mjs",
+    "contrast:check": "node scripts/check-contrast.mjs",
     "prebuild": "node scripts/check-copy.mjs"
   },
   "dependencies": {

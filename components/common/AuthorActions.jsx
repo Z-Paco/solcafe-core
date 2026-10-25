@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 /**
  * Author-only controls rendered inside server pages.
  *
- * <AuthorActions createHref="/news/create" createLabel="New news post" />
+ * <AuthorActions createHref="/write?type=news" createLabel="New news post" />
  *   Shows a create button to users on the public.authors allowlist.
  *
  * <AuthorActions post={{ id, slug, user_id }} editHref=... afterDeleteHref=... />

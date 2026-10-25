@@ -74,7 +74,7 @@ export default async function NewsPostPage({ params }) {
           backHref="/news"
           backLabel="All news"
           eyebrow="News"
-          editHref={`/news/edit/${post.slug}`}
+          editHref={`/write/news/${post.slug}`}
           noun="news post"
           readMinutes={readingMinutes(post.description, metadata.mainContent)}
         />

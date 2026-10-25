@@ -22,3 +22,9 @@ Scroll fade-ins hide offscreen elements until scrolled to. Full-page screenshots
 - Edit pages: the redirect-on-no-user path now keeps the loading view up (no empty-editor flash); art/engineer already had a null-safe user check at this point.
 - Deleted: postcss.config.mjs, app/styles/themes/seasonal.css, app/styles/themes/roles.css, components/SupabaseProvider.tsx (sandbox allowed it).
 - Not verified: dark-mode screenshots, 361-960px header wrap check, keyboard test of the mobile menu, themeColor meta update in a real browser, signed-in views, author actions.
+
+## Unified editor (/write)
+- One editor replaces the six create/edit pages: `/write?type=news|art|engineer` and `/write/<type>/<slug>`. Old URLs 308-redirect (next.config.js). Tabs only on create; an edited post keeps its type.
+- Shared logic in `lib/editor.ts`; the three type editors are unchanged except News lost its unused base64 cover field. Slugs are now unique per type and stay fixed on edit (news used to re-slug when the title changed).
+- Known debt, not fixed: `postEditor.css` still has preview-mode and `.related-link*` rules that nothing renders.
+- Not verified: signed-in create/edit/delete against Supabase (writes to production posts; needs the builder's go-ahead), tabs at 390px, Vespers screenshots.

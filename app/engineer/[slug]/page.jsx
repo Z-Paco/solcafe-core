@@ -68,7 +68,7 @@ export default async function EngineeringPostPage({ params }) {
           backHref="/engineer"
           backLabel="All projects"
           eyebrow="Engineering"
-          editHref={`/engineer/edit/${post.slug}`}
+          editHref={`/write/engineer/${post.slug}`}
           noun="project"
           readMinutes={readingMinutes(
             post.description,

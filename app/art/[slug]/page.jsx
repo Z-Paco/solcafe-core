@@ -57,7 +57,7 @@ export default async function ArtPostPage({ params }) {
           backHref="/art"
           backLabel="Art gallery"
           eyebrow="Art"
-          editHref={`/art/edit/${post.slug}`}
+          editHref={`/write/art/${post.slug}`}
           noun="art post"
           showDek={false}
         />

@@ -22,7 +22,7 @@ export default async function NewsPage() {
         eyebrow="News"
         title={<CopySlot id="news.title" as="h1" size="display" fallback="News" className="page-intro__title" />}
         lede={<CopySlot id="news.lede" as="p" size="lede" label="Lede" lines={2} className="page-intro__lede" />}
-        actions={<AuthorActions createHref="/news/create" createLabel="New news post" />}
+        actions={<AuthorActions createHref="/write?type=news" createLabel="New news post" />}
       />
       <div className="container">
         <Chronicle posts={posts} error={error} headingLevel={2} />

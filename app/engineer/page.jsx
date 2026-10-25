@@ -29,7 +29,7 @@ export default async function EngineeringPage() {
         eyebrow="Engineering"
         title={<h1 className="page-intro__title">Engineering projects</h1>}
         lede={<CopySlot id="engineer.lede" as="p" size="lede" label="Lede" lines={2} className="page-intro__lede" />}
-        actions={<AuthorActions createHref="/engineer/create" createLabel="New engineering post" />}
+        actions={<AuthorActions createHref="/write?type=engineer" createLabel="New engineering post" />}
       />
 
       <div className="container">

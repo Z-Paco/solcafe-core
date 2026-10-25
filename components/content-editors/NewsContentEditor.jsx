@@ -7,7 +7,6 @@ export default function NewsContentEditor({ content, updateContent, onValidate }
   const [quotes, setQuotes] = useState(content.quotes || []);
   const [relatedLinks, setRelatedLinks] = useState(content.relatedLinks || []);
   const [fetchingMetadata, setFetchingMetadata] = useState(false); // <-- Added state for fetching metadata
-  const [coverImage, setCoverImage] = useState(content.coverImage || ""); // <-- Added state for cover image
 
   // Add validation state
   const [errors, setErrors] = useState({
@@ -180,25 +179,6 @@ export default function NewsContentEditor({ content, updateContent, onValidate }
       quotes,
       relatedLinks,
     });
-  };
-
-  // Handle cover image change
-  const handleCoverImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverImage(reader.result);
-        updateContent({
-          mainContent,
-          sources,
-          quotes,
-          relatedLinks,
-          coverImage: reader.result,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   // Add validation method
@@ -480,26 +460,6 @@ export default function NewsContentEditor({ content, updateContent, onValidate }
         >
           Add Related Link
         </button>
-      </div>
-
-      {/* Cover Image */}
-      <div className="form-group">
-        <label htmlFor="coverImage">Cover Image (Optional)</label>
-        <p className="field-description">
-          Add a cover image if automatic extraction doesn&apos;t work or you prefer a
-          custom image.
-        </p>
-        <input
-          type="file"
-          id="coverImage"
-          accept="image/*"
-          onChange={handleCoverImageChange}
-        />
-        {coverImage && (
-          <div className="image-preview">
-            <img src={coverImage} alt="Cover preview" />
-          </div>
-        )}
       </div>
     </div>
   );

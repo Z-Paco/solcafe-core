@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { SECTION_LABEL, SECTION_PATH, safeImageSrc, toTags } from "@/lib/content";
@@ -280,6 +281,11 @@ export default function PostEditor({ mode, initialType = "news", slug }) {
                   ? "Only the author of this post can edit it."
                   : "Publishing is limited to SolCafe authors."}
             </p>
+            {status === "denied" && !editing && (
+              <p>
+                <Link href="/contact?reason=publishing">Ask to become an author</Link>
+              </p>
+            )}
           </div>
         </div>
       </main>

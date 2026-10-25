@@ -1,11 +1,14 @@
 # Handoff: SolCafe
 
-## Next session checklist (updated 2026-10-25)
-1. Ask the builder: commit the two pass 4 commits below? Run them only after a "yes".
-2. Ask: may we run a signed-in create, edit and delete test of `/write` (one throwaway draft per type, deleted after)? It writes to production `posts`.
-3. Ask: did the `contact@solcafe.ca` forwarding test email arrive (ImprovMX + GoDaddy DNS)? And are the four form options OK?
-4. Then build `/contact`, v1 `mailto:` (spec below).
-5. Unrelated to the repo: the builder has a PC suspend/display fix guide at `~/Desktop/suspend-display-fix.md`. If they bring it up, start from step 2 there (check the logs).
+## Next session checklist (updated 2026-10-25, later)
+1. Pass 4 is committed: `33e95f7` (contrast fix) and `703c9d7` (/write editor). Not pushed. AGENTS.md (the `next dev` block) is still left out.
+2. The builder's `public.authors` row exists (`86b8b3e7-579a-4529-98dd-7eb58ed09796`, added 2026-10-25). The signed-in /write test (one throwaway draft per type, deleted after, Claude in Chrome, dev server on :3100 with the main checkout's env) is approved and **not yet run**.
+2a. DB cleanup first pass is done (read-only audit). Proposed, not yet run: delete 4 unused test users (`test@email.com`, `alerttander@hotmail.gov`, `draco298sander@gmail.ca`, `rohey17422@ofacer.com`); delete 16 orphaned `post-images` objects (~8.5 MB); ~~repoint `posts.user_id` FK to `auth.users`~~ (do NOT: `lib/posts.ts` embeds `profiles(...)` through that FK); instead DONE 2026-10-25, migration `create_profile_when_author_added`: a trigger on `public.authors` creates the author's empty profile row, so inviting an author is one insert; drop `comments`, `role_progressions`, `posts.likes_count/comments_count`, `posts.content`; disable pg_graphql; index `posts.user_id`; wrap `auth.uid()` in profiles policies. Dashboard-only: leaked-password protection, Postgres upgrade. No migration history exists: save the final schema to `supabase/migrations/`. Run one at a time, builder in manual mode.
+2b. The Supabase MCP must be authenticated with write access (role `postgres`). In the earlier session it was `supabase_read_only_user`, which blocked all writes.
+3. `/contact` v1 (mailto) and the `uniqueSlug` fix (`lib/editor.ts`, `PostEditor.jsx`: slug uniqueness now spans all types because `posts_slug_key` is global) are built and **uncommitted**. /contact is: `app/contact/page.jsx`, `components/common/ContactForm.jsx`, `lib/contact.ts`, `app/styles/contact.css`, five `contact.*` slots in `content/copy.ts`, the footer link, the sitemap entry, the "Ask to become an author" link in PostEditor, and two new contrast pairs. Proposed commit: `feat: add /contact front door (mailto v1)`. Ask before running it.
+4. Email forwarding (ImprovMX + GoDaddy) is **not set up yet**. These are the builder's steps, below. Until it's done, the mailto goes nowhere.
+5. The four form reasons are approved as listed.
+6. Unrelated to the repo: the builder has a PC suspend/display fix guide at `~/Desktop/suspend-display-fix.md`. If they bring it up, start from step 2 there (check the logs).
 
 ## START HERE: pass 4 (2026-10-24), unified editor and contact
 The worktree is `.claude/worktrees/agent-ad3856b84d5a683d6`, on branch `feat/window-of-light` (commits `005f1ff` and `2f97ec6`, not pushed). The work below is **uncommitted**, waiting on the builder's "yes".

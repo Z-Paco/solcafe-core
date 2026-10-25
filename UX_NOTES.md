@@ -28,3 +28,11 @@ Scroll fade-ins hide offscreen elements until scrolled to. Full-page screenshots
 - Shared logic in `lib/editor.ts`; the three type editors are unchanged except News lost its unused base64 cover field. Slugs are now unique per type and stay fixed on edit (news used to re-slug when the title changed).
 - Known debt, not fixed: `postEditor.css` still has preview-mode and `.related-link*` rules that nothing renders.
 - Not verified: signed-in create/edit/delete against Supabase (writes to production posts; needs the builder's go-ahead), tabs at 390px, Vespers screenshots.
+
+## Contact (/contact), v1 mailto
+- The single front door. `lib/contact.ts` is the one place for the address (`contact@solcafe.ca`), the four reasons and their subject tags (`[General]`, `[Publishing]`, `[Correction]`, `[Collaboration]`), and `mailtoHref`.
+- v1 opens the visitor's mail app with subject and body filled in (CRLF line breaks per RFC 6068). The message is capped at 1500 characters because long mailto links fail in some clients. Email is required now so the layout and fields match v2.
+- `?reason=publishing` (or any reason id) preselects a reason. The /write "Not available" state links there.
+- All prose is slots (`contact.*` in `content/copy.ts`): title, lede, the publisher-vetting note and the meta description. UI labels stay in the component.
+- v2 (later): a Resend server action with the same fields, Reply-To set to the visitor, a honeypot field and a rate limit. The API key goes in Vercel env, which the builder adds.
+- Checked: 1280px and 390px in Day and Vespers (0 overflow, one h1, no console errors), validation and focus, the preselect, and the generated mailto. Not checked: a real mail client opening the link.

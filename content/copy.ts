@@ -156,6 +156,25 @@ export const copy = {
     "§5"
   ),
 
+  // ---------- Contact ----------
+  "contact.title": slot(null, "Contact page headline."),
+  "contact.lede": slot(
+    null,
+    "One or two sentences under the Contact headline: who this inbox is for (questions, publisher requests, corrections, collaboration)."
+  ),
+  "contact.publishing.heading": slot(
+    null,
+    "Heading of the note beside the form on becoming a publisher."
+  ),
+  "contact.publishing.body": slot(
+    null,
+    "What vetting means: publishing is by invitation, what you look for in an author, and how long a reply may take. Any faith-lens wording is yours."
+  ),
+  "contact.metaDescription": slot(
+    null,
+    "Contact page description for search results and link previews."
+  ),
+
   // ---------- Error pages ----------
   "notFound.heading": slot(
     null,

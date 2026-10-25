@@ -9,7 +9,7 @@ const SITE_URL = "https://www.solcafe.ca";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes: MetadataRoute.Sitemap = ["", "/news", "/art", "/engineer", "/about"].map(
+  const staticRoutes: MetadataRoute.Sitemap = ["", "/news", "/art", "/engineer", "/about", "/contact"].map(
     (path) => ({ url: `${SITE_URL}${path}` })
   );
 

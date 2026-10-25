@@ -49,6 +49,8 @@ const PAIRS = [
   ["ink-soft", "wall", 4.5],
   ["ink", "color-surface", 4.5],
   ["ink-soft", "color-surface", 4.5],
+  ["ink", "color-surface-sunk", 4.5],
+  ["color-error", "color-surface", 4.5],
   ["gold-ink", "page", 4.5],
   ["leaf-ink", "page", 4.5],
   ["sky-ink", "page", 4.5],

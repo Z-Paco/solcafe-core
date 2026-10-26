@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import "../styles/auth.css";
 
-// Only same-origin paths: "/news/create" is fine, "//evil.com" or "https://..." is not.
+// Only same-origin paths: "/write?type=news" is fine, "//evil.com" or "https://..." is not.
 function safeRedirect(value) {
   if (typeof value !== "string" || !value.startsWith("/")) return "/";
   if (value.startsWith("//") || value.startsWith("/\\")) return "/";

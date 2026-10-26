@@ -726,3 +726,35 @@
   flex: 1 1 8rem;
   min-width: 0;
 }
+
+/* Type tabs of the unified editor (/write): ruled underline, small capitals */
+.editor-tabs {
+  display: flex;
+  gap: var(--space-5, 1.5rem);
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.editor-tabs__tab {
+  padding: 0.6rem 0.1rem;
+  margin-bottom: -1px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-family: var(--ff-inscr);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.editor-tabs__tab[aria-selected="true"] {
+  color: var(--color-text);
+  border-bottom-color: var(--gold);
+}
+
+.editor-tabs__tab:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}

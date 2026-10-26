@@ -29,7 +29,7 @@ export default async function ArtPage() {
         eyebrow="Art"
         title={<h1 className="page-intro__title">Art gallery</h1>}
         lede={<CopySlot id="art.lede" as="p" size="lede" label="Lede" lines={2} className="page-intro__lede" />}
-        actions={<AuthorActions createHref="/art/create" createLabel="New art post" />}
+        actions={<AuthorActions createHref="/write?type=art" createLabel="New art post" />}
       />
 
       <div className="container">

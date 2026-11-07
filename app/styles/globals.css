@@ -526,15 +526,6 @@ code {
   --bead: var(--sky);
 }
 
-/* Generic card (legacy pages such as /about/roles) */
-.card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  box-shadow: var(--shadow-sm);
-}
-
 /* Status messages */
 .notice {
   padding: var(--space-3) var(--space-4);

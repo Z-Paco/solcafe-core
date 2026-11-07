@@ -1,5 +1,5 @@
 import React from "react";
-import { copy } from "@/content/copy";
+import { copy, SHOW_PLACEHOLDERS } from "@/content/copy";
 
 const HEADING = /^h[1-6]$/;
 
@@ -10,7 +10,8 @@ function shortLabel(brief) {
 
 /**
  * Renders a prose slot from content/copy.ts. While the builder has not written
- * it, shows a ruled "scribe" placeholder: a small inscription naming the slot
+ * it, development shows a ruled "scribe" placeholder (production shows only
+ * the heading `fallback`, or nothing): a small inscription naming the slot
  * and its COPY_PROPOSALS section, an optional ghost of the slot's name at the
  * real type size, and `lines` ruled lines.
  *
@@ -70,6 +71,17 @@ export default function CopySlot({
   }
 
   const isHeading = HEADING.test(Tag);
+
+  // Placeholders are for the builder: production shows only the fallback
+  // heading (so the outline stays intact) or nothing.
+  if (!SHOW_PLACEHOLDERS) {
+    return isHeading && fallback ? (
+      <Tag className={className} id={htmlId || undefined} {...rest}>
+        {fallback}
+      </Tag>
+    ) : null;
+  }
+
   const inline = Tag === "span";
   const Box = inline ? "span" : "div";
   const tag = [label ?? shortLabel(slot.brief), slot.proposal].filter(Boolean).join(" · ");

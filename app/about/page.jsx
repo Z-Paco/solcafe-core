@@ -3,12 +3,12 @@ import Link from "next/link";
 import CopySlot from "@/components/common/CopySlot";
 import RoseWindow from "@/components/glass/RoseWindow";
 import Vine from "@/components/glass/Vine";
-import { copyText } from "@/content/copy";
+import { descriptionMeta, hasCopy } from "@/content/copy";
 import "../styles/about.css";
 
 export const metadata = {
   title: "About",
-  description: copyText("about.metaDescription"),
+  ...descriptionMeta("about.metaDescription"),
   alternates: { canonical: "/about" },
 };
 
@@ -31,7 +31,7 @@ export default function AboutPage() {
 
       <div className="folio container">
         <Vine className="folio__vine" />
-        {LEAVES.map((leaf) => (
+        {LEAVES.filter((leaf) => hasCopy(leaf.body)).map((leaf) => (
           <section key={leaf.id} className="folio__section" aria-labelledby={`about-${leaf.id}`} data-reveal>
             <CopySlot
               id={leaf.heading}

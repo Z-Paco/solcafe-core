@@ -94,11 +94,6 @@ export default function ProfilePage() {
     }
   }, [session, loading, supabase, router]);
 
-  // For testing purposes, add a simple log to see session state
-  console.log("Session state:", session ? "Logged in" : "Not logged in");
-  console.log("Current session:", session);
-  console.log("Session user:", session?.user);
-
   // This comes from the authentication context or api
   const userProfile = loading
     ? {

@@ -15,10 +15,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (
-    (req.nextUrl.pathname === "/login" || req.nextUrl.pathname === "/signup") &&
-    user
-  ) {
+  if (req.nextUrl.pathname === "/login" && user) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -26,5 +23,9 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/dashboard/:path*", "/login", "/signup"],
+  // Every page, so a refreshed Supabase session is always saved (Server
+  // Components cannot write cookies). Static assets and images are skipped.
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml)$).*)",
+  ],
 };

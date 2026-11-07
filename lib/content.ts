@@ -131,3 +131,11 @@ export const SECTION_LABEL = {
   art: "Art",
   engineering: "Engineering",
 } as const;
+
+/** Default link-preview image (public/og.png) for pages without a cover. */
+export const SHARE_IMAGE = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: "SolCafe: a stained-glass window of the sun rising over Alberta fields",
+};

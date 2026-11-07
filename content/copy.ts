@@ -5,10 +5,12 @@
 //   brief:    one line telling the builder what belongs here
 //   proposal: the COPY_PROPOSALS.md section that has options and sources
 //
-// A null slot renders a dashed placeholder (components/common/CopySlot.jsx)
-// that shows the brief, so the layout is visible before the words exist.
-// Metadata (title/description/OG) reads from here too and falls back to
-// "SolCafe" or nothing when a slot is null. Run `npm run copy:check` for the
+// In development a null slot renders a dashed placeholder
+// (components/common/CopySlot.jsx) that shows the brief, so the layout is
+// visible before the words exist. In production it renders nothing (or the
+// heading fallback), and sections whose words are all unwritten are hidden.
+// Metadata (title/description/OG) reads from here too and falls back to the
+// site description or nothing when a slot is null. Run `npm run copy:check` for the
 // list of empty slots.
 //
 // UI microcopy (nav labels, button labels, "Sources", "Build steps", error
@@ -198,7 +200,27 @@ export const copy = {
   ),
 } satisfies Record<string, Slot>;
 
+/** Show unwritten slots as placeholders (development only). */
+export const SHOW_PLACEHOLDERS = process.env.NODE_ENV !== "production";
+
 /** Text of a slot, or undefined while it is unwritten. For metadata. */
 export function copyText(key: CopyKey): string | undefined {
   return copy[key].text ?? undefined;
+}
+
+/**
+ * Whether a section built from these slots should render: always in
+ * development (so placeholders show), otherwise only once one is written.
+ */
+export function hasCopy(...keys: CopyKey[]): boolean {
+  return SHOW_PLACEHOLDERS || keys.some((key) => Boolean(copy[key].text));
+}
+
+/**
+ * `{ description }` for page metadata, or `{}` while the slot is unwritten so
+ * the page inherits the site description instead of losing it.
+ */
+export function descriptionMeta(key: CopyKey): { description?: string } {
+  const text = copyText(key);
+  return text ? { description: text } : {};
 }

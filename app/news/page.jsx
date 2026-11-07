@@ -3,13 +3,13 @@ import AuthorActions from "@/components/common/AuthorActions";
 import Chronicle from "@/components/common/Chronicle";
 import CopySlot from "@/components/common/CopySlot";
 import PageIntro from "@/components/common/PageIntro";
-import { copyText } from "@/content/copy";
+import { descriptionMeta } from "@/content/copy";
 import { listPublished } from "@/lib/posts";
 import "../styles/collections.css";
 
 export const metadata = {
   title: "News",
-  description: copyText("news.metaDescription"),
+  ...descriptionMeta("news.metaDescription"),
   alternates: { canonical: "/news" },
 };
 

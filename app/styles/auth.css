@@ -121,34 +121,6 @@
   overflow: hidden;
 }
 
-/* Role selection styling for signup */
-.role-selection-container {
-  margin: 1.5rem 0;
-}
-
-.role-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-top: 0.5rem;
-}
-
-.role-option {
-  display: flex;
-  gap: 1rem;
-  padding: 0.8rem;
-  border-radius: 8px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.role-option.selected {
-  border-color: var(--color-accent);
-  background: var(--color-tag-bg);
-}
-
 /* Make form scrollable on small screens */
 @media (max-height: 800px) {
   .auth-container {
@@ -215,23 +187,3 @@
   margin-bottom: 1rem;
 }
 
-.learn-roles-link {
-  color: var(--color-accent);
-  background: var(--color-tag-bg);
-  padding: 0.5rem 1.1rem;
-  border-radius: 999px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 0.5rem;
-  box-shadow: var(--shadow-sm);
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  border: none;
-  cursor: pointer;
-}
-.learn-roles-link:hover {
-  color: var(--color-accent);
-  background: var(--gradient-chinook);
-  box-shadow: var(--shadow-md);
-}

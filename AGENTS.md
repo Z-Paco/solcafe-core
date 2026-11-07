@@ -71,12 +71,14 @@ available here.
 ## Repository Layout
 
 - `app/` — App Router pages and API routes
-  - Content types (each with `create`, `edit`, `[slug]`): `art/`, `news/`,
-    `engineer/`
-  - Other routes: `about/` (+ `roles`), `dashboard/`, `profile/`
-    (`comm/`, `contact/` still on disk but hidden from nav per scope cap)
-  - Auth flows: `login/`, `signup/`, `verify/`, `reset-password/`,
-    `update-password/`
+  - Content types (each an index + `[slug]`): `art/`, `news/`, `engineer/`;
+    one editor for all three at `write/` (create) and `write/[type]/[slug]`
+    (edit)
+  - Other routes: `about/`, `contact/`, `dashboard/`, `profile/`
+    (`about/roles` removed Nov 2026, redirects to `/about`)
+  - Auth flows: `login/`, `verify/`, `reset-password/`, `update-password/`.
+    Sign-up is closed (authors are invited via `public.authors`); `/signup`
+    redirects to `/login`.
   - API routes: `api/extract-metadata` only (`api/posts`, `api/profile`
     removed Oct 2026 — pages query Supabase directly; `api/roles`,
     `api/contribute` never existed)
@@ -127,3 +129,13 @@ Do not make changes to connected repos without authorization.
 - Live site: https://www.solcafe.ca/
 - Next.js on Vercel; single shared Supabase project — no staging environment,
   so treat production data accordingly.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

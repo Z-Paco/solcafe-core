@@ -4,14 +4,14 @@ import CopySlot from "@/components/common/CopySlot";
 import EmptyState from "@/components/common/EmptyState";
 import Lancet from "@/components/common/Lancet";
 import PageIntro from "@/components/common/PageIntro";
-import { copyText } from "@/content/copy";
+import { descriptionMeta } from "@/content/copy";
 import { listPublished } from "@/lib/posts";
 import { asRecord } from "@/lib/content";
 import "../styles/collections.css";
 
 export const metadata = {
   title: "Engineering",
-  description: copyText("engineer.metaDescription"),
+  ...descriptionMeta("engineer.metaDescription"),
   alternates: { canonical: "/engineer" },
 };
 

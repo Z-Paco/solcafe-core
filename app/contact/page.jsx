@@ -2,14 +2,14 @@ import React from "react";
 import CopySlot from "@/components/common/CopySlot";
 import ContactForm from "@/components/common/ContactForm";
 import RoseWindow from "@/components/glass/RoseWindow";
-import { copyText } from "@/content/copy";
+import { descriptionMeta, hasCopy } from "@/content/copy";
 import { CONTACT_EMAIL, reasonFromParam } from "@/lib/contact";
 import "../styles/about.css";
 import "../styles/contact.css";
 
 export const metadata = {
   title: "Contact",
-  description: copyText("contact.metaDescription"),
+  ...descriptionMeta("contact.metaDescription"),
   alternates: { canonical: "/contact" },
 };
 
@@ -18,6 +18,7 @@ export const metadata = {
 // (public.authors), so the aside explains vetting in the builder's words.
 export default async function ContactPage({ searchParams }) {
   const { reason } = await searchParams;
+  const showPublishing = hasCopy("contact.publishing.body");
 
   return (
     <main id="main-content" className="folio-page">
@@ -35,24 +36,31 @@ export default async function ContactPage({ searchParams }) {
           <ContactForm initialReason={reasonFromParam(reason)} />
         </section>
 
-        <aside className="contact__aside" aria-labelledby="contact-publishing">
-          <CopySlot
-            id="contact.publishing.heading"
-            as="h2"
-            size="small"
-            label="Rubric"
-            fallback="Becoming a publisher"
-            htmlId="contact-publishing"
-            className="contact__rubric"
-          />
-          <CopySlot
-            id="contact.publishing.body"
-            as="p"
-            paragraphs
-            label="What vetting means"
-            lines={5}
-            className="contact__text"
-          />
+        <aside
+          className="contact__aside"
+          {...(showPublishing ? { "aria-labelledby": "contact-publishing" } : { "aria-label": "Email" })}
+        >
+          {showPublishing && (
+            <>
+              <CopySlot
+                id="contact.publishing.heading"
+                as="h2"
+                size="small"
+                label="Rubric"
+                fallback="Becoming a publisher"
+                htmlId="contact-publishing"
+                className="contact__rubric"
+              />
+              <CopySlot
+                id="contact.publishing.body"
+                as="p"
+                paragraphs
+                label="What vetting means"
+                lines={5}
+                className="contact__text"
+              />
+            </>
+          )}
           <p className="contact__direct">
             <span className="inscr">Or write directly</span>
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

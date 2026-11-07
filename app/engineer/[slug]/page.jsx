@@ -14,6 +14,7 @@ import {
   readingMinutes,
   safeImageSrc,
   toParagraphs,
+  SHARE_IMAGE,
 } from "@/lib/content";
 import "../../styles/templates/postDetail.css";
 
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }) {
       type: "article",
       title: post.title,
       description: excerpt(post.description, 160),
-      ...(image ? { images: [image] } : {}),
+      images: [image ?? SHARE_IMAGE],
     },
     ...(post.published ? {} : { robots: { index: false } }),
   };

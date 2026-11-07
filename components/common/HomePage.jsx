@@ -8,6 +8,7 @@ import HeroWindow from "../glass/HeroWindow";
 import LightBeams from "../glass/LightBeams";
 import Motes from "../glass/Motes";
 import RoseWindow from "../glass/RoseWindow";
+import { hasCopy } from "@/content/copy";
 import { listPublished } from "@/lib/posts";
 import "../../app/styles/home.css";
 import "../../app/styles/collections.css";
@@ -18,6 +19,8 @@ export default async function HomePage() {
     listPublished("art", 1),
     listPublished("engineering", 1),
   ]);
+  const showWorks =
+    art.posts.length > 0 || engineering.posts.length > 0 || hasCopy("art.empty", "engineer.empty");
 
   return (
     <main id="main-content" className="home">
@@ -69,52 +72,58 @@ export default async function HomePage() {
         <Chronicle posts={news.posts} error={news.error} />
       </section>
 
-      <section className="home-section container" aria-labelledby="home-works-heading">
-        <SectionHead id="home-works-heading" title="Art & engineering" />
-        <div className="lancets">
-          <RoseWindow variant="oculus" className="lancets__oculus" />
-          <Lancet post={art.posts[0]} type="art" emptySlot="art.empty" />
-          <Lancet post={engineering.posts[0]} type="engineering" emptySlot="engineer.empty" />
-        </div>
-      </section>
+      {showWorks && (
+        <section className="home-section container" aria-labelledby="home-works-heading">
+          <SectionHead id="home-works-heading" title="Art & engineering" />
+          <div className="lancets">
+            <RoseWindow variant="oculus" className="lancets__oculus" />
+            <Lancet post={art.posts[0]} type="art" emptySlot="art.empty" />
+            <Lancet post={engineering.posts[0]} type="engineering" emptySlot="engineer.empty" />
+          </div>
+        </section>
+      )}
 
       {/* The canticle: the lens, under the great rose */}
-      <section className="canticle" aria-labelledby="home-lens-heading">
-        <div className="canticle__inner container">
-          <RoseWindow variant="big" className="canticle__rose" />
-          <div className="canticle__text">
-            <p className="inscr canticle__eyebrow">The lens</p>
-            <CopySlot
-              id="home.lens.heading"
-              as="h2"
-              size="heading"
-              label="Heading"
-              ghost="Your heading"
-              fallback="The lens"
-              htmlId="home-lens-heading"
-            />
-            <CopySlot id="home.lens.body" as="p" size="lede" label="A few sentences" lines={4} />
-            <figure className="canticle__epigraph">
+      {hasCopy("home.lens.heading", "home.lens.body") && (
+        <section className="canticle" aria-labelledby="home-lens-heading">
+          <div className="canticle__inner container">
+            <RoseWindow variant="big" className="canticle__rose" />
+            <div className="canticle__text">
+              <p className="inscr canticle__eyebrow">The lens</p>
               <CopySlot
-                id="home.lens.epigraph"
-                as="blockquote"
-                size="lede"
-                label="Epigraph, cited"
-                className="accent-italic"
-                lines={2}
+                id="home.lens.heading"
+                as="h2"
+                size="heading"
+                label="Heading"
+                ghost="Your heading"
+                fallback="The lens"
+                htmlId="home-lens-heading"
               />
-              <figcaption>
-                <CopySlot id="home.lens.epigraphSource" as="span" size="small" label="Source" />
-              </figcaption>
-            </figure>
-            <div>
-              <Link href="/about" className="btn btn--primary canticle__btn">
-                About SolCafe
-              </Link>
+              <CopySlot id="home.lens.body" as="p" size="lede" label="A few sentences" lines={4} />
+              {hasCopy("home.lens.epigraph") && (
+                <figure className="canticle__epigraph">
+                  <CopySlot
+                    id="home.lens.epigraph"
+                    as="blockquote"
+                    size="lede"
+                    label="Epigraph, cited"
+                    className="accent-italic"
+                    lines={2}
+                  />
+                  <figcaption>
+                    <CopySlot id="home.lens.epigraphSource" as="span" size="small" label="Source" />
+                  </figcaption>
+                </figure>
+              )}
+              <div>
+                <Link href="/about" className="btn btn--primary canticle__btn">
+                  About SolCafe
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </main>
   );
 }

@@ -5,6 +5,7 @@ import Footer from "@/components/common/Footer";
 import RevealObserver from "@/components/common/RevealObserver";
 import GlassDefs from "@/components/glass/GlassDefs";
 import { copyText } from "@/content/copy";
+import { SHARE_IMAGE } from "@/lib/content";
 import "./styles/globals.css";
 
 // Display and headings: a Renaissance Garamond.
@@ -45,14 +46,14 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "SolCafe",
     locale: "en_CA",
-    url: "/",
     title: "SolCafe",
     description: SITE_DESCRIPTION,
+    images: [SHARE_IMAGE],
   },
+  // Title, description and image fall back to the Open Graph tags, so each
+  // page's own openGraph carries through to X/Twitter cards too.
   twitter: {
-    card: "summary",
-    title: "SolCafe",
-    description: SITE_DESCRIPTION,
+    card: "summary_large_image",
   },
 };
 
